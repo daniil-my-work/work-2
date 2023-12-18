@@ -6,7 +6,8 @@ CREATE TABLE `user` (
     `password` VARCHAR(255),
     `user_ip` VARCHAR(15),
     `address` VARCHAR(255),
-    `rating` INT
+    `rating` INT,
+    `role` CHAR(55)
 );
 
 CREATE TABLE `menu` (
