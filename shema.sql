@@ -1,4 +1,6 @@
-CREATE TABLE `user` (
+CREATE DATABASE mnogoruba;
+
+USE mnogoruba CREATE TABLE `user` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `date_reg` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `telephone` VARCHAR(20) UNIQUE,
@@ -17,6 +19,12 @@ CREATE TABLE `menu` (
     `description` VARCHAR(255),
     `price` INT,
     `cooking_time` INT,
+    `category__id` INT,
+    FOREIGN KEY (`category__id`) REFERENCES `category_menu` (`id`)
+);
+
+CREATE TABLE `category_menu` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
     `category__name` ENUM(
         'поке',
         'роллы',
@@ -29,14 +37,6 @@ CREATE TABLE `menu` (
         'напитки',
         'соус'
     ),
-    `category__id` INT,
-);
-
-CREATE TABLE `order` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `order_time` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    `menu_id` INT,
-    FOREIGN KEY (`menu_id`) REFERENCES `menu` (`id`)
 );
 
 CREATE TABLE `component` (
@@ -68,4 +68,11 @@ CREATE TABLE `poke` (
     `img` VARCHAR(255),
     `description` VARCHAR(255),
     `price` INT
+);
+
+CREATE TABLE `order` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `order_time` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `menu_id` INT,
+    FOREIGN KEY (`menu_id`) REFERENCES `menu` (`id`)
 );
