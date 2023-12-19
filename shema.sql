@@ -78,3 +78,9 @@ CREATE TABLE `poke_component` (
     FOREIGN KEY (`component_id`) REFERENCES `component` (`id`),
     FOREIGN KEY (`poke_id`) REFERENCES `poke` (`id`)
 );
+
+CREATE TABLE `address` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `city` VARCHAR(255),
+    `address_name` VARCHAR(255)
+);
