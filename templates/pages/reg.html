@@ -1,2 +1,17 @@
 <!-- Страница регистрации -->
-<div class=""></div>
+<div class="registration">
+    <form class="registration__form" action="process_registration.php" method="post">
+        <h2 class="registration__title">Регистрация</h2>
+
+        <label for="phone">Телефон:</label>
+        <input type="tel" id="phone" name="phone" placeholder="Введите номер телефона" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="Введите ваш email" required>
+
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" placeholder="Введите пароль" required>
+
+        <button type="submit">Зарегистрироваться</button>
+    </form>
+</div>
