@@ -14,7 +14,6 @@ CREATE TABLE `user` (
     `role` CHAR(55)
 );
 
-
 CREATE TABLE `category_menu` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `category__name` ENUM(
