@@ -14,26 +14,6 @@ CREATE TABLE `user` (
     `role` CHAR(55)
 );
 
-CREATE TABLE `menu` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `title` VARCHAR(255),
-    `img` VARCHAR(255),
-    `description` VARCHAR(255),
-    `price` INT,
-    `cooking_time` INT,
-    `category__name` ENUM(
-        'поке',
-        'роллы',
-        'супы',
-        'горячее',
-        'вок',
-        'закуски',
-        'сэндвичи',
-        'десерты',
-        'напитки',
-        'соус'
-    )
-);
 
 CREATE TABLE `category_menu` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -49,6 +29,17 @@ CREATE TABLE `category_menu` (
         'напитки',
         'соус'
     )
+);
+
+CREATE TABLE `menu` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `title` VARCHAR(255),
+    `img` VARCHAR(255),
+    `description` VARCHAR(255),
+    `price` INT,
+    `cooking_time` INT,
+    `category__id` INT,
+    FOREIGN KEY (`category__id`) REFERENCES `category_menu` (`id`)
 );
 
 CREATE TABLE `order` (
@@ -73,14 +64,6 @@ CREATE TABLE `component` (
     ) NOT NULL
 );
 
-CREATE TABLE `poke_component` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `component_id` INT,
-    `poke_id` INT,
-    FOREIGN KEY (`component_id`) REFERENCES `component` (`id`),
-    FOREIGN KEY (`poke_id`) REFERENCES `poke` (`id`)
-);
-
 CREATE TABLE `poke` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `title` VARCHAR(255),
@@ -89,8 +72,10 @@ CREATE TABLE `poke` (
     `price` INT
 );
 
--- Добавляем внешний ключ после создания таблицы `category_menu`
-ALTER TABLE
-    `menu`
-ADD
-    FOREIGN KEY (`category__name`) REFERENCES `category_menu` (`category__name`);
+CREATE TABLE `poke_component` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `component_id` INT,
+    `poke_id` INT,
+    FOREIGN KEY (`component_id`) REFERENCES `component` (`id`),
+    FOREIGN KEY (`poke_id`) REFERENCES `poke` (`id`)
+);
