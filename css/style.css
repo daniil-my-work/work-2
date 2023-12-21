@@ -552,11 +552,57 @@ textarea {
     color: #666;
 }
 
-
-
 .reg__form-button {
     width: 100%;
     min-height: 40px;
     margin-top: 30px;
 }
 
+
+
+
+/* Страница аккаунт  */
+.account {
+    padding: 30px 0 50px;
+}
+
+.account__info {
+    padding: 0 10px;
+    margin-bottom: 50px;
+}
+
+.account__info-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 0 auto;
+    margin-bottom: 20px;
+}
+
+.account__info-name {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.account__orders {
+    padding: 0 10px;
+}
+
+.account__orders-table {
+    max-height: 400px;
+    overflow-y: scroll !important;
+}
+
+.account__orders-nav {
+    margin: 0;
+    margin-top: 10px;
+}
+
+.account__orders-nav .menu__nav-list {
+    padding: 0;
+    margin: 0;
+}
+
+.account__orders-nav .menu__nav-item {
+    background-color: #f7f7f7;
+}
