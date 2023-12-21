@@ -3,6 +3,7 @@
 
 /* Общие стили */
 .page__body {
+    position: relative;
     margin: 0;
     padding: 0;
     /* overflow: hidden; */
@@ -12,6 +13,10 @@
     font-size: 14px;
     line-height: 150%;
     color: #414042;
+}
+
+.page__body .hidden {
+    display: none;
 }
 
 .title {
@@ -49,6 +54,37 @@ ol {
     padding: 0;
     list-style-type: none;
 }
+
+label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+input,
+textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Кнопки */
+.button--basic {
+    padding: 10px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.button--basic:hover {
+    background-color: #2980b9;
+}
+
+
 
 /* Хедер */
 .header {}
@@ -386,3 +422,141 @@ ol {
     color: #fff;
     text-decoration: none;
 }
+
+
+/* Страница регистрации */
+.reg {
+    padding: 40px 20px 60px;
+}
+
+.registration-form {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.reg__form-input-wrapper {
+    margin-bottom: 10px;
+}
+
+.reg__form-input-wrapper-error {
+    display: block;
+    margin-top: 4px;
+    color: red;
+    font-size: 13px;
+}
+
+.reg__form-input {
+    margin-bottom: 0;
+}
+
+.reg__form-input--tel {
+    margin-bottom: 2px;
+}
+
+.reg__form-input--adress {
+    margin-bottom: 0;
+}
+
+.reg__form-address-wrapper {
+    position: relative;
+}
+
+.reg__form-address-list {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    transform: translateY(100%);
+    max-height: 120px;
+    overflow-y: scroll;
+}
+
+.reg__form-address-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    overflow-x: hidden;
+    border-radius: 4px;
+}
+
+
+/* Радиокнопки */
+.reg__radio {
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.1);
+    z-index: 5;
+}
+
+.reg__radio-title {
+    text-align: center;
+}
+
+.reg__radio-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 25px 20px;
+    background-color: #fff;
+}
+
+.reg__radio-content {
+    display: flex;
+    justify-content: center;
+}
+
+.reg__form-radioButton {
+    display: inline-block;
+    margin-bottom: 0;
+    margin-right: 10px;
+}
+
+.reg__form-radioButton input[type=radio] {
+    display: none;
+}
+
+.reg__form-radioButton label {
+    display: inline-block;
+    cursor: pointer;
+    margin-bottom: 0;
+    padding: 0px 15px;
+    line-height: 34px;
+    border: 1px solid #ffd600;
+    border-radius: 6px;
+    user-select: none;
+    color: #000;
+}
+
+/* Checked */
+.reg__form-radioButton input[type=radio]:checked+label {
+    background: #ffd600;
+}
+
+/* Hover */
+.reg__form-radioButton label:hover {
+    color: #666;
+}
+
+/* Disabled */
+.reg__form-radioButton input[type=radio]:disabled+label {
+    background: #efefef;
+    color: #666;
+}
+
+
+
+.reg__form-button {
+    width: 100%;
+    min-height: 40px;
+    margin-top: 30px;
+}
+
