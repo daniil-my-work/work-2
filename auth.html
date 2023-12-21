@@ -93,19 +93,10 @@
                 </div>
 
 
-                <h2 class="title">Регистрация</h2>
+                <h2 class="title">Войти</h2>
 
-                <!-- Форма регистрации -->
+                <!-- Форма для авторизации -->
                 <form class="reg__form" action="#" method="post">
-                    <div class="reg__form-input-wrapper">
-                        <label for="name">Имя:</label>
-                        <input class="reg__form-input" type="text" id="name" name="name" placeholder="Даниил" required>
-
-                        <span class="reg__form-input-wrapper-error hidden">
-                            Сообщение с ошибкой
-                        </span>
-                    </div>
-
                     <div class="reg__form-input-wrapper">
                         <label for="email">Почта:</label>
                         <input class="reg__form-input" type="email" id="email" name="email" placeholder="test@yandex.ru"
@@ -113,16 +104,6 @@
 
                         <span class="reg__form-input-wrapper-error hidden">
                             Сообщение с ошибкой
-                        </span>
-                    </div>
-
-                    <div class="reg__form-input-wrapper">
-                        <label for="phone">Номер телефона:</label>
-                        <input class="reg__form-input reg__form-input--tel" type="tel" id="phone" name="phone"
-                            pattern="[0-9]{10}" placeholder="+7(980) 705 70 02" required>
-
-                        <span class="reg__form-input-wrapper-error hidden">
-                            Сообщение с ошибкой: Введите номер телефона без пробелов и символов
                         </span>
                     </div>
 
@@ -136,26 +117,8 @@
                         </span>
                     </div>
 
-                    <div class="reg__form-address-wrapper">
-                        <label for="address">Адрес:</label>
-
-                        <input class="reg__form-input reg__form-input--adress" type="text" id="address" name="address"
-                            pattern="[0-9]{10}" placeholder="ул. Антонова ... " required>
-
-                        <span class="reg__form-input-wrapper-error hidden">
-                            Сообщение с ошибкой: Такого адреса не существует
-                        </span>
-
-                        <ul class="reg__form-address-list hidden">
-                            <li class="reg__form-address-item">
-                                1
-                            </li>
-                        </ul>
-                    </div>
-
-
                     <button class="button--basic reg__form-button" type="submit">
-                        Зарегистрироваться
+                        Войти
                     </button>
                 </form>
             </div>
