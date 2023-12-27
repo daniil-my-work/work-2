@@ -159,6 +159,7 @@ textarea {
     width: 80%;
     background-color: #f6f6f6;
     transition: right 0.3s ease;
+    z-index: 2;
 }
 
 /* Добавляем класс "show" для отображения навигационного меню */
