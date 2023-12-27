@@ -675,3 +675,24 @@ textarea {
 .account__orders-nav .menu__nav-item {
     background-color: #f7f7f7;
 }
+
+/* .account__orders-client {
+
+} */
+
+.account__orders-analitic-download {
+    padding: 10px;
+    padding-bottom: 30px;
+}
+
+.account__orders-analitic-download-time {
+    margin-bottom: 10px;
+}
+
+.account__orders-analitic-download input {
+    width: auto;
+}
+
+.account__orders-analitic-content .sub-title {
+    padding: 0 10px;
+}
