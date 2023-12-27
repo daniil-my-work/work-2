@@ -584,8 +584,77 @@ textarea {
     margin-bottom: 20px;
 }
 
+.account__orders-time {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    margin-bottom: 30px;
+}
+
+.account__orders-time .sub-title {
+    margin: 0;
+    margin-right: 20px;
+}
+
+.account__orders-time .account__orders-input {
+    margin: 0;
+}
+
+.account__orders-group {
+    padding: 0 10px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.account__orders-group-link {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    background-color: #ffd600;
+    color: #000;
+    text-decoration: none;
+    border-radius: 0;
+}
+
+.account__orders-group-link:hover {
+    background-color: #e9c202 !important;
+    color: #000 !important;
+}
+
+.account__orders-group-link::before {
+    position: absolute;
+    content: '';
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    height: 60%;
+    width: 1px;
+    background-color: #000;
+}
+
+.account__orders-group-link:first-child {
+    border-radius: 5px 0 0 5px;
+}
+
+.account__orders-group-link:last-child {
+    border-radius: 0 5px 5px 0;
+}
+
+.account__orders-group-link:last-child::before {
+    content: none;
+}
+
 .account__orders {
     padding: 0 10px;
+}
+
+.account__orders--active {
+    margin-bottom: 40px;
+}
+
+.account__orders-input {
+    margin-bottom: 10px;
 }
 
 .account__orders-table {
