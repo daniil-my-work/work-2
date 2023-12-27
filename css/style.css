@@ -612,10 +612,15 @@ textarea {
     position: relative;
     display: block;
     padding: 10px 15px;
-    background-color: #ffd600;
+    background-color: #F6F6F6;
     color: #000;
     text-decoration: none;
     border-radius: 0;
+}
+
+.account__orders-group-link--active {
+    background-color: #ffd600;
+    border-radius: 5px;
 }
 
 .account__orders-group-link:hover {
@@ -696,4 +701,13 @@ textarea {
 
 .account__orders-analitic-content .sub-title {
     padding: 0 10px;
+}
+
+
+
+/* Страница Меню */
+.page__menu-group {
+    max-width: 100%;
+    overflow-x: auto;
+    justify-content: flex-start;
 }
