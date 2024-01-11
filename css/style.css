@@ -807,7 +807,6 @@ textarea {
     border-radius: 10px;
     transform: translateY(-50%);
     background-color: #f3f3f3;
-    z-index: -1;
 }
 
 .basket__item-count {
@@ -822,12 +821,29 @@ textarea {
     font-weight: 600;
     background-color: #ffd600;
     border-radius: 50%;
+    z-index: 1;
 }
 
 .basket__item-action {
+    position: relative;
     display: block;
     padding: 0 7px;
     font-size: 16px;
+    z-index: 1;
+}
+
+.basket__item-action:active {
+    background-color: #999;
+}
+
+.basket__item-action--minus {
+    padding-left: 10px;
+    border-radius: 10px 0 0 10px;
+}
+
+.basket__item-action--plus {
+    padding-right: 10px;
+    border-radius: 0 10px 10px 0;
 }
 
 .basket__order {
