@@ -79,57 +79,6 @@ function get_query_bets($user_id)
     GROUP BY lots.id, lots.user_id, lots.winner_id, lots.img, lots.title, categories.name_category, lots.date_finish;";
 }
 
-
-/**
- * Записывает в БД сделанную ставку
- * @param $link mysqli Ресурс соединения
- * @param int $sum Сумма ставки
- * @param int $user_id ID пользователя
- * @param int $lot_id ID лота
- * @return bool $res Возвращает true в случае успешной записи
- */
-function add_bet_database($con, $sum, $user_id, $lot_id)
-{
-    $sql = "INSERT INTO bets (date_bet, price_bet, user_id, lot_id) VALUE (NOW(), ?, $user_id, $lot_id);";
-    $stmt = mysqli_prepare($con, $sql);
-    mysqli_stmt_bind_param($stmt, 'i', $sum);
-    $res = mysqli_stmt_execute($stmt);
-    if ($res) {
-        return $res;
-    }
-    $error = mysqli_error($con);
-    return $error;
-}
-
-/**
- * Возвращает массив из десяти последних ставок на этот лот
- * @param $con Подключение к MySQL
- * @param int $id_lot Id лота
- * @return [Array | String] $list_bets Ассоциативный массив со списком ставок на этот лот из базы данных
- * или описание последней ошибки подключения
- */
-function get_bets_history($con, $id_lot)
-{
-    if (!$con) {
-        $error = mysqli_connect_error();
-        return $error;
-    } else {
-        $sql = "SELECT users.user_name, bets.price_bet, DATE_FORMAT(date_bet, '%d.%m.%y %H:%i') AS date_bet
-        FROM bets
-        JOIN lots ON bets.lot_id=lots.id
-        JOIN users ON bets.user_id=users.id
-        WHERE lots.id=$id_lot
-        ORDER BY bets.date_bet DESC LIMIT 10;";
-        $result = mysqli_query($con, $sql);
-        if ($result) {
-            $list_bets = mysqli_fetch_all($result, MYSQLI_ASSOC);
-            return $list_bets;
-        }
-        $error = mysqli_error($con);
-        return $error;
-    }
-}
-
 /**
  * Возвращает массив ставок пользователя
  * @param $con Подключение к MySQL
