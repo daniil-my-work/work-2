@@ -1,6 +1,9 @@
 <?php
 
 require_once('./functions/helpers.php');
+require_once('./functions/init.php');
+
+
 
 $page_head = include_template(
     'head.php',
