@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Валидация полей
     $rules = [
         'user_name' => function ($value) {
-            return $value == 'Da';
+            return $value == 'Da' ? 'Имя занято' : '';
         },
         'email' => function ($value) {
             return $value;
@@ -36,11 +36,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     foreach ($user as $key => $value) {
-        # code...
-        if (empty($user[$value])) {
+        // Проверка на незаполненное поле
+        if (empty($value)) {
             $errors[$key] = 'Поле' . $user[$key] . 'должно быть заполнено.';
         }
 
+        // Проверка по самописным правилам
         if (array_key_exists($key, $rules)) {
             $rule = $rules[$key];
             $errors[$key] = $rule($value);
@@ -65,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         $user['user_ip'] = $userIP;
 
-        $sql = "INSERT INTO user (date_reg, user_name, telephone, email, user_password, user_ip) VALUES (NOW(), ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO user (date_reg, user_name, email, telephone, user_password, user_ip) VALUES (NOW(), ?, ?, ?, ?, ?)";
 
         $stmt = db_get_prepare_stmt($con, $sql, $user);
         $res = mysqli_stmt_execute($stmt);
@@ -77,10 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo "Номер ошибки" . mysqli_errno($con);
 
 
-            $page_body = include_template(
-                'reg.php',
-                []
-            );
+            $page_body = include_template('reg.php');
         }
 
         mysqli_stmt_close($stmt);

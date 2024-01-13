@@ -30,13 +30,15 @@
         <h2 class="title">Регистрация</h2>
 
         <!-- Форма регистрации -->
-        <form class="reg__form" action="#" method="post">
+        <form class="reg__form" action="#" method="post" autocomplete="on">
+            
+
             <div class="reg__form-input-wrapper">
                 <label for="user_name">Имя:</label>
-                <input class="reg__form-input" type="text" id="user_name" name="user_name" placeholder="Даниил" required>
+                <input class="reg__form-input" type="text" id="user_name" name="user_name" placeholder="Даниил" value="<?= $_POST['user_name']; ?>"> 
 
-                <?php $hidden = empty($errors['user_name']) ? 'hidden' : ''; ?>
-                <span class="reg__form-input-wrapper-error <?= $hidden; ?>">
+                <?php $classHidden = isset($errors['user_name']) ? 'hidden' : ''; ?>
+                <span class="reg__form-input-wrapper-error <?= $classHidden; ?>">
                     <?= $errors['user_name']; ?>
                 </span>
             </div>
