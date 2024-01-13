@@ -78,7 +78,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $res = mysqli_stmt_execute($stmt);
 
         if ($res) {
-            echo "Запись успешно добавлена в базу данных.";
+            // echo "Запись успешно добавлена в базу данных.";
+
+            header("Location: /auth.php");
+            exit;
         } else {
             echo "Ошибка при выполнении запроса:" . mysqli_error($con);
             echo "Номер ошибки" . mysqli_errno($con);
