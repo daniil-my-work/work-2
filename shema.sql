@@ -5,6 +5,7 @@ USE mnogoruba;
 CREATE TABLE `user` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `date_reg` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    `name` VARCHAR(255),
     `telephone` VARCHAR(20) UNIQUE,
     `email` VARCHAR(255) UNIQUE,
     `password` VARCHAR(255),

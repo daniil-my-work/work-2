@@ -32,11 +32,12 @@
         <!-- Форма регистрации -->
         <form class="reg__form" action="#" method="post">
             <div class="reg__form-input-wrapper">
-                <label for="name">Имя:</label>
-                <input class="reg__form-input" type="text" id="name" name="name" placeholder="Даниил" required>
+                <label for="user_name">Имя:</label>
+                <input class="reg__form-input" type="text" id="user_name" name="user_name" placeholder="Даниил" required>
 
-                <span class="reg__form-input-wrapper-error hidden">
-                    Сообщение с ошибкой
+                <?php $hidden = empty($errors['user_name']) ? 'hidden' : ''; ?>
+                <span class="reg__form-input-wrapper-error <?= $hidden; ?>">
+                    <?= $errors['user_name']; ?>
                 </span>
             </div>
 
@@ -51,7 +52,7 @@
 
             <div class="reg__form-input-wrapper">
                 <label for="phone">Номер телефона:</label>
-                <input class="reg__form-input reg__form-input--tel" type="tel" id="phone" name="phone" pattern="[0-9]{10}" placeholder="+7(980) 705 70 02" required>
+                <input class="reg__form-input reg__form-input--tel" type="tel" id="phone" name="phone" placeholder="+7(980) 705 70 02" required>
 
                 <span class="reg__form-input-wrapper-error hidden">
                     Сообщение с ошибкой: Введите номер телефона без пробелов и символов
@@ -59,15 +60,15 @@
             </div>
 
             <div class="reg__form-input-wrapper">
-                <label for="password">Пароль:</label>
-                <input class="reg__form-input" type="password" id="password" name="password" placeholder="***" required>
+                <label for="user_password">Пароль:</label>
+                <input class="reg__form-input" type="password" id="user_password" name="user_password" placeholder="***" required>
 
                 <span class="reg__form-input-wrapper-error hidden">
                     Сообщение с ошибкой: Пароль не соответствует требованиям
                 </span>
             </div>
 
-            <div class="reg__form-address-wrapper">
+            <!-- <div class="reg__form-address-wrapper">
                 <label for="address">Адрес:</label>
 
                 <input class="reg__form-input reg__form-input--adress" type="text" id="address" name="address" pattern="[0-9]{10}" placeholder="ул. Антонова ... " required>
@@ -81,7 +82,7 @@
                         1
                     </li>
                 </ul>
-            </div>
+            </div> -->
 
 
             <button class="button--basic reg__form-button" type="submit">
