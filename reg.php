@@ -2,12 +2,19 @@
 
 require_once('./functions/helpers.php');
 require_once('./functions/init.php');
+require_once('./functions/validators.php');
 
 
-$page_body = include_template(
-    'reg.php',
-    []
-);
+$page_body = include_template('reg.php');
+
+
+// Описание полей для проверки
+$fieldDescriptions = [
+    'user_name' => 'Имя',
+    'email' => 'E-mail',
+    'phone' => 'Телефон',
+    'user_password' => 'Пароль',
+];
 
 // Проверка на отправку формы
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -17,32 +24,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Валидация полей
     $rules = [
-        'user_name' => function ($value) {
-            return $value == 'Da' ? 'Имя занято' : '';
-        },
         'email' => function ($value) {
-            return $value;
+            return validate_email($value);
         },
         'phone' => function ($value) {
-            return $value;
+            return validate_phone($value);
         },
         'user_password' => function ($value) {
-            return $value;
-        },
+            return validate_length($value, 8, 12);
+        }
     ];
 
     // Получает данные из формы
-    $user = filter_input_array(INPUT_POST, ['user_name' => FILTER_DEFAULT, 'email' => FILTER_VALIDATE_EMAIL, 'phone' => FILTER_DEFAULT, 'user_password' => FILTER_DEFAULT], true);
+    $user = filter_input_array(INPUT_POST, ['user_name' => FILTER_DEFAULT, 'email' => FILTER_DEFAULT, 'phone' => FILTER_DEFAULT, 'user_password' => FILTER_DEFAULT], true);
 
 
     foreach ($user as $key => $value) {
         // Проверка на незаполненное поле
         if (empty($value)) {
-            $errors[$key] = 'Поле' . $user[$key] . 'должно быть заполнено.';
+            $field = $fieldDescriptions[$key] ?? '';
+
+            $errors[$key] = 'Поле ' . $field . ' должно быть заполнено.';
         }
 
         // Проверка по самописным правилам
-        if (array_key_exists($key, $rules)) {
+        if (isset($rules[$key])) {
             $rule = $rules[$key];
             $errors[$key] = $rule($value);
         }
@@ -76,7 +82,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             echo "Ошибка при выполнении запроса:" . mysqli_error($con);
             echo "Номер ошибки" . mysqli_errno($con);
-
 
             $page_body = include_template('reg.php');
         }

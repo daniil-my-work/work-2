@@ -1,27 +1,14 @@
 <?php
 // Проверяет категорию
-function validate_category($id, $allowed_list)
-{
-    if (!in_array($id, $allowed_list)) {
-        return "Указана несуществующая категория";
-    }
-}
+// function validate_category($id, $allowed_list)
+// {
+//     if (!in_array($id, $allowed_list)) {
+//         return "Указана несуществующая категория";
+//     }
+// }
 
-// Проверяет число
-function validate_number($num)
-{
-    if (!empty($num)) {
-        $num *= 1;
 
-        if (is_int($num) && $num > 0) {
-            return NULL;
-        }
-
-        return "Содержимое поля должно быть целым числом больше ноля";
-    }
-}
-
-// Проверяет email
+// Проверяет E-mail
 function validate_email($email)
 {
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -29,13 +16,33 @@ function validate_email($email)
     }
 };
 
-// Проверяет что содержимое укладывается в допустимый диапазон
+// Проверяет Номер телефона
+function validate_phone($phone)
+{
+    // Удаление всех символов, кроме цифр
+    $phone = preg_replace("/[^0-9]/", "", $phone);
+
+    // Проверка, что телефон состоит из 11 цифр
+    if (strlen($phone) !== 11) {
+        return 'Неверная длина номера телефона';
+    }
+
+    // Проверка, что телефон начинается с кода страны "+7"
+    if (substr($phone, 0, 2) !== '79') {
+        return 'Телефон должен начинаться с кода страны +7';
+    }
+
+    // Все проверки пройдены, номер телефона валиден
+    return '';
+}
+
+// Проверяет длину
 function validate_length($value, $min, $max)
 {
     if ($value) {
         $len = strlen($value);
         if ($len < $min or $len > $max) {
-            return "Значение должно быть от $min до $max символов";
+            return "Пароль должен быть от $min до $max символов";
         }
     }
 }

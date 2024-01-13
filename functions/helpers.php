@@ -76,16 +76,3 @@ function include_template($name, array $data = [])
 
     return $result;
 }
-
-
-// Возвращет значение из массива $_POST
-function getPostValue($array, $fieldName)
-{
-    $result = '';
-
-    if (isset($array[$fieldName])) {
-        $result = $array[$fieldName];
-    }
-
-    return $result;
-}
