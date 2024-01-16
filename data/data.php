@@ -18,3 +18,7 @@ $fieldDescriptions = [
     'phone' => 'Телефон',
     'user_password' => 'Пароль',
 ];
+
+$isAuth = false;
+$userName = '';
+

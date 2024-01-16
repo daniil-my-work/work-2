@@ -66,9 +66,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Проверка совпадения пароля
         $isAuth = password_verify($user['user_password'], $userInfo['user_password']);
-        // echo $isAuth;
 
         if ($isAuth) {
+            // Старт сессии
+            session_start();
+
             header("Location: /index.php");
             exit;
         };
