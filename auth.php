@@ -3,6 +3,18 @@
 require_once('./functions/helpers.php');
 
 
+$page_body = include_template(
+    'auth.php',
+    []
+);
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    
+}
+
+
+
 $page_head = include_template(
     'head.php',
     [
@@ -12,11 +24,6 @@ $page_head = include_template(
 
 $page_header = include_template(
     'header.php',
-    []
-);
-
-$page_body = include_template(
-    'auth.php',
     []
 );
 

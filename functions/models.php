@@ -1,6 +1,39 @@
 <?php
 
 /**
+ * Формирует SQL-запрос для добавления записи в таблицу user
+ * @return string SQL-запрос
+ */
+function get_query_create_user()
+{
+    return "INSERT INTO user (date_reg, user_name, email, telephone, user_password, user_ip, user_role) 
+    VALUES (NOW(), ?, ?, ?, ?, ?, ?)";
+}
+
+/**
+ * Формирует SQL-запрос для показа спика лотов
+ * @return string SQL-запрос
+ */
+function get_query_userEmail()
+{
+    return "SELECT user.email, user.user_password FROM user WHERE user.email";
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+// ============ Примеры ============
+
+/**
  * Формирует SQL-запрос для показа спика лотов
  * @return string SQL-запрос
  */
@@ -35,15 +68,7 @@ function get_query_create_lot($user_id)
      VALUES (?, ?, ?, ?, ?, ?, ?, $user_id)";
 }
 
-/**
- * Формирует SQL-запрос для добавления записи в таблицу users
- * @return string SQL-запрос
- */
-function get_query_create_user()
-{
-    return "INSERT INTO users (`date_registration`, `email`, `user_password`, `user_name`, `contacts`) 
-     VALUES (NOW(), ?, ?, ?, ?)";
-}
+
 
 /**
  * Формирует SQL-запрос для добавления записи в таблицу bets
@@ -87,10 +112,11 @@ function get_query_bets($user_id)
  *  пользователя из базы данных
  * или описание последней ошибки подключения
  */
-function get_bets ($con, $id) {
+function get_bets($con, $id)
+{
     if (!$con) {
-    $error = mysqli_connect_error();
-    return $error;
+        $error = mysqli_connect_error();
+        return $error;
     } else {
         $sql = "SELECT DATE_FORMAT(bets.date_bet, '%d.%m.%y %H:%i') AS date_bet, bets.price_bet, lots.title, lots.lot_description, lots.img, lots.date_finish, lots.id, users.user_name, users.contacts, categories.name_category
         FROM bets

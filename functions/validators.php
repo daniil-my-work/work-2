@@ -1,12 +1,4 @@
 <?php
-// Проверяет категорию
-// function validate_category($id, $allowed_list)
-// {
-//     if (!in_array($id, $allowed_list)) {
-//         return "Указана несуществующая категория";
-//     }
-// }
-
 
 // Проверяет E-mail
 function validate_email($email)

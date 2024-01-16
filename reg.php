@@ -3,6 +3,7 @@
 require_once('./data/data.php');
 require_once('./functions/helpers.php');
 require_once('./functions/init.php');
+require_once('./functions/models.php.php');
 require_once('./functions/validators.php');
 
 
@@ -76,8 +77,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $user['user_ip'] = $userIP;
 
-        $sql = "INSERT INTO user (date_reg, user_name, email, telephone, user_password, user_ip, user_role) VALUES (NOW(), ?, ?, ?, ?, ?, ?)";
-
+        // Формирует sql запрос для добавления записи в таблицу User
+        $sql = get_query_create_user();
         $user['user_role'] = 'client';
 
         // Устанавливает роль: Админ
