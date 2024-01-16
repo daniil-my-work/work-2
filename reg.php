@@ -1,5 +1,6 @@
 <?php
 
+require_once('./data/data.php');
 require_once('./functions/helpers.php');
 require_once('./functions/init.php');
 require_once('./functions/validators.php');
@@ -15,6 +16,7 @@ $fieldDescriptions = [
     'phone' => 'Телефон',
     'user_password' => 'Пароль',
 ];
+
 
 // Проверка на отправку формы
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -38,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Получает данные из формы
     $user = filter_input_array(INPUT_POST, ['user_name' => FILTER_DEFAULT, 'email' => FILTER_DEFAULT, 'phone' => FILTER_DEFAULT, 'user_password' => FILTER_DEFAULT], true);
 
-
+    // Заполняет массив с ошибками
     foreach ($user as $key => $value) {
         // Проверка на незаполненное поле
         if (empty($value)) {
@@ -55,7 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $errors = array_filter($errors);
-
+    
+    // Проверяет на наличие ошибок
     if (!empty($errors)) {
         $page_body = include_template(
             'reg.php',
@@ -70,9 +73,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $userIP = $_SERVER['REMOTE_ADDR'];
         }
+
         $user['user_ip'] = $userIP;
 
-        $sql = "INSERT INTO user (date_reg, user_name, email, telephone, user_password, user_ip) VALUES (NOW(), ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO user (date_reg, user_name, email, telephone, user_password, user_ip, user_role) VALUES (NOW(), ?, ?, ?, ?, ?, ?)";
+
+        $user['user_role'] = 'client';
+
+        // Устанавливает роль: Админ
+        if (in_array($user['phone'], $adminTelephone)) {
+            $user['user_role'] = 'admin';
+        }
+        
+        // Устанавливает роль: Собственник
+        if (in_array($user['phone'], $ownerTelephone)) {
+            $user['user_role'] = 'owner';
+        }
+
+        // Хеширует пароль
+        $user['user_password'] = password_hash($user['user_password'], PASSWORD_BCRYPT);
 
         $stmt = db_get_prepare_stmt($con, $sql, $user);
         $res = mysqli_stmt_execute($stmt);
