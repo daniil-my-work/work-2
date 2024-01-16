@@ -33,7 +33,7 @@
         <form class="reg__form" action="#" method="post">
             <div class="reg__form-input-wrapper">
                 <label for="email">Почта:</label>
-                <input class="reg__form-input" type="email" id="email" name="email" placeholder="test@yandex.ru" required>
+                <input class="reg__form-input" type="email" id="user_email" name="user_email" placeholder="test@yandex.ru" required>
 
                 <span class="reg__form-input-wrapper-error hidden">
                     Сообщение с ошибкой
@@ -42,7 +42,7 @@
 
             <div class="reg__form-input-wrapper">
                 <label for="password">Пароль:</label>
-                <input class="reg__form-input" type="password" id="password" name="password" placeholder="***" required>
+                <input class="reg__form-input" type="password" id="user_password" name="user_password" placeholder="***" required>
 
                 <span class="reg__form-input-wrapper-error hidden">
                     Сообщение с ошибкой: Пароль не соответствует требованиям

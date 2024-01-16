@@ -3,20 +3,11 @@
 require_once('./data/data.php');
 require_once('./functions/helpers.php');
 require_once('./functions/init.php');
-require_once('./functions/models.php.php');
+require_once('./functions/models.php');
 require_once('./functions/validators.php');
 
 
 $page_body = include_template('reg.php');
-
-
-// Описание полей для проверки
-$fieldDescriptions = [
-    'user_name' => 'Имя',
-    'email' => 'E-mail',
-    'phone' => 'Телефон',
-    'user_password' => 'Пароль',
-];
 
 
 // Проверка на отправку формы
@@ -44,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Заполняет массив с ошибками
     foreach ($user as $key => $value) {
         // Проверка на незаполненное поле
-        if (empty($value)) {
+        if (in_array($key, $required) && empty($value)) {
             $field = $fieldDescriptions[$key] ?? '';
 
             $errors[$key] = 'Поле ' . $field . ' должно быть заполнено.';

@@ -14,9 +14,9 @@ function get_query_create_user()
  * Формирует SQL-запрос для показа спика лотов
  * @return string SQL-запрос
  */
-function get_query_userEmail()
+function get_query_userAuth($user_email)
 {
-    return "SELECT user.email, user.user_password FROM user WHERE user.email";
+    return "SELECT user.email, user.user_password FROM user WHERE user.email = '$user_email'";
 };
 
 
