@@ -61,18 +61,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $userInfo = mysqli_query($con, $sql);
 
         if ($userInfo) {
-            $userInfo = get_arrow($res);
+            $userInfo = get_arrow($userInfo);
         }
 
         // Проверка совпадения пароля
         $isAuth = password_verify($user['user_password'], $userInfo['user_password']);
-        echo $isAuth;
+        // echo $isAuth;
 
-        // if ($isAuth) {
-        //     header("Location" . '/index.php');
-        // };
-
-
+        if ($isAuth) {
+            header("Location: /index.php");
+            exit;
+        };
     }
 }
 
