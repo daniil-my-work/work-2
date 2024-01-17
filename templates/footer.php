@@ -1,4 +1,3 @@
-<!-- Футер -->
 <footer class="footer">
     <div class="footer__wrapper">
         <header class="footer__top">

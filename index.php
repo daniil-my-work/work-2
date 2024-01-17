@@ -1,6 +1,7 @@
 <?php
 
 require_once('./functions/helpers.php');
+require_once('./functions/init.php');
 
 
 $page_head = include_template(
@@ -13,6 +14,7 @@ $page_head = include_template(
 $page_header = include_template(
     'header.php',
     [
+        'is_auth' => $is_auth,
     ]
 );
 

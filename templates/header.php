@@ -1,4 +1,3 @@
-<!-- Хедер -->
 <header class="header">
     <div class="header__wrapper">
         <a class="header__logo-link" href="./index.php">
@@ -21,9 +20,19 @@
                 </li>
 
                 <li class="header__nav-item">
-                    <a class="header__nav-item-link" href="./reg.php">
-                        Регистрация
-                    </a>
+                    <?php if (!$is_auth) : ?>
+                        <a class="header__nav-item-link" href="./reg.php">
+                            Регистрация
+                        </a>
+
+                        <a class="header__nav-item-link" href="./auth.php">
+                            Войти
+                        </a>
+                    <?php else : ?>
+                        <a class="header__nav-item-link" href="./logout.php">
+                            Выйти
+                        </a>
+                    <?php endif; ?>
                 </li>
 
                 <li class="header__nav-item">
