@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $errors = array_filter($errors);
-    
+
     // Проверяет на наличие ошибок
     if (!empty($errors)) {
         $page_body = include_template(
@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (in_array($user['phone'], $adminTelephone)) {
             $user['user_role'] = 'admin';
         }
-        
+
         // Устанавливает роль: Собственник
         if (in_array($user['phone'], $ownerTelephone)) {
             $user['user_role'] = 'owner';
@@ -114,9 +114,7 @@ $page_head = include_template(
 
 $page_header = include_template(
     'header.php',
-    [
-        'is_auth' => $is_auth,
-    ]
+    []
 );
 
 $page_footer = include_template(

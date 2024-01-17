@@ -20,7 +20,7 @@
                 </li>
 
                 <li class="header__nav-item">
-                    <?php if (!$is_auth) : ?>
+                    <?php if (!$isAuth) : ?>
                         <a class="header__nav-item-link" href="./reg.php">
                             Регистрация
                         </a>

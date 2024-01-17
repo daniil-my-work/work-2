@@ -8,4 +8,4 @@ mysqli_set_charset($con, 'utf8');
 session_start();
 
 // Флаг авторизации
-$is_auth = false;
+$isAuth = isset($_SESSION['user_email']);

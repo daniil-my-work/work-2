@@ -7,8 +7,6 @@ require_once('./functions/models.php');
 require_once('./functions/validators.php');
 
 
-echo $is_auth;
-
 $page_body = include_template(
     'auth.php',
     []
@@ -75,9 +73,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $userInfo = get_arrow($userInfo);
 
             // Проверка совпадения пароля
-            $isAuth = password_verify($user['user_password'], $userInfo['user_password']);
+            $isValidPassword = password_verify($user['user_password'], $userInfo['user_password']);
 
-            if (!$isAuth) {
+            if (!$isValidPassword) {
                 $errors['user_password'] = 'Вы ввели неправильный пароль';
 
                 $page_body = include_template(
@@ -88,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 );
             } else {
                 // Пользователь авторизован
-                $is_auth = true;
+                // $isAuth = true;
 
                 // Добавление данных в сессию
                 $_SESSION['user_id'] = $userInfo['id'];
@@ -113,7 +111,6 @@ $page_head = include_template(
 $page_header = include_template(
     'header.php',
     [
-        'is_auth' => $is_auth,
     ]
 );
 
