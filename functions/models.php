@@ -16,7 +16,7 @@ function get_query_create_user()
  */
 function get_query_userAuth($user_email)
 {
-    return "SELECT user.email, user.user_password FROM user WHERE user.email = '$user_email'";
+    return "SELECT user.id, user.user_name, user.email, user.user_password FROM user WHERE user.email = '$user_email'";
 };
 
 

@@ -1,7 +1,13 @@
 <?php
 
 require_once('./functions/helpers.php');
+require_once('./functions/init.php');
 
+
+if (!isset($_SESSION['user_email'])) {
+    header("Location: ./auth.php");
+    exit;
+}
 
 $page_head = include_template(
     'head.php',
@@ -34,5 +40,6 @@ $layout_content = include_template(
         'footer' => $page_footer,
     ]
 );
+
 
 print($layout_content);

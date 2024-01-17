@@ -7,6 +7,8 @@ require_once('./functions/models.php');
 require_once('./functions/validators.php');
 
 
+echo $_SESSION['user_email'];
+
 $page_body = include_template(
     'auth.php',
     []
@@ -60,20 +62,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $userInfo = mysqli_query($con, $sql);
 
-        if ($userInfo) {
+        if (!$userInfo) {
+            $errors['email'] = 'Вы ввели неправильный email';
+
+            $page_body = include_template(
+                'auth.php',
+                [
+                    'errors' => $errors,
+                ]
+            );
+        } else {
             $userInfo = get_arrow($userInfo);
+
+            // Проверка совпадения пароля
+            $isAuth = password_verify($user['user_password'], $userInfo['user_password']);
+
+            if ($isAuth) {
+                // Добавление данных в сессию
+                $_SESSION['user_id'] = $userInfo['id'];
+                $_SESSION['user_name'] = $userInfo['user_name'];
+                $_SESSION['user_email'] = $userInfo['email'];
+
+                header("Location: /index.php");
+                exit;
+            };
         }
-
-        // Проверка совпадения пароля
-        $isAuth = password_verify($user['user_password'], $userInfo['user_password']);
-
-        if ($isAuth) {
-            // Старт сессии
-            session_start();
-
-            header("Location: /index.php");
-            exit;
-        };
     }
 }
 

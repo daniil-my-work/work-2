@@ -19,6 +19,5 @@ $fieldDescriptions = [
     'user_password' => 'Пароль',
 ];
 
-$isAuth = false;
-$userName = '';
+// $isAuth = false;
 
