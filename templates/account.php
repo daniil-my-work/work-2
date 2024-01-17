@@ -6,7 +6,7 @@
             <img class="account__info-img" src="" alt="">
 
             <h3 class="account__info-name">
-                Даниил
+                <?= $user_name; ?>
             </h3>
 
             <!-- Таблица с данными -->

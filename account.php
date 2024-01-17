@@ -25,7 +25,9 @@ $page_header = include_template(
 
 $page_body = include_template(
     'account.php',
-    []
+    [
+        'user_name' => $_SESSION['user_name'],
+    ]
 );
 
 $page_footer = include_template(

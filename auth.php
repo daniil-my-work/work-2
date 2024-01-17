@@ -85,9 +85,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ]
                 );
             } else {
-                // Пользователь авторизован
-                // $isAuth = true;
-
                 // Добавление данных в сессию
                 $_SESSION['user_id'] = $userInfo['id'];
                 $_SESSION['user_name'] = $userInfo['user_name'];
