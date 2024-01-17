@@ -111,6 +111,7 @@ $page_head = include_template(
 $page_header = include_template(
     'header.php',
     [
+        'isAuth' => $isAuth,
     ]
 );
 
