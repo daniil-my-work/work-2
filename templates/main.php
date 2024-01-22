@@ -30,7 +30,7 @@
             </h2>
 
             <ul class="menu__list">
-                <li class="menu__item">
+                <li class="menu__item" data-set="">
                     <img src="https://102922.selcdn.ru/nomenclature_images_test/1926609/7a849eb1-7100-4d77-bde2-d6bac3002d46.jpg" alt="" class="menu__item-img">
 
                     <div class="menu__item-content">
@@ -49,17 +49,19 @@
                             </p>
 
                             <div class="menu__item-info-order">
-                                <button class="menu__item-button hidden" type="button">
+                                <button class="menu__item-button" type="button">
                                     В корзину
                                 </button>
 
-                                <div class="basket__item-counter">
+                                <div class="basket__item-counter hidden">
+                                    <input class="basket__item_input" type="hidden" name="productId" value="">
+
                                     <span class="basket__item-action basket__item-action--minus">
                                         –
                                     </span>
 
                                     <p class="basket__item-count">
-                                        10
+                                        1
                                     </p>
 
                                     <span class="basket__item-action basket__item-action--plus">
