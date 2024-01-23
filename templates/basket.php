@@ -22,18 +22,26 @@
                     </p>
                 </div>
 
-                <div class="basket__item-counter">
-                    <span class="basket__item-action basket__item-action--minus">
-                        –
-                    </span>
+                <div class="product-item__counter">
+                    <div class="product-item__counter-number-wrapper hidden">
+                        <input class="product-item__counter-input" type="hidden" name="productId" value="">
 
-                    <p class="basket__item-count">
-                        10
-                    </p>
+                        <span class="product-item__counter-action product-item__counter-action--minus">
+                            –
+                        </span>
 
-                    <span class="basket__item-action basket__item-action--plus">
-                        +
-                    </span>
+                        <p class="product-item__counter-number">
+                            1
+                        </p>
+
+                        <span class="product-item__counter-action product-item__counter-action--plus">
+                            +
+                        </span>
+                    </div>
+
+                    <button class="product-item__counter-button" type="button">
+                        Удалить из корзины
+                    </button>
                 </div>
             </li>
 
@@ -50,18 +58,26 @@
                     </p>
                 </div>
 
-                <div class="basket__item-counter">
-                    <span class="basket__item-action basket__item-action--minus">
-                        –
-                    </span>
+                <div class="product-item__counter">
+                    <div class="product-item__counter-number-wrapper hidden">
+                        <input class="product-item__counter-input" type="hidden" name="productId" value="">
 
-                    <p class="basket__item-count">
-                        10
-                    </p>
+                        <span class="product-item__counter-action product-item__counter-action--minus">
+                            –
+                        </span>
 
-                    <span class="basket__item-action basket__item-action--plus">
-                        +
-                    </span>
+                        <p class="product-item__counter-number">
+                            1
+                        </p>
+
+                        <span class="product-item__counter-action product-item__counter-action--plus">
+                            +
+                        </span>
+                    </div>
+
+                    <button class="product-item__counter-button" type="button">
+                        Удалить из корзины
+                    </button>
                 </div>
             </li>
 
@@ -78,21 +94,30 @@
                     </p>
                 </div>
 
-                <div class="basket__item-counter">
-                    <span class="basket__item-action basket__item-action--minus">
-                        –
-                    </span>
+                <div class="product-item__counter">
+                    <div class="product-item__counter-number-wrapper hidden">
+                        <input class="product-item__counter-input" type="hidden" name="productId" value="">
 
-                    <p class="basket__item-count">
-                        10
-                    </p>
+                        <span class="product-item__counter-action product-item__counter-action--minus">
+                            –
+                        </span>
 
-                    <span class="basket__item-action basket__item-action--plus">
-                        +
-                    </span>
+                        <p class="product-item__counter-number">
+                            1
+                        </p>
+
+                        <span class="product-item__counter-action product-item__counter-action--plus">
+                            +
+                        </span>
+                    </div>
+
+                    <button class="product-item__counter-button" type="button">
+                        Удалить из корзины
+                    </button>
                 </div>
             </li>
         </ul>
+
 
         <div class="basket__order">
             <p class="basket__order-text">

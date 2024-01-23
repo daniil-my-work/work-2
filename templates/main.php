@@ -50,23 +50,23 @@
                                 410
                             </p>
 
-                            <div class="menu__item-info-order">
-                                <button class="menu__item-button" type="button">
+                            <div class="product-item__counter">
+                                <button class="product-item__counter-button" type="button">
                                     В корзину
                                 </button>
 
-                                <div class="basket__item-counter hidden">
-                                    <input class="basket__item_input" type="hidden" name="productId" value="">
+                                <div class="product-item__counter-number-wrapper hidden">
+                                    <input class="product-item__counter-input" type="hidden" name="productId" value="0">
 
-                                    <span class="basket__item-action basket__item-action--minus">
+                                    <span class="product-item__counter-action product-item__counter-action--minus">
                                         –
                                     </span>
 
-                                    <p class="basket__item-count">
-                                        1
+                                    <p class="product-item__counter-number">
+                                        0
                                     </p>
 
-                                    <span class="basket__item-action basket__item-action--plus">
+                                    <span class="product-item__counter-action product-item__counter-action--plus">
                                         +
                                     </span>
                                 </div>
@@ -93,23 +93,23 @@
                                 410
                             </p>
 
-                            <div class="menu__item-info-order">
-                                <button class="menu__item-button" type="button">
+                            <div class="product-item__counter">
+                                <button class="product-item__counter-button" type="button">
                                     В корзину
                                 </button>
 
-                                <div class="basket__item-counter hidden">
-                                    <input class="basket__item_input" type="hidden" name="productId" value="">
+                                <div class="product-item__counter-number-wrapper hidden">
+                                    <input class="product-item__counter-input" type="hidden" name="productId" value="0">
 
-                                    <span class="basket__item-action basket__item-action--minus">
+                                    <span class="product-item__counter-action product-item__counter-action--minus">
                                         –
                                     </span>
 
-                                    <p class="basket__item-count">
-                                        1
+                                    <p class="product-item__counter-number">
+                                        0
                                     </p>
 
-                                    <span class="basket__item-action basket__item-action--plus">
+                                    <span class="product-item__counter-action product-item__counter-action--plus">
                                         +
                                     </span>
                                 </div>
@@ -136,23 +136,23 @@
                                 410
                             </p>
 
-                            <div class="menu__item-info-order">
-                                <button class="menu__item-button" type="button">
+                            <div class="product-item__counter">
+                                <button class="product-item__counter-button" type="button">
                                     В корзину
                                 </button>
 
-                                <div class="basket__item-counter hidden">
-                                    <input class="basket__item_input" type="hidden" name="productId" value="">
+                                <div class="product-item__counter-number-wrapper hidden">
+                                    <input class="product-item__counter-input" type="hidden" name="productId" value="0">
 
-                                    <span class="basket__item-action basket__item-action--minus">
+                                    <span class="product-item__counter-action product-item__counter-action--minus">
                                         –
                                     </span>
 
-                                    <p class="basket__item-count">
-                                        1
+                                    <p class="product-item__counter-number">
+                                        0
                                     </p>
 
-                                    <span class="basket__item-action basket__item-action--plus">
+                                    <span class="product-item__counter-action product-item__counter-action--plus">
                                         +
                                     </span>
                                 </div>

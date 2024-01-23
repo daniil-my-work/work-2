@@ -290,15 +290,6 @@ textarea {
     margin: 0;
 }
 
-.menu__item-button {
-    border: none;
-    background-color: #ffd600;
-    padding: 10px 20px;
-    font-weight: 700;
-    color: #000;
-    border-radius: 25px;
-}
-
 /* Навигация */
 .menu__nav {
     display: flex;
@@ -797,61 +788,6 @@ textarea {
     margin: 0;
 }
 
-.basket__item-counter {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.basket__item-counter::before {
-    position: absolute;
-    width: 100%;
-    height: 24px;
-    content: '';
-    top: 50%;
-    left: 0;
-    border-radius: 10px;
-    transform: translateY(-50%);
-    background-color: #f3f3f3;
-}
-
-.basket__item-count {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 36px;
-    height: 36px;
-    margin: 0;
-    font-size: 16px;
-    line-height: 16px;
-    font-weight: 600;
-    background-color: #ffd600;
-    border-radius: 50%;
-    z-index: 1;
-}
-
-.basket__item-action {
-    position: relative;
-    display: block;
-    padding: 0 7px;
-    font-size: 16px;
-    z-index: 1;
-}
-
-.basket__item-action:active {
-    background-color: #999;
-}
-
-.basket__item-action--minus {
-    padding-left: 10px;
-    border-radius: 10px 0 0 10px;
-}
-
-.basket__item-action--plus {
-    padding-right: 10px;
-    border-radius: 0 10px 10px 0;
-}
-
 .basket__order {
     display: flex;
     align-items: center;
@@ -891,4 +827,78 @@ textarea {
 
 .page__order .basket__icon {
     margin-bottom: 6px;
+}
+
+
+
+
+/* Компонент счетчик числа блюд */
+.product-item__counter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.product-item__counter-button {
+    border: none;
+    background-color: #ffd600;
+    padding: 10px 20px;
+    font-weight: 700;
+    color: #000;
+    border-radius: 25px;
+}
+
+.product-item__counter-number-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.product-item__counter-number-wrapper::before {
+    position: absolute;
+    width: 100%;
+    height: 24px;
+    content: '';
+    top: 50%;
+    left: 0;
+    border-radius: 10px;
+    transform: translateY(-50%);
+    background-color: #f3f3f3;
+}
+
+.product-item__counter-number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 36px;
+    height: 36px;
+    margin: 0;
+    font-size: 16px;
+    line-height: 16px;
+    font-weight: 600;
+    background-color: #ffd600;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.product-item__counter-action {
+    position: relative;
+    display: block;
+    padding: 0 7px;
+    font-size: 16px;
+    z-index: 1;
+}
+
+.product-item__counter-action:active {
+    background-color: #999;
+}
+
+.product-item__counter-action--minus {
+    padding-left: 10px;
+    border-radius: 10px 0 0 10px;
+}
+
+.product-item__counter-action--plus {
+    padding-right: 10px;
+    border-radius: 0 10px 10px 0;
 }
