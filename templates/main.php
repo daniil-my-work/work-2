@@ -29,6 +29,8 @@
                 Популярные блюда
             </h2>
 
+            
+            <!-- Меню -->
             <ul class="menu__list">
                 <li class="menu__item" data-set="">
                     <img src="https://102922.selcdn.ru/nomenclature_images_test/1926609/7a849eb1-7100-4d77-bde2-d6bac3002d46.jpg" alt="" class="menu__item-img">
@@ -72,7 +74,7 @@
                         </div>
                     </div>
                 </li>
-                
+
                 <li class="menu__item" data-set="">
                     <img src="https://102922.selcdn.ru/nomenclature_images_test/1926609/7a849eb1-7100-4d77-bde2-d6bac3002d46.jpg" alt="" class="menu__item-img">
 
@@ -159,6 +161,7 @@
                     </div>
                 </li>
             </ul>
+
 
             <nav class="menu__nav">
                 <button class="menu__nav-button menu__nav-button--prev">
