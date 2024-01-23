@@ -10,20 +10,26 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-
-function decrementNumber(itemNode, inputNode) {
+// Уменьшает кол-во блюд
+function decrementNumber(itemNode, inputNode, button, counter) {
     const value = Number(itemNode.textContent);
     const newValue = Number(itemNode.textContent) - 1;
 
-    if (value < 1) {
-        itemNode.textContent = 0;
-        inputNode.value = 0;
-    }
+    if (value <= 1) {
+        button.classList.remove('hidden');
+        counter.classList.add('hidden');
 
-    itemNode.textContent = newValue;
-    inputNode.value = newValue;
+        itemNode.textContent = 1;
+        inputNode.value = 1;
+
+        itemCounter.removeEventListener('click', handleCounterClick);
+    } else {
+        itemNode.textContent = newValue;
+        inputNode.value = newValue;
+    }
 }
 
+// Прибавляет кол-во блюд
 function incrementNumber(itemNode, inputNode) {
     const newValue = Number(itemNode.textContent) + 1
     itemNode.textContent = newValue;
@@ -47,23 +53,14 @@ function handleCounterClick(evt) {
 
     const minusActionButton = target.classList.contains('basket__item-action--minus');
     if (minusActionButton) {
-        console.log('Минус');
+        // console.log('Минус');
 
-        decrementNumber(countNumberItem, counterInput);
-
-        if (Number(countNumberItem.textContent) < 1) {
-            console.log('dsds');
-
-            basketButton.classList.remove('hidden');
-            itemCounter.classList.add('hidden');
-
-            itemCounter.removeEventListener('click', handleCounterClick);
-        }
+        decrementNumber(countNumberItem, counterInput, basketButton, itemCounter);
     }
 
     const plusActionButton = target.classList.contains('basket__item-action--plus');
     if (plusActionButton) {
-        console.log('Плюс');
+        // console.log('Плюс');
 
         incrementNumber(countNumberItem, counterInput);
     }
@@ -83,12 +80,12 @@ mainList.addEventListener('click', (evt) => {
     const basketButton = target;
     const menuItem = target.closest('.menu__item');
     const itemCounter = menuItem.querySelector('.basket__item-counter');
-    const countNumberItem = menuItem.querySelector('.basket__item-count');
-    const counterInput = menuItem.querySelector('.basket__item_input');
+    const itemCounterNumber = menuItem.querySelector('.basket__item-count');
+    const itemCounterInput = menuItem.querySelector('.basket__item_input');
 
     basketButton.classList.add('hidden');
     itemCounter.classList.remove('hidden');
-    counterInput.value = Number(countNumberItem.textContent);
+    itemCounterInput.value = Number(itemCounterNumber.textContent);
 
     // Прибавляет / уменьшает кол-во блюд
     itemCounter.addEventListener('click', handleCounterClick);
