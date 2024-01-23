@@ -30,88 +30,81 @@ function incrementNumber(inputNode) {
     const newValue = inputNode.value + 1;
     inputNode.value = newValue;
 
-    return 
+    return
 }
 
 
 // Закидывает заказ в localStorage
-function setBasketItem(orderId, productId, number) {
+function setBasketItem(orderId, id, number) {
     // Получаем текущие данные из локального хранилища
     const storedData = localStorage.getItem(orderId);
     const cartData = storedData ? JSON.parse(storedData) : {};
 
     // Обновляем данные в объекте cartData
-    cartData[productId] = number;
+    cartData[id] = number;
 
     // Сохраняем обновленные данные в локальное хранилище
     localStorage.setItem(orderId, JSON.stringify(cartData));
 }
 
 
-// Устанавливает кол-во блюд
-function setProductNumber(evt) {
-    const element = evt.target;
+// Добавляет продукт в корзину
+function addProductInOrder(evt) {
+    // Номер заказа
+    const orderId = '123';
 
+    // Элементы
+    const element = evt.target;
+    const productItem = element.closest(".menu__item");
+    const productCounterWrapper = productItem.querySelector(".product-item__counter-number-wrapper");
+    const productCounterButton = productItem.querySelector(".product-item__counter-button");
+    const productCounterInput = productItem.querySelector(".product-item__counter-input");
+    const productCounterNumber = productItem.querySelector(".product-item__counter-number");
+    const counterValue = Number(productCounterInput.value);
+
+    // Айди продукта
+    const productDataId = productItem.dataset.productId;
+
+
+    // Уменьшает кол-во блюд
     const decButton = element.classList.contains('product-item__counter-action--minus');
     if (decButton) {
         console.log('Минус');
+        const newValue = counterValue - 1;
 
+        setBasketItem(orderId, productDataId, newValue);
+        productCounterInput.value = newValue;
+        productCounterNumber.textContent = newValue;
+
+        return;
     }
 
+    // Увеличивает кол-во блюд
     const plusButton = element.classList.contains('product-item__counter-action--plus');
     if (plusButton) {
         console.log('Плюс');
+        const newValue = counterValue + 1;
 
+        setBasketItem(orderId, productDataId, newValue);
+        productCounterInput.value = newValue;
+        productCounterNumber.textContent = newValue;
+
+        return;
     }
-}
-
-
-// Добавляет продукт в корзину
-function addProductInOrder(evt) {
-    const element = evt.target;
 
     const inBasket = element.classList.contains("product-item__counter-button");
     if (!inBasket) {
         return;
     }
 
-    const productItem = element.closest(".menu__item");
-    const productCounterWrapper = productItem.querySelector(".product-item__counter-number-wrapper");
-    const productCounterButton = productItem.querySelector(".product-item__counter-button");
-    const productCounterInput = productItem.querySelector(".product-item__counter-input");
-    const productCounterNumber = productItem.querySelector(".product-item__counter-number");
-
     // Показывает счетчик
     openCounter(productCounterButton, productCounterWrapper);
 
     // Устанавливает стартовое значение 1 для блюда
-    productCounterInput.value = 1;
-    productCounterNumber.textContent = productCounterInput.value;
-
-    const orderId = '123';
-    const productDataId = productItem.dataset.productId;
-    setBasketItem(orderId, productDataId, productCounterInput.value);
-
-    // Устанавливает кол-во блюд
-    productCounterWrapper.addEventListener('click', setProductNumber);
-
-
-    // const basketButton = target;
-    // const menuItem = target.closest(".menu__item");
-    // const itemCounter = menuItem.querySelector(".basket__item-counter");
-    // const itemCounterInput = menuItem.querySelector(".basket__item_input");
-    // const orderId = '123';
-    // const productDataId = menuItem.dataset.productId;
-
-    // basketButton.classList.add("hidden");
-    // itemCounter.classList.remove("hidden");
-    // itemCounterInput.value = Number(itemCounterNumber.textContent);
-
-    // // Прибавляет / уменьшает кол-во блюд
-    // itemCounter.addEventListener("click", handleCounterClick);
-
-    // // Закидывает данные в Локал-Сторедж 
-    // setBasketItem(orderId, productDataId);
+    const startValue = counterValue;
+    productCounterInput.value = startValue;
+    productCounterNumber.textContent = String(startValue);
+    setBasketItem(orderId, productDataId, startValue);
 }
 
 
