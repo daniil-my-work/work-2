@@ -29,10 +29,10 @@
                 Популярные блюда
             </h2>
 
-            
+
             <!-- Меню -->
             <ul class="menu__list">
-                <li class="menu__item" data-set="">
+                <li class="menu__item" data-product-id="1">
                     <img src="https://102922.selcdn.ru/nomenclature_images_test/1926609/7a849eb1-7100-4d77-bde2-d6bac3002d46.jpg" alt="" class="menu__item-img">
 
                     <div class="menu__item-content">
@@ -75,7 +75,7 @@
                     </div>
                 </li>
 
-                <li class="menu__item" data-set="">
+                <li class="menu__item" data-product-id="2">
                     <img src="https://102922.selcdn.ru/nomenclature_images_test/1926609/7a849eb1-7100-4d77-bde2-d6bac3002d46.jpg" alt="" class="menu__item-img">
 
                     <div class="menu__item-content">
@@ -118,7 +118,7 @@
                     </div>
                 </li>
 
-                <li class="menu__item" data-set="">
+                <li class="menu__item" data-product-id="3">
                     <img src="https://102922.selcdn.ru/nomenclature_images_test/1926609/7a849eb1-7100-4d77-bde2-d6bac3002d46.jpg" alt="" class="menu__item-img">
 
                     <div class="menu__item-content">
