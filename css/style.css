@@ -760,7 +760,7 @@ textarea {
 .basket__item {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .basket__item:last-child {
@@ -846,6 +846,18 @@ textarea {
     font-weight: 700;
     color: #000;
     border-radius: 25px;
+}
+
+.product-item__counter-button--basket {
+    margin-left: 20px;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+}
+
+.product-item__counter-button-icon--basket {
+    width: 16px;
+    height: 16px;
 }
 
 .product-item__counter-number-wrapper {

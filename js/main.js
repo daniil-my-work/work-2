@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-// localStorage.clear();
+localStorage.clear();
 
 // Показывет кнопку: В корзину
 function openCounter(button, counter) {
@@ -130,12 +130,86 @@ const mainList = document.querySelector(".menu__list");
 
 // Прибавляет или убавляет кол-во блюд в заказе на странице Главная
 if (mainList) {
+    console.log('Главная');
     mainList.addEventListener("click", addProductInOrder);
 }
 
-// const basketList = document.querySelector(".basket__list");
 
-// // Прибавляет или убавляет кол-во блюд в заказе на странице Корзина
-// if (basketList) {
-//     basketList.addEventListener("click", addProductInOrder);
-// }
+// Добавляет продукт в корзину
+function addProductInOrderBasket(evt) {
+    // Номер заказа
+    const orderId = "123";
+
+    // Элементы
+    const element = evt.target;
+    const productItem = element.closest(".basket__item");
+    const productCounterInput = productItem.querySelector(
+        ".product-item__counter-input"
+    );
+    const productCounterNumber = productItem.querySelector(
+        ".product-item__counter-number"
+    );
+    const counterValue = Number(productCounterInput.value);
+
+    // // Айди продукта
+    const productDataId = productItem.dataset.productId;
+
+    // Уменьшает кол-во блюд
+    const decButton = element.classList.contains(
+        "product-item__counter-action--minus"
+    );
+    if (decButton) {
+        console.log("Минус");
+        const newValue = counterValue - 1;
+
+        if (newValue < 1) {
+            return;
+        }
+
+        setBasketItem(orderId, productDataId, newValue);
+        productCounterInput.value = newValue;
+        productCounterNumber.textContent = newValue;
+
+        return;
+    }
+
+    // Увеличивает кол-во блюд
+    const plusButton = element.classList.contains(
+        "product-item__counter-action--plus"
+    );
+    if (plusButton) {
+        console.log("Плюс");
+        const newValue = counterValue + 1;
+
+        setBasketItem(orderId, productDataId, newValue);
+        productCounterInput.value = newValue;
+        productCounterNumber.textContent = newValue;
+
+        return;
+    }
+
+    const delButton = element.classList.contains("product-item__counter-button--basket") || element.classList.contains("product-item__counter-button-icon--basket");
+    if (delButton) {
+        console.log('Удаляет элемент');
+        setBasketItem(orderId, productDataId, 0);
+        productItem.remove();
+
+        return;
+    }
+}
+
+const basketList = document.querySelector(".basket__list");
+
+// Прибавляет или убавляет кол-во блюд в заказе на странице Корзина
+if (basketList) {
+    console.log('Корзина');
+    basketList.addEventListener("click", addProductInOrderBasket);
+
+    const productList = document.querySelectorAll('.basket__item');
+
+    productList.forEach((element) => {
+        element.dataset.productId = 1;
+
+        // setBasketItem(orderId, productDataId, 1);
+    });
+}
