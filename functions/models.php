@@ -19,6 +19,20 @@ function get_query_userAuth($user_email)
     return "SELECT user.id, user.user_name, user.email, user.user_password FROM user WHERE user.email = '$user_email'";
 };
 
+/**
+ * Формирует SQL-запрос для показа списка продуктов по списку идентификаторов продуктов
+ * @param array $productIds Массив идентификаторов продуктов
+ * @return string SQL-запрос
+ */
+function get_query_productList(array $productIds)
+{
+    // Преобразуем массив идентификаторов в строку для использования в операторе IN
+    $productIdList = implode(',', array_map('intval', $productIds));
+
+    // Формируем SQL-запрос
+    return "SELECT * FROM menu WHERE menu.id IN ($productIdList)";
+}
+
 
 
 

@@ -31,19 +31,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo 'Товар добавлен в корзину';
 }
 
-// $_SESSION['cart']['1'] = 3;
-// $_SESSION['cart']['2'] = 3;
-
-// Удаление конкретного элемента из сессии
-// unset($_SESSION['cart']['1']);
-
-// Удаление всех переменных сессии
-// session_unset();
-
 
 // Получение данных из сессии
 $productsData = isset($_SESSION['cart']) ? $_SESSION['cart'] : array();
-print_r($productsData);
+// print_r($productsData);
 
 
 $page_head = include_template(

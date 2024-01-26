@@ -753,6 +753,10 @@ textarea {
     margin-bottom: 30px;
 }
 
+.page__basket-form {
+    margin-bottom: 0;
+}
+
 .basket__list {
     margin-bottom: 40px;
 }

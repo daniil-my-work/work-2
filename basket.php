@@ -2,6 +2,7 @@
 
 require_once('./functions/helpers.php');
 require_once('./functions/init.php');
+require_once('./functions/models.php');
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -27,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['cart'][$productId] = 1;
     }
 
+
     // Ответ сервера (может быть пустым или содержать информацию об успешном добавлении)
     echo 'Товар добавлен в корзину';
 }
@@ -34,6 +36,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Получение данных из сессии
 $productsData = isset($_SESSION['cart']) ? $_SESSION['cart'] : array();
 print_r($productsData);
+
+// Получает список продуктов для отрисовки в корзине
+$productIds = array_keys($productsData);
+$sql = get_query_productList($productIds);
+$productList = mysqli_query($con, $sql);
+print_r($productIds);
+// print_r($productList);
 
 
 $page_head = include_template(
