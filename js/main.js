@@ -128,40 +128,45 @@ function addProductInOrder(evt) {
 const mainList = document.querySelector(".menu__list");
 
 // Прибавляет или убавляет кол-во блюд в заказе на странице Главная
-if (mainList) {
-    console.log('Главная');
+// if (mainList) {
+//     console.log('Главная');
 
-    // Получаем текущие данные из локального хранилища
-    const storedData = localStorage.getItem(123);
-    const cartData = storedData ? JSON.parse(storedData) : {};
+//     // Получаем текущие данные из локального хранилища
+//     const storedData = localStorage.getItem(123);
+//     const cartData = storedData ? JSON.parse(storedData) : {};
 
-    // Итерируем по ключам в cartData
-    for (const key in cartData) {
-        // Находим элемент по data-product-id
-        const productItem = document.querySelector(`[data-product-id="${key}"]`);
-        console.log(productItem);
+//     // Итерируем по ключам в cartData
+//     for (const key in cartData) {
+//         // Находим элемент по data-product-id
+//         const productItem = document.querySelector(`[data-product-id="${key}"]`);
 
-        const productCounterWrapper = productItem.querySelector(
-            ".product-item__counter-number-wrapper"
-        );
-        const productCounterButton = productItem.querySelector(
-            ".product-item__counter-button"
-        );
-        const productCounterInput = productItem.querySelector(
-            ".product-item__counter-input"
-        );
-        const productCounterNumber = productItem.querySelector(
-            ".product-item__counter-number"
-        );
+//         if (!productItem) {
+//             continue;
+//         }
 
-        // Показывает счетчик
-        openCounter(productCounterButton, productCounterWrapper);
-        productCounterInput.value = cartData[key];
-        productCounterNumber.textContent = cartData[key];
-    }
+//         const productCounterWrapper = productItem.querySelector(
+//             ".product-item__counter-number-wrapper"
+//         );
+//         const productCounterButton = productItem.querySelector(
+//             ".product-item__counter-button"
+//         );
+//         const productCounterInput = productItem.querySelector(
+//             ".product-item__counter-input"
+//         );
+//         const productCounterNumber = productItem.querySelector(
+//             ".product-item__counter-number"
+//         );
 
-    mainList.addEventListener("click", addProductInOrder);
-}
+//         // Показывает счетчик
+//         openCounter(productCounterButton, productCounterWrapper);
+//         productCounterInput.value = cartData[key];
+//         productCounterNumber.textContent = cartData[key];
+//     }
+
+//     mainList.addEventListener("click", addProductInOrder);
+// }
+
+
 
 
 // Добавляет продукт в корзину
@@ -252,7 +257,7 @@ if (basketList) {
 
             <div class="product-item__counter">
                 <div class="product-item__counter-number-wrapper">
-                    <input class="product-item__counter-input" type="hidden" name="productId" value="${cartData[key]}">
+                    <input class="product-item__counter-input" type="hidden" name="${key}" value="${cartData[key]}">
 
                     <span class="product-item__counter-action product-item__counter-action--minus">
                         –
@@ -278,12 +283,71 @@ if (basketList) {
 
         basketList.innerHTML += item;
     }
-
-    // const productList = document.querySelectorAll('.basket__item');
-
-    // productList.forEach((element) => {
-    //     element.dataset.productId = 1;
-
-    //     // setBasketItem(orderId, productDataId, 1);
-    // });
 }
+
+
+
+function fetchUpdateProductList(params) {
+    // Отправка Fetch-запроса на сервер
+    fetch('index.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: params.toString(),
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(data => {
+            // Обработка ответа (если необходимо)
+            location.reload();
+        })
+        .catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+        });
+}
+
+
+
+function testSend(evt) {
+    // Элемент
+    const element = evt.target;
+
+    const inBasket = element.classList.contains("product-item__counter-button");
+    if (!inBasket) {
+        return;
+    }
+
+    const productItem = element.closest(".menu__item");
+    const productCounterInput = productItem.querySelector(
+        ".product-item__counter-input"
+    );
+    const productCounterWrapper = productItem.querySelector(
+        ".product-item__counter-number-wrapper"
+    );
+    const productCounterButton = productItem.querySelector(
+        ".product-item__counter-button"
+    );
+
+    // Айди продукта
+    const productDataId = productItem.dataset.productId;
+
+    // Кол-во продуктов
+    const action = 'minus'; // или получите количество товара, если это динамическое
+
+    // Формирование строки параметров
+    const params = new URLSearchParams();
+    params.append('productId', productDataId);
+    params.append('action', action);
+
+    console.log(params.toString());
+
+    // Обновляет данные в сессии
+    fetchUpdateProductList(params);
+};
+
+mainList.addEventListener("click", testSend);
