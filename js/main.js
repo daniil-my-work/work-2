@@ -151,6 +151,10 @@ const mainList = document.querySelector(".menu__list");
 mainList.addEventListener("click", addProductInBasket);
 
 
+
+
+
+
 // Добавляет продукт в корзину
 // function addProductInBasket(evt) {
 //     // Номер заказа
