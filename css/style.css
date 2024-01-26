@@ -786,8 +786,8 @@ textarea {
     margin: 0;
 }
 
-.basket__item-text {
-    font-size: 12px;
+.basket__item-price {
+    font-size: 15px;
     color: #999;
     margin: 0;
 }

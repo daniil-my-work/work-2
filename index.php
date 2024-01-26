@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Получение данных из сессии
 $productsData = isset($_SESSION['cart']) ? $_SESSION['cart'] : array();
-// print_r($productsData);
+print_r($productsData);
 
 
 $page_head = include_template(
