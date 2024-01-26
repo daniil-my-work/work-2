@@ -148,75 +148,90 @@ function addProductInBasket(evt) {
 
 // Обработчик для страницы Главная и Меню
 const mainList = document.querySelector(".menu__list");
-mainList.addEventListener("click", addProductInBasket);
+if (mainList) {
+    console.log('Главная / Меню');
 
-
-
+    mainList.addEventListener("click", addProductInBasket);
+}
 
 
 
 // Добавляет продукт в корзину
-// function addProductInBasket(evt) {
-//     // Номер заказа
-//     // const orderId = "123";
+function addProductInBasketSecond(evt) {
+    // Элементы
+    const element = evt.target;
+    const productItem = element.closest(".basket__item");
+    const productCounterInput = productItem.querySelector(
+        ".product-item__counter-input"
+    );
+    const productCounterNumber = productItem.querySelector(
+        ".product-item__counter-number"
+    );
+    const counterValue = Number(productCounterInput.value);
 
-//     // Элементы
-//     const element = evt.target;
-//     const productItem = element.closest(".basket__item");
-//     const productCounterInput = productItem.querySelector(
-//         ".product-item__counter-input"
-//     );
-//     const productCounterNumber = productItem.querySelector(
-//         ".product-item__counter-number"
-//     );
-//     const counterValue = Number(productCounterInput.value);
 
-//     // // Айди продукта
-//     const productDataId = productItem.dataset.productId;
+    // Айди продукта
+    const productDataId = productItem.dataset.productId;
 
-//     // Уменьшает кол-во блюд
-//     const decButton = element.classList.contains(
-//         "product-item__counter-action--minus"
-//     );
-//     if (decButton) {
-//         console.log("Минус");
-//         const newValue = counterValue - 1;
+    // Формирование строки параметров
+    const params = new URLSearchParams();
+    params.append('productId', productDataId);
 
-//         if (newValue < 1) {
-//             return;
-//         }
 
-//         setBasketItem(orderId, productDataId, newValue);
-//         productCounterInput.value = newValue;
-//         productCounterNumber.textContent = newValue;
+    // Уменьшает кол-во блюд
+    const decButton = element.classList.contains(
+        "product-item__counter-action--minus"
+    );
+    if (decButton) {
+        console.log("Минус");
+        const newValue = counterValue - 1;
 
-//         return;
-//     }
+        if (counterValue <= 1) {
+            console.log("Минимальное значение 1");
+            return;
+        }
 
-//     // Увеличивает кол-во блюд
-//     const plusButton = element.classList.contains(
-//         "product-item__counter-action--plus"
-//     );
-//     if (plusButton) {
-//         console.log("Плюс");
-//         const newValue = counterValue + 1;
+        // Обновляет данные в сессии
+        params.append('quantity', newValue);
+        apiUpdateProductList(params);
+        // console.log(params.toString());
 
-//         setBasketItem(orderId, productDataId, newValue);
-//         productCounterInput.value = newValue;
-//         productCounterNumber.textContent = newValue;
+        productCounterInput.value = newValue;
+        productCounterNumber.textContent = newValue;
 
-//         return;
-//     }
+        return;
+    }
 
-//     const delButton = element.classList.contains("product-item__counter-button--basket") || element.classList.contains("product-item__counter-button-icon--basket");
-//     if (delButton) {
-//         console.log('Удаляет элемент');
-//         setBasketItem(orderId, productDataId, 0);
-//         productItem.remove();
+    // Увеличивает кол-во блюд
+    const plusButton = element.classList.contains(
+        "product-item__counter-action--plus"
+    );
+    if (plusButton) {
+        console.log("Плюс");
+        const newValue = counterValue + 1;
 
-//         return;
-//     }
-// }
+        // Обновляет данные в сессии
+        params.append('quantity', newValue);
+        apiUpdateProductList(params);
+        // console.log(params.toString());
+
+        productCounterInput.value = newValue;
+        productCounterNumber.textContent = newValue;
+
+        return;
+    }
+
+    const delButton = element.classList.contains("product-item__counter-button--basket") || element.classList.contains("product-item__counter-button-icon--basket");
+    if (delButton) {
+        console.log('Удаляет элемент из Корзины');
+
+        params.append('quantity', 0);
+        apiUpdateProductList(params);
+        productItem.remove();
+
+        return;
+    }
+}
 
 const basketList = document.querySelector(".basket__list");
 
@@ -224,5 +239,5 @@ const basketList = document.querySelector(".basket__list");
 if (basketList) {
     console.log('Корзина');
 
-    // basketList.addEventListener("click", addProductInOrderBasket);
+    basketList.addEventListener("click", addProductInBasketSecond);
 }
