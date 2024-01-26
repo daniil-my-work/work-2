@@ -7,7 +7,7 @@ require_once('./functions/init.php');
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Получите данные из запроса
     $productId = isset($_POST['productId']) ? $_POST['productId'] : null;
-    $action = isset($_POST['action']) ? $_POST['action'] : null;
+    $quantity = isset($_POST['quantity']) ? $_POST['quantity'] : null;
 
     // Инициализируйте или обновите данные корзины в сессии
     if (!isset($_SESSION['cart'])) {
@@ -16,13 +16,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Добавьте товар в корзину
     if (isset($_SESSION['cart'][$productId])) {
-        $quantity = $_SESSION['cart'][$productId];
-
-        if ($action === 'minus') {
-            $newValue = $quantity - 1;
+        // Удаление конкретного элемента из сессии
+        if ($quantity <= 0) {
+            unset($_SESSION['cart'][$productId]);
+            return;
         }
 
-        $_SESSION['cart'][$productId] = $newValue;
+        $_SESSION['cart'][$productId] = $quantity;
     } else {
         $_SESSION['cart'][$productId] = 1;
     }
@@ -30,6 +30,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Ответ сервера (может быть пустым или содержать информацию об успешном добавлении)
     echo 'Товар добавлен в корзину';
 }
+
+// $_SESSION['cart']['1'] = 3;
+// $_SESSION['cart']['2'] = 3;
+
+// Удаление конкретного элемента из сессии
+// unset($_SESSION['cart']['1']);
+
+// Удаление всех переменных сессии
+// session_unset();
 
 
 // Получение данных из сессии
