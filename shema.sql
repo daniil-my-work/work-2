@@ -17,6 +17,18 @@ CREATE TABLE `user` (
 
 CREATE TABLE `category_menu` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `category__title` ENUM(
+        'poke',
+        'rolls',
+        'soups',
+        'hot',
+        'wok',
+        'appetizers',
+        'sandwiches',
+        'desserts',
+        'beverages',
+        'sauce',
+    ),
     `category__name` ENUM(
         'поке',
         'роллы',
@@ -35,7 +47,7 @@ CREATE TABLE `menu` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `title` VARCHAR(255),
     `img` VARCHAR(255),
-    `description` VARCHAR(255),
+    `description` TEXT,
     `price` INT,
     `cooking_time` INT,
     `category__id` INT,
