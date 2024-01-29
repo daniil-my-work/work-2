@@ -2,6 +2,8 @@
 
 require_once('./functions/helpers.php');
 require_once('./functions/init.php');
+require_once('./functions/models.php');
+require_once('./functions/db.php');
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -37,6 +39,11 @@ $productsData = isset($_SESSION['cart']) ? $_SESSION['cart'] : array();
 print_r($productsData);
 
 
+$sql = get_query_products();
+$products = mysqli_query($con, $sql);
+$productList = get_arrow($products);
+
+
 $page_head = include_template(
     'head.php',
     [
@@ -55,6 +62,7 @@ $page_body = include_template(
     'main.php',
     [
         'productsData' => $productsData,
+        'products' => $productList,
     ]
 );
 

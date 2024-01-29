@@ -3,6 +3,7 @@
 require_once('./functions/helpers.php');
 require_once('./functions/init.php');
 require_once('./functions/models.php');
+require_once('./functions/db.php');
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -40,9 +41,21 @@ print_r($productsData);
 // Получает список продуктов для отрисовки в корзине
 $productIds = array_keys($productsData);
 $sql = get_query_productList($productIds);
-$productList = mysqli_query($con, $sql);
-print_r($productIds);
+$products = mysqli_query($con, $sql);
+$productList = get_arrow($products);
 // print_r($productList);
+
+$fullPrice = 0;
+
+// Перебираем продукты из $productList
+foreach ($productList as $product) {
+    $productId = $product['id']; // Получаем ID продукта
+    $quantity = $productsData[$productId]; // Получаем количество продукта из $productsData
+    $price = $product['price']; // Получаем цену продукта
+
+    // Умножаем цену продукта на его количество и добавляем к общей стоимости
+    $fullPrice += $price * $quantity;
+}
 
 
 $page_head = include_template(
@@ -63,6 +76,8 @@ $page_body = include_template(
     'basket.php',
     [
         'productsData' => $productsData,
+        'products' => $productList,
+        'fullPrice' => $fullPrice,
     ]
 );
 

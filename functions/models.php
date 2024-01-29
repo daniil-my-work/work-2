@@ -11,13 +11,15 @@ function get_query_create_user()
 }
 
 /**
- * Формирует SQL-запрос для показа спика лотов
+ * Формирует SQL-запрос для показа спика
  * @return string SQL-запрос
  */
-function get_query_userAuth($user_email)
-{
-    return "SELECT user.id, user.user_name, user.email, user.user_password FROM user WHERE user.email = '$user_email'";
-};
+// function get_query_userAuth($user_email)
+// {
+//     return "SELECT user.id, user.user_name, user.email, user.user_password FROM user WHERE user.email = '$user_email'";
+// };
+
+
 
 /**
  * Формирует SQL-запрос для показа списка продуктов по списку идентификаторов продуктов
@@ -32,6 +34,27 @@ function get_query_productList(array $productIds)
     // Формируем SQL-запрос
     return "SELECT * FROM menu WHERE menu.id IN ($productIdList)";
 }
+
+/**
+ * Формирует SQL-запрос для показа списка продуктов 
+ * @return string SQL-запрос
+ */
+function get_query_products()
+{
+    return "SELECT * FROM menu";
+}
+
+
+// /**
+//  * Формирует SQL-запрос для показа списка продуктов в корзине
+//  * @param array $productIds SQL-запрос
+//  * @return string SQL-запрос
+//  */
+// function get_query_productInBasket(array $productIds)
+// {
+//     return "SELECT * FROM menu";
+// }
+
 
 
 

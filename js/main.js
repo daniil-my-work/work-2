@@ -184,6 +184,7 @@ function addProductInBasketSecond(evt) {
     );
     if (decButton) {
         console.log("Минус");
+        
         const newValue = counterValue - 1;
 
         if (counterValue <= 1) {
@@ -198,6 +199,9 @@ function addProductInBasketSecond(evt) {
 
         productCounterInput.value = newValue;
         productCounterNumber.textContent = newValue;
+
+        // Обновить страницу
+        // location.reload();
 
         return;
     }
@@ -218,6 +222,9 @@ function addProductInBasketSecond(evt) {
         productCounterInput.value = newValue;
         productCounterNumber.textContent = newValue;
 
+        // Обновить страницу
+        // location.reload();
+
         return;
     }
 
@@ -228,6 +235,9 @@ function addProductInBasketSecond(evt) {
         params.append('quantity', 0);
         apiUpdateProductList(params);
         productItem.remove();
+
+        // Обновить страницу
+        // location.reload();
 
         return;
     }
