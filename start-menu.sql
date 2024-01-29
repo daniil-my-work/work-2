@@ -1,6 +1,6 @@
 -- Таблица Категория
 INSERT INTO
-    category_menu (category__name, category__title)
+    category_menu (category__title, category__name)
 VALUES
     ('poke', 'поке'),
     ('rolls', 'роллы'),
