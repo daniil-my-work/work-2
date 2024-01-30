@@ -67,7 +67,7 @@ CREATE TABLE `orders` (
     id INT AUTO_INCREMENT PRIMARY KEY,
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     customer_id INT,
-    order_id INT,
+    order_id CHAR(13),
     total_amount INT
 );
 
@@ -76,7 +76,7 @@ CREATE TABLE `order_items` (
     product_id INT,
     quantity INT,
     unit_price INT,
-    order_id INT,
+    order_id CHAR(13),
     FOREIGN KEY (order_id) REFERENCES orders(order_id)
 );
 

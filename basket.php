@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $order['customer_id'] = 33;
     $order['total_amount'] = 2000;
-    $order['order_id'] = intval($order_id);
+    $order['order_id'] = $order_id;
 
     $sql = get_query_create_order();
     $stmt = db_get_prepare_stmt($con, $sql, $order);
