@@ -72,6 +72,26 @@ function get_query_selectedCategory($activeCategory)
 }
 
 
+/**
+ * Формирует SQL-запрос для добавления записи в таблицу orders
+ * @return string SQL-запрос
+ */
+function get_query_create_order()
+{
+    return "INSERT INTO orders (order_date, customer_id, total_amount, order_id) 
+    VALUES (NOW(), ?, ?, ?)";
+}
+
+/**
+ * Формирует SQL-запрос для добавления записи в таблицу order_items
+ * @return string SQL-запрос
+ */
+function get_query_create_orderItem($order_id)
+{
+    return "INSERT INTO order_items (product_id, quantity, unit_price, order_id) 
+    VALUES (?, ?, ?, $order_id)";
+}
+
 
 
 

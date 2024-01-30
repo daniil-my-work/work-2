@@ -9,15 +9,36 @@ require_once('./functions/db.php');
 // Получение данных из сессии
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
 
+
+// $_SESSION['order']['order_id'] = 3;
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Ответ сервера (может быть пустым или содержать информацию об успешном добавлении)
-    
-    if ($isAuth) {
+    $order_id = uniqid();
+    print_r($order_id);
 
-        // echo $productsData;
-        echo 'Товар добавлен в корзину';
-        // return;
+
+    $order['customer_id'] = 33;
+    $order['total_amount'] = 2000;
+    $order['order_id'] = intval($order_id);
+
+    $sql = get_query_create_order();
+    $stmt = db_get_prepare_stmt($con, $sql, $order);
+    $res = mysqli_stmt_execute($stmt);
+
+    if ($res) {
+        echo "Запись успешно добавлена в базу данных.";
+    } else {
+        echo "Ошибка при выполнении запроса: " . mysqli_error($con);
+        echo "Номер ошибки: " . mysqli_errno($con);
     }
+
+    // if ($isAuth) {
+    //     // echo $productsData;
+    //     echo 'Товар добавлен в корзину';
+    //     // return;
+    // }
 
     // header("Location: ./index.php");
 }
