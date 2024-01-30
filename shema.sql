@@ -63,6 +63,22 @@ CREATE TABLE `order` (
     FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 );
 
+CREATE TABLE `orders` (
+    order_id INT AUTO_INCREMENT PRIMARY KEY,
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    customer_id INT,
+    total_amount INT
+);
+
+CREATE TABLE `order_items` (
+    order_item_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT,
+    quantity INT,
+    unit_price INT,
+    order_id INT,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id)
+);
+
 CREATE TABLE `component` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `title` VARCHAR(255),

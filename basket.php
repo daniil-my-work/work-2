@@ -6,17 +6,22 @@ require_once('./functions/models.php');
 require_once('./functions/db.php');
 
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Ответ сервера (может быть пустым или содержать информацию об успешном добавлении)
-    echo 'Товар добавлен в корзину';
-
-    header("Location: ./index.php");
-}
-
-
 // Получение данных из сессии
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
-print_r($productsData);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Ответ сервера (может быть пустым или содержать информацию об успешном добавлении)
+    
+    if ($isAuth) {
+
+        // echo $productsData;
+        echo 'Товар добавлен в корзину';
+        // return;
+    }
+
+    // header("Location: ./index.php");
+}
+
 
 // Получает список продуктов для отрисовки в корзине
 $productIds = array_keys($productsData);
