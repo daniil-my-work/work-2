@@ -26,7 +26,7 @@
 
                     <div class="product-item__counter">
                         <div class="product-item__counter-number-wrapper">
-                            <input class="product-item__counter-input" type="hidden" name="productId" value="<?= isset($productsData['1']) ? $productsData['1'] : '0'; ?>">
+                            <input class="product-item__counter-input" type="hidden" name="productId" value="<?= $productsData[$productId]; ?>">
                             <span class="product-item__counter-action product-item__counter-action--minus">
                                 –
                             </span>

@@ -6,36 +6,14 @@ require_once('./functions/models.php');
 require_once('./functions/db.php');
 
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Получите данные из запроса
-    $productId = isset($_POST['productId']) ? $_POST['productId'] : null;
-    $quantity = isset($_POST['quantity']) ? $_POST['quantity'] : null;
-
-    // Инициализируйте или обновите данные корзины в сессии
-    if (!isset($_SESSION['cart'])) {
-        $_SESSION['cart'] = array();
-    }
-
-    // Добавьте товар в корзину
-    if (isset($_SESSION['cart'][$productId])) {
-        // Удаление конкретного элемента из сессии
-        if ($quantity <= 0) {
-            unset($_SESSION['cart'][$productId]);
-            return;
-        }
-
-        $_SESSION['cart'][$productId] = $quantity;
-    } else {
-        $_SESSION['cart'][$productId] = 1;
-    }
-
-    // Ответ сервера (может быть пустым или содержать информацию об успешном добавлении)
-    echo 'Товар добавлен в корзину';
-}
+// if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+//     // Ответ сервера (может быть пустым или содержать информацию об успешном добавлении)
+//     echo 'Товар добавлен в корзину';
+// }
 
 
 // Получение данных из сессии
-$productsData = isset($_SESSION['cart']) ? $_SESSION['cart'] : array();
+$productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
 print_r($productsData);
 
 

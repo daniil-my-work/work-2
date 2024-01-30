@@ -44,16 +44,35 @@ function get_query_products()
     return "SELECT * FROM menu";
 }
 
+/**
+ * Формирует SQL-запрос для показа списка продуктов 
+ * @return string SQL-запрос
+ */
+function get_query_selectedProducts($activeCategory)
+{
+    return "SELECT menu.id, menu.title, menu.img, menu.description, menu.price, category_menu.category__name, category_menu.category__title FROM menu LEFT JOIN category_menu ON menu.category__id = category_menu.id WHERE category_menu.category__title = '$activeCategory'";
+}
 
-// /**
-//  * Формирует SQL-запрос для показа списка продуктов в корзине
-//  * @param array $productIds SQL-запрос
-//  * @return string SQL-запрос
-//  */
-// function get_query_productInBasket(array $productIds)
-// {
-//     return "SELECT * FROM menu";
-// }
+
+/**
+ * Формирует SQL-запрос для показа списка категорий 
+ * @return string SQL-запрос
+ */
+function get_query_categories()
+{
+    return "SELECT * FROM category_menu";
+}
+
+/**
+ * Формирует SQL-запрос для показа активной категории
+ * @return string SQL-запрос
+ */
+function get_query_selectedCategory($activeCategory)
+{
+    return "SELECT * FROM category_menu WHERE category_menu.category__title = '$activeCategory'";
+}
+
+
 
 
 

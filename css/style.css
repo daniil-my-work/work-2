@@ -630,8 +630,9 @@ textarea {
 }
 
 .account__orders-group-link:hover {
-    background-color: #e9c202 !important;
+    background-color: #ffd600 !important;
     color: #000 !important;
+    border-radius: 5px;
 }
 
 .account__orders-group-link::before {
