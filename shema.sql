@@ -58,7 +58,9 @@ CREATE TABLE `order` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `order_time` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `menu_id` INT,
-    FOREIGN KEY (`menu_id`) REFERENCES `menu` (`id`)
+    `user_id` INT,
+    FOREIGN KEY (`menu_id`) REFERENCES `menu` (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 );
 
 CREATE TABLE `component` (
