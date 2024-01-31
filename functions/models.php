@@ -86,10 +86,10 @@ function get_query_create_order()
  * Формирует SQL-запрос для добавления записи в таблицу order_items
  * @return string SQL-запрос
  */
-function get_query_create_orderItem($order_id)
+function get_query_create_orderItem()
 {
     return "INSERT INTO order_items (product_id, quantity, unit_price, order_id) 
-    VALUES (?, ?, ?, $order_id)";
+    VALUES (?, ?, ?, ?)";
 }
 
 
