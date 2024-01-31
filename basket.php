@@ -16,7 +16,7 @@ $sql = get_query_productList($productIds);
 $products = mysqli_query($con, $sql);
 $productList = get_arrow($products);
 
-print_r($productsData);
+// print_r($productsData);
 
 
 // Цена товароа в корзине
@@ -44,9 +44,27 @@ if (count($productIds) == 1) {
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Ответ сервера (может быть пустым или содержать информацию об успешном добавлении)
-    $order_id = uniqid();
+    // Проверка на уникальность айди заказа
+    function checkOrderIdUniqueness($con, $order_id)
+    {
+        // SQl код для проверки уникальности идентификатора заказа
+        $sql = "SELECT COUNT(*) AS count FROM orders WHERE order_id = '$order_id'";
+
+        $result = mysqli_query($con, $sql);
+        $myResult = get_arrow($result);
+        $count = $myResult['count'];
+
+        return $count == 0;
+    }
+
+    // Генерируем уникальный идентификатор
+    do {
+        $order_id = uniqid();
+        // Проверяем, существует ли уже такой идентификатор в базе данных
+    } while (!checkOrderIdUniqueness($con, $order_id));
+
     print_r($order_id);
+
 
     $order['customer_id'] = 33;
     $order['total_amount'] = $fullPrice;
@@ -91,7 +109,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $res = mysqli_stmt_execute($stmt);
         }
     }
-
 
 
     if ($res) {
