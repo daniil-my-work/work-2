@@ -22,7 +22,7 @@
                     </p>
 
                     <p class="text basket__item-price">
-                        <?= $orderItems['price']; ?>
+                        <?= $orderItems['description']; ?>
                     </p>
                 </div>
 

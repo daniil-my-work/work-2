@@ -5,6 +5,8 @@ require_once('./functions/init.php');
 require_once('./functions/db.php');
 
 
+// print_r($_SESSION);
+
 // Данные о заказе
 $sql = "SELECT * FROM orders WHERE orders.customer_id = '$userId' ORDER BY id DESC LIMIT 1";
 $result = mysqli_query($con, $sql);

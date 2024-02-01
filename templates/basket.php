@@ -95,11 +95,15 @@
 
         <div class="basket__order">
             <p class="basket__order-text">
-                Ваш заказ:
+                <?php if ($productLength == 0) : ?>
+                    Ваша корзина пуста
+                <?php else : ?>
+                    Ваш заказ:
 
-                <span class="basket__order-number">
-                    <?= $fullPrice; ?> руб
-                </span>
+                    <span class="basket__order-number">
+                        <?= $fullPrice; ?> руб
+                    </span>
+                <?php endif; ?>
             </p>
 
             <?php $isHidden = $productLength == 0 ? 'hidden' : ''; ?>

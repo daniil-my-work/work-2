@@ -14,6 +14,15 @@ function get_query_create_user()
  * Формирует SQL-запрос для показа спика
  * @return string SQL-запрос
  */
+function get_query_userInfo($user_email)
+{
+    return "SELECT * FROM user WHERE user.email = '$user_email'";
+};
+
+/**
+ * Формирует SQL-запрос для показа спика
+ * @return string SQL-запрос
+ */
 function get_query_userAuth($user_email)
 {
     return "SELECT user.id, user.user_name, user.email, user.user_password FROM user WHERE user.email = '$user_email'";

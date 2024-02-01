@@ -3,10 +3,10 @@
     <div class="account">
         <!-- Общая инфа для всех кабинетов -->
         <div class="account__info">
-            <img class="account__info-img" src="" alt="">
+            <img class="account__info-img" src="<?= $userInfo['user_img']; ?>" alt="">
 
             <h3 class="account__info-name">
-                <?= $user_name; ?>
+                <?= $userInfo['user_name']; ?>
             </h3>
 
             <!-- Таблица с данными -->
@@ -17,7 +17,7 @@
                             Почта:
                         </th>
                         <td>
-                            test@yandex.ru
+                            <?= $userInfo['email']; ?>
                         </td>
                     </tr>
                     <tr>
@@ -25,23 +25,7 @@
                             Номер телефона:
                         </th>
                         <td>
-                            +7(980) 705 70 02
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">
-                            Пароль:
-                        </th>
-                        <td>
-                            ****
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">
-                            Адрес:
-                        </th>
-                        <td>
-                            Таким образом постоянный количественный рост и сфера нашей активности требуют
+                            <?= $userInfo['telephone']; ?>
                         </td>
                     </tr>
                 </tbody>
@@ -53,17 +37,20 @@
         <div class="account__orders-wrapper">
             <!-- Вкладка -->
             <div class="account__orders-group">
-                <a class="button--basic account__orders-group-link" href="">
+                <?php $isActiveGroupOrders = $statisticGroup == 'orders' ? 'account__orders-group-link--active' : ''; ?>
+                <a class="button--basic account__orders-group-link <?= $isActiveGroupOrders; ?>" href="./admin.php?group=orders">
                     Заказы
                 </a>
-
-                <a class="button--basic account__orders-group-link" href="">
+                
+                <?php $isActiveGroupClients = $statisticGroup == 'clients' ? 'account__orders-group-link--active' : ''; ?>
+                <a class="button--basic account__orders-group-link <?= $isActiveGroupClients; ?>" href="./admin.php?group=clients">
                     Клиенты
                 </a>
             </div>
 
             <!-- Заказы -->
-            <div class="account__orders-order hidden">
+            <?php $isHiddenOrders = $statisticGroup != 'orders' ? 'hidden' : ''; ?>
+            <div class="account__orders-order <?= $isHiddenOrders; ?>">
                 <!-- Календарь -->
                 <div class="account__orders-time">
                     <h3 class="sub-title">
@@ -227,7 +214,8 @@
             </div>
 
             <!-- Клиенты -->
-            <div class="account__orders-client">
+            <?php $isHiddenClients = $statisticGroup != 'clients' ? 'hidden' : ''; ?>
+            <div class="account__orders-client <?= $isHiddenClients; ?>">
                 <!-- Календарь -->
                 <div class="account__orders-time">
                     <h3 class="sub-title">
@@ -235,6 +223,10 @@
                     </h3>
 
                     <input class="account__orders-input" type="text" name="" id="">
+
+                    <button class="button--basic">
+                        Загрузить
+                    </button>
                 </div>
 
                 <!-- Таблица с данными -->

@@ -2,12 +2,23 @@
 
 require_once('./functions/helpers.php');
 require_once('./functions/init.php');
+require_once('./functions/models.php');
+require_once('./functions/db.php');
 
 
-if (!isset($_SESSION['user_email'])) {
+// Проверка на авторизацию
+if (!$isAuth) {
     header("Location: ./auth.php");
     exit;
 }
+
+
+$userEmail = $_SESSION['user_email'];
+$sql = get_query_userInfo($userEmail);
+$result = mysqli_query($con, $sql);
+$userInfo = get_arrow($result);
+
+
 
 $page_head = include_template(
     'head.php',
@@ -26,7 +37,7 @@ $page_header = include_template(
 $page_body = include_template(
     'account.php',
     [
-        'user_name' => $_SESSION['user_name'],
+        'userInfo' => $userInfo,
     ]
 );
 

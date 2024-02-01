@@ -72,8 +72,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Проверяем, существует ли уже такой идентификатор в базе данных
     } while (!checkOrderIdUniqueness($con, $order_id));
 
-    // print_r($order_id);
-
 
     // Получает айди пользователя, совершившего заказ
     $userEmail = $_SESSION['user_email'];
@@ -133,14 +131,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Удаляет данные из сессии и перенапрвляет на страницу аккаунт
         unset($_SESSION['order']);
         header("Location: ./order.php");
-
     } else {
         echo "Ошибка при выполнении запроса: " . mysqli_error($con);
         echo "Номер ошибки: " . mysqli_errno($con);
     }
 }
-
-
 
 
 

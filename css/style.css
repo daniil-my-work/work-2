@@ -658,12 +658,16 @@ textarea {
     content: none;
 }
 
-.account__orders {
+/* .account__orders {
     padding: 0 10px;
-}
+} */
 
 .account__orders--active {
     margin-bottom: 40px;
+}
+
+.account__orders-title {
+    padding: 0 10px;
 }
 
 .account__orders-input {
@@ -693,20 +697,20 @@ textarea {
 
 } */
 
-.account__orders-analitic-download {
+.account__orders-analytic-download {
     padding: 10px;
     padding-bottom: 30px;
 }
 
-.account__orders-analitic-download-time {
+.account__orders-analytic-download-time {
     margin-bottom: 10px;
 }
 
-.account__orders-analitic-download input {
+.account__orders-analytic-download input {
     width: auto;
 }
 
-.account__orders-analitic-content .sub-title {
+.account__orders-analytic-content .sub-title {
     padding: 0 10px;
 }
 
