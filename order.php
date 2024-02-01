@@ -28,13 +28,8 @@ foreach ($orderItems as $orderItem) {
     if (!is_array($orderItem)) {
         $isArrayOrderItems = false;
         break;
-        // $containsArrays = true;
     }
 }
-
-// print_r($orderId);
-// print_r($orderItems);
-print_r($isArrayOrderItems);
 
 
 
