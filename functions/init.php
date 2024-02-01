@@ -9,3 +9,4 @@ session_start();
 
 // Флаг авторизации
 $isAuth = isset($_SESSION['user_email']);
+$userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : '';

@@ -102,7 +102,8 @@
                 </span>
             </p>
 
-            <button type="submit" class="basket__order-button">
+            <?php $isHidden = $productLength == 0 ? 'hidden' : ''; ?>
+            <button type="submit" class="basket__order-button <?= $isHidden; ?>">
                 Заказать
             </button>
         </div>

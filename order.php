@@ -2,6 +2,40 @@
 
 require_once('./functions/helpers.php');
 require_once('./functions/init.php');
+require_once('./functions/db.php');
+
+
+// Данные о заказе
+$sql = "SELECT * FROM orders WHERE orders.customer_id = '$userId' ORDER BY id DESC LIMIT 1";
+$result = mysqli_query($con, $sql);
+$orderInfo = get_arrow($result);
+
+
+// Данные о товарах в заказе
+$orderId = $orderInfo['order_id'];
+$sql = "SELECT order_items.product_id, order_items.quantity, menu.title, menu.img, menu.description FROM order_items 
+LEFT JOIN menu
+ON order_items.product_id = menu.id
+WHERE order_items.order_id = '$orderId'";
+$result = mysqli_query($con, $sql);
+$orderItems = get_arrow($result);
+
+
+// Список продуктов это массив
+$isArrayOrderItems = true;
+
+foreach ($orderItems as $orderItem) {
+    if (!is_array($orderItem)) {
+        $isArrayOrderItems = false;
+        break;
+        // $containsArrays = true;
+    }
+}
+
+// print_r($orderId);
+// print_r($orderItems);
+print_r($isArrayOrderItems);
+
 
 
 $page_head = include_template(
@@ -20,7 +54,11 @@ $page_header = include_template(
 
 $page_body = include_template(
     'order.php',
-    []
+    [
+        'orderInfo' => $orderInfo,
+        'orderItems' => $orderItems,
+        'isArrayOrderItems' => $isArrayOrderItems,
+    ]
 );
 
 $page_footer = include_template(

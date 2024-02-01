@@ -6,17 +6,26 @@ require_once('./functions/models.php');
 require_once('./functions/db.php');
 
 
+// Проверка на авторизацию
+if (!$isAuth) {
+    header("Location: ./auth.php");
+    return;
+}
+
+
 // Получение данных из сессии
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
 
+// Устанавливает начальное значение списка товаров в корзине
+$productList = [];
 
 // Получает список продуктов для отрисовки в корзине
 $productIds = array_keys($productsData);
-$sql = get_query_productList($productIds);
-$products = mysqli_query($con, $sql);
-$productList = get_arrow($products);
-
-// print_r($productsData);
+if (count($productIds) != 0) {
+    $sql = get_query_productList($productIds);
+    $products = mysqli_query($con, $sql);
+    $productList = get_arrow($products);
+}
 
 
 // Цена товароа в корзине
@@ -63,10 +72,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Проверяем, существует ли уже такой идентификатор в базе данных
     } while (!checkOrderIdUniqueness($con, $order_id));
 
-    print_r($order_id);
+    // print_r($order_id);
 
 
-    $order['customer_id'] = 33;
+    // Получает айди пользователя, совершившего заказ
+    $userEmail = $_SESSION['user_email'];
+    $sql = "SELECT user.id FROM user WHERE user.email = '$userEmail'";
+    $result = mysqli_query($con, $sql);
+    $userId = get_arrow($result)['id'];
+
+    // Формирует объект заказа
+    $order['customer_id'] = $userId;
     $order['total_amount'] = $fullPrice;
     $order['order_id'] = $order_id;
 
@@ -76,10 +92,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $res = mysqli_stmt_execute($stmt);
 
 
-    // Добавляет запись в базу с состовляющими заказа 
+    // SQL код для добавление записи в базу с состовляющими заказа 
     $sqlSecond = get_query_create_orderItem();
 
-    // Подсчитывает цену в заивисмости от кол-ва товаров в корзине
+    // Записывает в базу товары лежащие в корзине
     if (count($productIds) == 1) {
         $productId = $productList['id']; // Получаем ID продукта
 
@@ -113,6 +129,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($res) {
         echo "Запись успешно добавлена в базу данных.";
+
+        // Удаляет данные из сессии и перенапрвляет на страницу аккаунт
+        unset($_SESSION['order']);
+        header("Location: ./order.php");
+
     } else {
         echo "Ошибка при выполнении запроса: " . mysqli_error($con);
         echo "Номер ошибки: " . mysqli_errno($con);
