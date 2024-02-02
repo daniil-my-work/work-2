@@ -17,7 +17,7 @@
                             Почта:
                         </th>
                         <td>
-                        <?= $userInfo['email']; ?>
+                            <?= $userInfo['email']; ?>
                         </td>
                     </tr>
                     <tr>
@@ -25,7 +25,7 @@
                             Номер телефона:
                         </th>
                         <td>
-                        <?= $userInfo['telephone']; ?>
+                            <?= $userInfo['telephone']; ?>
                         </td>
                     </tr>
                     <tr>
@@ -52,10 +52,14 @@
                 Загрузить
             </button>
 
-            
+
+            <!-- Таблица заказов пользователя -->
             <table class="table table-striped table-hover account__orders-table ">
                 <thead>
                     <tr>
+                        <th scope="col">
+                            Номер
+                        </th>
                         <th scope="col">
                             Дата
                         </th>
@@ -68,61 +72,48 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>@twitter</td>
-                        <td>@twitter</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>@twitter</td>
-                        <td>@twitter</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>@twitter</td>
-                        <td>@twitter</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>@twitter</td>
-                        <td>@twitter</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>@twitter</td>
-                        <td>@twitter</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>@twitter</td>
-                        <td>@twitter</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>@twitter</td>
-                        <td>@twitter</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>@twitter</td>
-                        <td>@twitter</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>@twitter</td>
-                        <td>@twitter</td>
-                    </tr>
+                    <!-- Проходится по массиву заказов -->
+                    <?php foreach ($keys as $key) : ?>
+                        <?php if (count($groupedItems[$key]) == 1) : ?>
+                            <?php $groupedItemFirst = $groupedItems[$key][0]; ?>
+                            <tr>
+                                <th scope="row">
+                                    <?= $groupedItemFirst['order_id']; ?>
+                                </th>
+                                <td>
+                                    <?= $groupedItemFirst['order_date']; ?>
+                                </td>
+                                <td>
+                                    <?= $groupedItemFirst['title']; ?>
+                                    *
+                                    <?= $groupedItemFirst['quantity']; ?>
+                                </td>
+                                <td>
+                                    <?= $groupedItemFirst['total_amount']; ?>
+                                </td>
+                            </tr>
+                        <?php else : ?>
+                            <?php $groupedItemFirst = $groupedItems[$key][0]; ?>
+                            <tr>
+                                <th scope="row">
+                                    <?= $groupedItemFirst['order_id']; ?>
+                                </th>
+                                <td>
+                                    <?= $groupedItemFirst['order_date']; ?>
+                                </td>
+                                <td>
+                                    <?php foreach ($groupedItems[$key] as $groupedSubItem) : ?>
+                                        <?= $groupedSubItem['title']; ?>
+                                        *
+                                        <?= $groupedSubItem['quantity']; ?>
+                                    <?php endforeach; ?>
+                                </td>
+                                <td>
+                                    <?= $groupedItemFirst['total_amount']; ?>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
 

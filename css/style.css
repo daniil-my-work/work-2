@@ -658,10 +658,6 @@ textarea {
     content: none;
 }
 
-/* .account__orders {
-    padding: 0 10px;
-} */
-
 .account__orders--active {
     margin-bottom: 40px;
 }
