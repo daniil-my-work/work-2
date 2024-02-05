@@ -2,11 +2,16 @@
 const dateNow = new Date();
 const dateWeekAgo = dateNow.setDate(dateNow.getTime() - 7 * 24 * 60 * 60 * 1000);
 
+// Вставляет указанную дату
+const dateFirst = document.querySelector('#date-first');
+const dateSecond = document.querySelector('#date-second');
+
+
 // Инициализация Flatpickr с настройками
 flatpickr("#datepicker", {
     locale: "ru", // Установка русского языка
     mode: "range", // Режим - выбор диапазона дат
-    dateFormat: "Y-m-d", // Формат даты (год-месяц-день)
+    dateFormat: "d.m.Y", // Формат даты (год-месяц-день)
     defaultDate: [dateWeekAgo, dateNow], // Диапазон дат: неделя назад и сегодня
     locale: {
         firstDayOfWeek: 1, // Установка начала недели на понедельник
@@ -21,11 +26,6 @@ flatpickr("#datepicker", {
     },
     rangeSeparator: 'до', // Заменяем 'to' на 'до'
     onChange: function (selectedDates, dateStr, instance) {
-        // selectedDates - массив выбранных дат
-        // dateStr - строка с датами в формате, указанном в dateFormat
-        // instance - экземпляр Flatpickr
-        // console.log(selectedDates); // Отобразим выбранные даты в консоли
-
         if (selectedDates[0]) {
             const dateFirst = document.querySelector('#date-first');
             dateFirst.value = formatDate(selectedDates[0]);
@@ -35,8 +35,13 @@ flatpickr("#datepicker", {
             const dateSecond = document.querySelector('#date-second');
             dateSecond.value = formatDate(selectedDates[1]);
         }
+    },
+    onReady: function (selectedDates, dateStr, instance) {
+        // Устанавливаем выбранные значения в Flatpickr
+        instance.setDate([new Date(dateFirst.value), new Date(dateSecond.value)]);
     }
 });
+
 
 function formatDate(date) {
     const day = ('0' + date.getDate()).slice(-2);

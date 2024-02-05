@@ -50,8 +50,8 @@
             <form class="account__orders-calendar" action="./account.php" method="POST">
                 <!-- Календарь -->
                 <div class="input__date-wrapper">
-                    <input class="" type="hidden" id="date-first" name="date-first" placeholder="Дата начала">
-                    <input class="" type="hidden" id="date-second" name="date-second" placeholder="Дата окончания">
+                    <input class="" type="hidden" id="date-first" name="date-first" placeholder="Дата начала" value="<?= is_null($dateFirst) ? '' : $dateFirst; ?>">
+                    <input class="" type="hidden" id="date-second" name="date-second" placeholder="Дата окончания" value="<?= is_null($dateSecond) ? '' : $dateSecond; ?>">
 
                     <input class="input__date account__orders-input" type="text" id="datepicker" placeholder="Выберите дату">
 
@@ -86,47 +86,49 @@
                 </thead>
                 <tbody>
                     <!-- Проходится по массиву заказов -->
-                    <?php foreach ($keys as $key) : ?>
-                        <?php if (count($groupedItems[$key]) == 1) : ?>
-                            <?php $groupedItemFirst = $groupedItems[$key][0]; ?>
-                            <tr>
-                                <th scope="row">
-                                    <?= $groupedItemFirst['order_id']; ?>
-                                </th>
-                                <td>
-                                    <?= $groupedItemFirst['order_date']; ?>
-                                </td>
-                                <td>
-                                    <?= $groupedItemFirst['title']; ?>
-                                    *
-                                    <?= $groupedItemFirst['quantity']; ?>
-                                </td>
-                                <td>
-                                    <?= $groupedItemFirst['total_amount']; ?>
-                                </td>
-                            </tr>
-                        <?php else : ?>
-                            <?php $groupedItemFirst = $groupedItems[$key][0]; ?>
-                            <tr>
-                                <th scope="row">
-                                    <?= $groupedItemFirst['order_id']; ?>
-                                </th>
-                                <td>
-                                    <?= $groupedItemFirst['order_date']; ?>
-                                </td>
-                                <td>
-                                    <?php foreach ($groupedItems[$key] as $groupedSubItem) : ?>
-                                        <?= $groupedSubItem['title']; ?>
+                    <?php if (count($groupedItems) != 0) : ?>
+                        <?php foreach ($keys as $key) : ?>
+                            <?php if (count($groupedItems[$key]) == 1) : ?>
+                                <?php $groupedItemFirst = $groupedItems[$key][0]; ?>
+                                <tr>
+                                    <th scope="row">
+                                        <?= $groupedItemFirst['order_id']; ?>
+                                    </th>
+                                    <td>
+                                        <?= $groupedItemFirst['order_date']; ?>
+                                    </td>
+                                    <td>
+                                        <?= $groupedItemFirst['title']; ?>
                                         *
-                                        <?= $groupedSubItem['quantity']; ?>
-                                    <?php endforeach; ?>
-                                </td>
-                                <td>
-                                    <?= $groupedItemFirst['total_amount']; ?>
-                                </td>
-                            </tr>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
+                                        <?= $groupedItemFirst['quantity']; ?>
+                                    </td>
+                                    <td>
+                                        <?= $groupedItemFirst['total_amount']; ?>
+                                    </td>
+                                </tr>
+                            <?php else : ?>
+                                <?php $groupedItemFirst = $groupedItems[$key][0]; ?>
+                                <tr>
+                                    <th scope="row">
+                                        <?= $groupedItemFirst['order_id']; ?>
+                                    </th>
+                                    <td>
+                                        <?= $groupedItemFirst['order_date']; ?>
+                                    </td>
+                                    <td>
+                                        <?php foreach ($groupedItems[$key] as $groupedSubItem) : ?>
+                                            <?= $groupedSubItem['title']; ?>
+                                            *
+                                            <?= $groupedSubItem['quantity']; ?>
+                                        <?php endforeach; ?>
+                                    </td>
+                                    <td>
+                                        <?= $groupedItemFirst['total_amount']; ?>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
 
