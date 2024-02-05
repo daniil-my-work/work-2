@@ -6,6 +6,11 @@ require_once('./functions/models.php');
 require_once('./functions/db.php');
 
 
+// Максимальное кол-во строк
+define("MAX_ROW", 5);
+define("PAGINATION_LENGTH", 3);
+
+
 // Проверка на авторизацию
 if (!$isAuth) {
     header("Location: ./auth.php");
@@ -84,6 +89,17 @@ if ($result === false) {
 }
 
 
+// Кол-во записей
+$groupedItemLength = count($groupedItems);
+$paginationLength = ceil($groupedItemLength / MAX_ROW);
+
+// Создаем массив чисел от 1 до $maxNumber
+$pagination = range(1, $paginationLength);
+print_r($paginationLength);
+
+$currentPage = 1;
+
+
 $page_head = include_template(
     'head.php',
     [
@@ -105,6 +121,8 @@ $page_body = include_template(
         'groupedItems' => $groupedItems,
         'dateFirst' => $dateFirst,
         'dateSecond' => $dateSecond,
+        'pagination' => $pagination,
+        'currentPage' => $currentPage,
         'keys' => $keys,
     ]
 );
