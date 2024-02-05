@@ -396,11 +396,11 @@ textarea {
 
 .footer__top-button {
     border: none;
-  background-color: #ffd600;
-  padding: 13px 20px;
-  font-weight: 700;
-  color: #000;
-  border-radius: 25px;
+    background-color: #ffd600;
+    padding: 13px 20px;
+    font-weight: 700;
+    color: #000;
+    border-radius: 25px;
 }
 
 .footer__content {
@@ -811,11 +811,11 @@ textarea {
 
 .basket__order-button {
     border: none;
-  background-color: #ffd600;
-  padding: 13px 20px;
-  font-weight: 700;
-  color: #000;
-  border-radius: 25px;
+    background-color: #ffd600;
+    padding: 13px 20px;
+    font-weight: 700;
+    color: #000;
+    border-radius: 25px;
 }
 
 /* Страница Заказ */
@@ -919,4 +919,47 @@ textarea {
 .product-item__counter-action--plus {
     padding-right: 10px;
     border-radius: 0 10px 10px 0;
+}
+
+
+/* Обертка календаря */
+.account__orders-calendar {
+    display: flex;
+    padding: 0 10px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+.account__orders-calendar .input__date-wrapper {
+    flex-grow: 1;
+}
+
+.account__orders-calendar .button--basic {
+    margin-left: 10px;
+}
+
+
+/* Поле ввода с датой */
+.input__date-wrapper {
+    position: relative;
+}
+
+.input__date {
+    padding-right: 50px;
+}
+
+.input__date-icon {
+    position: absolute;
+    content: '';
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    z-index: -1;
+}
+
+.input__date {
+    margin: 0;
+    background-color: transparent;
 }
