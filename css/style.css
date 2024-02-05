@@ -679,6 +679,7 @@ textarea {
 .account__orders-nav {
     margin: 0;
     margin-top: 10px;
+    padding: 0 10px;
 }
 
 .account__orders-nav .menu__nav-list {

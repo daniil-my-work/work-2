@@ -97,7 +97,7 @@ $paginationLength = ceil($groupedItemLength / MAX_ROW);
 $pagination = range(1, $paginationLength);
 print_r($paginationLength);
 
-$currentPage = 1;
+$currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
 
 
 $page_head = include_template(
