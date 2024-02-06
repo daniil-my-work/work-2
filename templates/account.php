@@ -71,10 +71,10 @@
                 <thead>
                     <tr>
                         <th scope="col">
-                            Номер
+                            Дата
                         </th>
                         <th scope="col">
-                            Дата
+                            Номер
                         </th>
                         <th scope="col">
                             Состав заказа
@@ -86,16 +86,16 @@
                 </thead>
                 <tbody>
                     <!-- Проходится по массиву заказов -->
-                    <?php if (count($groupedItems) != 0) : ?>
+                    <?php if (count($orderList) != 0) : ?>
                         <?php foreach ($keys as $key) : ?>
-                            <?php if (count($groupedItems[$key]) == 1) : ?>
-                                <?php $groupedItemFirst = $groupedItems[$key][0]; ?>
+                            <?php if (count($orderList[$key]) == 1) : ?>
+                                <?php $groupedItemFirst = $orderList[$key][0]; ?>
                                 <tr>
                                     <th scope="row">
-                                        <?= $groupedItemFirst['order_id']; ?>
+                                        <?= $groupedItemFirst['order_date']; ?>
                                     </th>
                                     <td>
-                                        <?= $groupedItemFirst['order_date']; ?>
+                                        <?= $groupedItemFirst['order_id']; ?>
                                     </td>
                                     <td>
                                         <?= $groupedItemFirst['title']; ?>
@@ -107,16 +107,16 @@
                                     </td>
                                 </tr>
                             <?php else : ?>
-                                <?php $groupedItemFirst = $groupedItems[$key][0]; ?>
+                                <?php $groupedItemFirst = $orderList[$key][0]; ?>
                                 <tr>
                                     <th scope="row">
-                                        <?= $groupedItemFirst['order_id']; ?>
+                                        <?= $groupedItemFirst['order_date']; ?>
                                     </th>
                                     <td>
-                                        <?= $groupedItemFirst['order_date']; ?>
+                                        <?= $groupedItemFirst['order_id']; ?>
                                     </td>
                                     <td>
-                                        <?php foreach ($groupedItems[$key] as $groupedSubItem) : ?>
+                                        <?php foreach ($orderList[$key] as $groupedSubItem) : ?>
                                             <?= $groupedSubItem['title']; ?>
                                             *
                                             <?= $groupedSubItem['quantity']; ?>
@@ -137,6 +137,8 @@
             <?php if (count($pagination) > 1) : ?>
                 <nav class="menu__nav account__orders-nav">
                     <?php $prevPageNumber = $currentPage - 1; ?>
+                    <?php $nextPageNumber = $currentPage + 1; ?>
+
                     <?php if ($currentPage > 1) : ?>
                         <a href="./account.php?page=<?= $prevPageNumber; ?>" class="menu__nav-button menu__nav-button--prev">
                             <svg class="menu__nav-button-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
@@ -146,21 +148,23 @@
                     <?php endif; ?>
 
                     <ul class="menu__nav-list">
-                        <?php foreach ($pagination as $paginationItem) : ?>
-                            <?php $isActive = $paginationItem == $currentPage ? 'menu__nav-item--current' : ''; ?>
-                            <?php if ($isActive == 'menu__nav-item--current') : ?>
-                                <p class="menu__nav-item <?= $isActive; ?>">
-                                    <?= $paginationItem; ?>
-                                </p>
-                            <?php else : ?>
-                                <a href="./account.php?page=<?= $paginationItem; ?>" class="menu__nav-item">
-                                    <?= $paginationItem; ?>
-                                </a>
-                            <?php endif; ?>
-                        <?php endforeach; ?>
+                        <?php if ($prevPageNumber != 0) : ?>
+                            <a href="./account.php?page=<?= $prevPageNumber; ?>" class="menu__nav-item">
+                                <?= $prevPageNumber; ?>
+                            </a>
+                        <?php endif; ?>
+
+                        <p class="menu__nav-item menu__nav-item--current">
+                            <?= $currentPage; ?>
+                        </p>
+
+                        <?php if ($currentPage != count($pagination)) : ?>
+                            <a href="./account.php?page=<?= $nextPageNumber; ?>" class="menu__nav-item">
+                                <?= $nextPageNumber; ?>
+                            </a>
+                        <?php endif; ?>
                     </ul>
 
-                    <?php $nextPageNumber = $currentPage + 1; ?>
                     <?php if ($currentPage != count($pagination)) : ?>
                         <a href="./account.php?page=<?= $nextPageNumber; ?>" class="menu__nav-button menu__nav-button--next">
                             <svg class="menu__nav-button-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">

@@ -26,9 +26,19 @@ $userInfo = get_arrow($result);
 
 // Получает данные о заказах пользователя
 $userId = $userInfo['id'];
-$sql = "SELECT orders.*, order_items.product_id, order_items.quantity, menu.title FROM orders LEFT JOIN order_items ON orders.order_id = order_items.order_id LEFT JOIN menu ON order_items.product_id = menu.id WHERE orders.customer_id = '$userId' ORDER BY orders.id DESC;";
 $dateFirst = null;
 $dateSecond = null;
+
+
+// Формирует запрос с учетом указанного промежутка времени
+if (is_null($_SESSION['orderTime']['start']) && is_null($_SESSION['orderTime']['end'])) {
+    $sql = "SELECT orders.*, order_items.product_id, order_items.quantity, menu.title FROM orders LEFT JOIN order_items ON orders.order_id = order_items.order_id LEFT JOIN menu ON order_items.product_id = menu.id WHERE orders.customer_id = '$userId' ORDER BY orders.id DESC;";
+} else {
+    // Формирует запрос с учетом сохраненного промежутка времени
+    $dateFirst = $_SESSION['orderTime']['start'];
+    $dateSecond = $_SESSION['orderTime']['end'];
+    $sql = "SELECT orders.*, order_items.product_id, order_items.quantity, menu.title FROM orders LEFT JOIN order_items ON orders.order_id = order_items.order_id LEFT JOIN menu ON order_items.product_id = menu.id WHERE orders.customer_id = '$userId' AND orders.order_date BETWEEN '$dateFirst 00:00:00' AND '$dateSecond 23:59:59' ORDER BY orders.id DESC;";
+}
 
 
 // Получает данные о заказах пользователя за промежуток времени
@@ -36,11 +46,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dateFirst = $_POST['date-first'];
     $dateSecond = $_POST['date-second'];
 
-    $sql = "SELECT orders.*, order_items.product_id, order_items.quantity, menu.title FROM orders LEFT JOIN order_items ON orders.order_id = order_items.order_id LEFT JOIN menu ON order_items.product_id = menu.id WHERE orders.customer_id = '$userId' AND orders.order_date BETWEEN '$dateFirst 00:00:00' AND '$dateSecond 23:59:59'  ORDER BY orders.id DESC;";
+    $sql = "SELECT orders.*, order_items.product_id, order_items.quantity, menu.title FROM orders LEFT JOIN order_items ON orders.order_id = order_items.order_id LEFT JOIN menu ON order_items.product_id = menu.id WHERE orders.customer_id = '$userId' AND orders.order_date BETWEEN '$dateFirst 00:00:00' AND '$dateSecond 23:59:59' ORDER BY orders.id DESC;";
+
+    // Присвоение данных сессии
+    $_SESSION['orderTime']['start'] = $dateFirst;
+    $_SESSION['orderTime']['end'] = $dateSecond;
 }
 
 
+// Получает все записи из таблицы Заказы
 $result = mysqli_query($con, $sql);
+
 
 if ($result === false) {
     // Обработка ошибки выполнения запроса
@@ -58,12 +74,10 @@ if ($result === false) {
                 $orderId = $orderInfoItem['order_id'];
                 $groupedItems[$orderId][] = $orderInfoItem;
             }
-
-            $keys = array_keys($groupedItems);
         } else {
             // Если результат запроса пуст
             $groupedItems = array();
-            $keys = array();
+            // $keys = array();
         }
     } elseif (mysqli_num_rows($result) == 1) {
         $orderInfo = get_arrow($result);
@@ -75,16 +89,16 @@ if ($result === false) {
             $orderId = $orderInfo['order_id'];
             $groupedItems[$orderId][] = $orderInfo;
 
-            $keys = array_keys($groupedItems);
+            // $keys = array_keys($groupedItems);
         } else {
             // Если результат запроса пуст
             $groupedItems = array();
-            $keys = array();
+            // $keys = array();
         }
     } else {
         // Если результат запроса пуст
         $groupedItems = array();
-        $keys = array();
+        // $keys = array();
     }
 }
 
@@ -94,10 +108,48 @@ $groupedItemLength = count($groupedItems);
 $paginationLength = ceil($groupedItemLength / MAX_ROW);
 
 // Создаем массив чисел от 1 до $maxNumber
-$pagination = range(1, $paginationLength);
-print_r($paginationLength);
+if ($groupedItemLength == 0) {
+    $pagination[] = 0;
+} else {
+    $pagination = range(1, $paginationLength);
+}
 
+
+// Соберает все даты в отдельный массив
+$allDates = [];
+foreach ($groupedItems as $order) {
+    foreach ($order as $item) {
+        $allDates[] = $item['order_date'];
+    }
+}
+
+// Cортирует массив дат по убыванию
+rsort($allDates);
+
+// Создает фильтрованный массив
+$filteredList = [];
+
+// Вставляет в массив отсортированные значения 
+foreach ($groupedItems as $orderId => $orderItems) {
+    foreach ($orderItems as $item) {
+        $filteredList[$orderId][] = $item;
+    }
+}
+
+
+// Текущая страница
 $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
+if ($currentPage == 1) {
+    $startIndex = 1;
+} else {
+    $startIndex = ($currentPage - 1) * MAX_ROW;
+}
+
+
+// Получает список заказов пользователя для отрисовки
+$orderList = array_slice($filteredList, $startIndex, MAX_ROW);
+$keys = array_keys($orderList);
+
 
 
 $page_head = include_template(
@@ -118,7 +170,7 @@ $page_body = include_template(
     'account.php',
     [
         'userInfo' => $userInfo,
-        'groupedItems' => $groupedItems,
+        'orderList' => $orderList,
         'dateFirst' => $dateFirst,
         'dateSecond' => $dateSecond,
         'pagination' => $pagination,

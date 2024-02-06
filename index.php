@@ -14,7 +14,7 @@ require_once('./functions/db.php');
 
 // Получение данных из сессии
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
-print_r($productsData);
+// print_r($productsData);
 
 
 $sql = get_query_products();
