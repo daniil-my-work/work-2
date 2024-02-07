@@ -133,7 +133,7 @@
 
 
     <!-- Иконка корзины -->
-    <a href="" class="action__basket hidden">
+    <a href="./account.php" class="action__basket hidden">
         <span class="action__basket-icon"></span>
     </a>
 </div>

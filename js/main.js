@@ -1,3 +1,31 @@
+// Кнопка корзина
+const actionBasket = document.querySelector('.action__basket');
+
+
+// Получает значение из Корзины
+function getProductInBasket() {
+    const basketUrl = 'get-session-data.php';
+
+    fetch(basketUrl, {
+        method: "GET",
+        credentials: 'same-origin'
+    })
+        .then(response => response.json())
+        .then(data => {
+            const dataLength = Object.keys(data).length === 0;
+
+            if (!dataLength) {
+                actionBasket.classList.remove('hidden');
+            } else {
+                actionBasket.classList.add('hidden');
+            }
+        })
+        .catch(error => {
+            console.log("Ошибка при получении данных из сессии:" + error);
+        });
+}
+
+
 // Функция для открытия и закртия меню
 document.addEventListener("DOMContentLoaded", function () {
     const burger = document.querySelector(".header__burger");
@@ -91,6 +119,9 @@ function addProductInBasket(evt) {
             apiUpdateProductList(params);
             // console.log(params.toString());
 
+            // Получает значение из Корзины
+            getProductInBasket();
+
             hideCounter(productCounterButton, productCounterWrapper);
             return;
         }
@@ -99,6 +130,9 @@ function addProductInBasket(evt) {
         params.append("quantity", newValue);
         apiUpdateProductList(params);
         // console.log(params.toString());
+
+        // Получает значение из Корзины
+        getProductInBasket();
 
         productCounterInput.value = newValue;
         productCounterNumber.textContent = newValue;
@@ -118,6 +152,9 @@ function addProductInBasket(evt) {
         params.append("quantity", newValue);
         apiUpdateProductList(params);
         // console.log(params.toString());
+
+        // Получает значение из Корзины
+        getProductInBasket();
 
         productCounterInput.value = newValue;
         productCounterNumber.textContent = newValue;
@@ -141,7 +178,9 @@ function addProductInBasket(evt) {
     // Обновляет данные в сессии
     params.append("quantity", startValue);
     apiUpdateProductList(params);
-    // console.log(params.toString());
+
+    // Получает значение из Корзины
+    getProductInBasket();
 }
 
 // Обработчик для страницы Главная и Меню
@@ -151,6 +190,7 @@ if (mainList) {
 
     mainList.addEventListener("click", addProductInBasket);
 }
+
 
 // Добавляет продукт в корзину
 function addProductInBasketSecond(evt) {
@@ -239,15 +279,11 @@ function addProductInBasketSecond(evt) {
     }
 }
 
-const basketList = document.querySelector(".basket__list");
-
 // Прибавляет или убавляет кол-во блюд в заказе на странице Корзина
+const basketList = document.querySelector(".basket__list");
 if (basketList) {
     console.log("Корзина");
 
     basketList.addEventListener("click", addProductInBasketSecond);
 }
 
-
-// Кнопка корзина
-const actionBasket = document.querySelector('.action__basket');

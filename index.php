@@ -6,17 +6,11 @@ require_once('./functions/models.php');
 require_once('./functions/db.php');
 
 
-// if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-//     // Ответ сервера (может быть пустым или содержать информацию об успешном добавлении)
-//     echo 'Товар добавлен в корзину';
-// }
-
-
 // Получение данных из сессии
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
-// print_r($productsData);
 
 
+// Получает список продуктов
 $sql = get_query_products();
 $products = mysqli_query($con, $sql);
 $productList = get_arrow($products);
