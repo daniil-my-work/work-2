@@ -5,10 +5,17 @@ require_once('./functions/init.php');
 require_once('./functions/db.php');
 
 
-// print_r($_SESSION);
 
 // Данные о заказе
-$sql = "SELECT * FROM orders WHERE orders.customer_id = '$userId' ORDER BY id DESC LIMIT 1";
+$getOrderId = isset($_GET['orderId']) ? $_GET['orderId'] : null;
+
+if (is_null($getOrderId)) {
+    header("Location: ./index.php");
+    return;
+}
+
+// Получает данные о конкретном заказе по id заказа
+$sql = "SELECT * FROM orders WHERE orders.customer_id = '$userId' AND orders.order_id = '$getOrderId'";
 $result = mysqli_query($con, $sql);
 $orderInfo = get_arrow($result);
 

@@ -95,7 +95,9 @@
                                         <?= $groupedItemFirst['order_date']; ?>
                                     </th>
                                     <td>
-                                        <?= $groupedItemFirst['order_id']; ?>
+                                        <a href="./order.php?orderId=<?= $groupedItemFirst['order_id']; ?>">
+                                            <?= $groupedItemFirst['order_id']; ?>
+                                        </a>
                                     </td>
                                     <td>
                                         <?= $groupedItemFirst['title']; ?>
@@ -113,7 +115,9 @@
                                         <?= $groupedItemFirst['order_date']; ?>
                                     </th>
                                     <td>
-                                        <?= $groupedItemFirst['order_id']; ?>
+                                        <a href="./order.php?orderId=<?= $groupedItemFirst['order_id']; ?>">
+                                            <?= $groupedItemFirst['order_id']; ?>
+                                        </a>
                                     </td>
                                     <td>
                                         <?php foreach ($orderList[$key] as $groupedSubItem) : ?>

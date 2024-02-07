@@ -89,7 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = db_get_prepare_stmt($con, $sql, $order);
     $res = mysqli_stmt_execute($stmt);
 
-
     // SQL код для добавление записи в базу с состовляющими заказа 
     $sqlSecond = get_query_create_orderItem();
 
@@ -130,7 +129,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Удаляет данные из сессии и перенапрвляет на страницу аккаунт
         unset($_SESSION['order']);
-        header("Location: ./order.php");
+
+        // Получает ID последнего вставленного заказа
+        $order_num = mysqli_insert_id($con);
+        $sql = "SELECT orders.order_id FROM orders WHERE orders.customer_id = '$userId' AND orders.id = '$order_num'";
+        $res = mysqli_query($con, $sql);
+        $order_id = get_arrow($res)['order_id'];
+
+        if (!$res) {
+            return;
+        }
+
+        header("Location: ./order.php?order=$order_id");
     } else {
         echo "Ошибка при выполнении запроса: " . mysqli_error($con);
         echo "Номер ошибки: " . mysqli_errno($con);
