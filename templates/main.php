@@ -130,4 +130,10 @@
             </p>
         </div>
     </div>
+
+
+    <!-- Иконка корзины -->
+    <a href="" class="action__basket hidden">
+        <span class="action__basket-icon"></span>
+    </a>
 </div>

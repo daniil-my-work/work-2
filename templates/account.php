@@ -148,6 +148,12 @@
                     <?php endif; ?>
 
                     <ul class="menu__nav-list">
+                        <?php if ($currentPage == count($pagination) && $prevPageNumber != 1) : ?>
+                            <a href="./account.php?page=<?= $prevPageNumber - 1; ?>" class="menu__nav-item">
+                                <?= $prevPageNumber - 1; ?>
+                            </a>
+                        <?php endif; ?>
+
                         <?php if ($prevPageNumber != 0) : ?>
                             <a href="./account.php?page=<?= $prevPageNumber; ?>" class="menu__nav-item">
                                 <?= $prevPageNumber; ?>
@@ -161,6 +167,12 @@
                         <?php if ($currentPage != count($pagination)) : ?>
                             <a href="./account.php?page=<?= $nextPageNumber; ?>" class="menu__nav-item">
                                 <?= $nextPageNumber; ?>
+                            </a>
+                        <?php endif; ?>
+
+                        <?php if ($prevPageNumber == 0 && $nextPageNumber != count($pagination)) : ?>
+                            <a href="./account.php?page=<?= $nextPageNumber + 1; ?>" class="menu__nav-item">
+                                <?= $nextPageNumber + 1; ?>
                             </a>
                         <?php endif; ?>
                     </ul>

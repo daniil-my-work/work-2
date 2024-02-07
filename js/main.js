@@ -247,3 +247,7 @@ if (basketList) {
 
     basketList.addEventListener("click", addProductInBasketSecond);
 }
+
+
+// Кнопка корзина
+const actionBasket = document.querySelector('.action__basket');
