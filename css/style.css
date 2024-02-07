@@ -748,6 +748,8 @@ textarea {
     display: inline-block;
     position: relative;
     padding-left: 20px;
+    text-decoration: none;
+    color: #000;
 }
 
 .basket__breadcrumbs::before {
@@ -757,12 +759,16 @@ textarea {
     height: 1px;
     bottom: 1px;
     left: 0;
-    background-color: #ffd600;
+        background-color: #ffd600;
 }
 
 .basket__breadcrumbs:hover,
 .basket__breadcrumbs:active {
     color: #ffd600;
+}
+
+.basket__breadcrumbs-icon {
+    rotate: 180deg;
 }
 
 .basket__icon {
