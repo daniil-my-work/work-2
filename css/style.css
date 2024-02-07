@@ -990,17 +990,20 @@ textarea {
     align-items: center;
     justify-content: center;
     position: fixed;
-    bottom: 10px;
-    right: 10px;
-    width: 60px;
-    height: 60px;
-    background-color: #d3d3d3;
+    bottom: 12px;
+    right: 12px;
+    width: 54px;
+    height: 54px;
+    background-color: #CCD2E3;
     z-index: 5;
     border-radius: 50%;
 }
 
+.action__basket:hover {
+    background-color: #ffd600;
+}
+
 .action__basket-icon {
-    width: 30px;
-    height: 30px;
-    background-color: red;
+    width: 24px;
+    height: 24px;
 }

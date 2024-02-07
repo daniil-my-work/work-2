@@ -13,7 +13,6 @@
     <!-- Футер -->
     <?= $footer; ?>
 
-
     <!-- Подключаем JavaScript Flatpickr -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
