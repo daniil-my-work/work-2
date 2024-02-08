@@ -420,10 +420,28 @@ textarea {
     margin-bottom: 50px;
 }
 
+.footer__list {
+    margin-bottom: 20px;
+}
+
+.footer__item {
+    margin-bottom: 4px;
+}
+
+.footer__item:last-child {
+    margin-bottom: 0;
+}
+
 .footer__item-link {
     color: #cbd2e3;
-    font-size: 16px;
+    font-size: 18px;
     line-height: 18px;
+    text-decoration: none;
+}
+
+.footer__item-link:hover,
+.footer__item-link:active {
+    color: #ffd600;
 }
 
 .footer__bottom {
@@ -618,6 +636,7 @@ textarea {
     display: flex;
     justify-content: center;
     margin-bottom: 30px;
+    margin-top: 10px;
 }
 
 .account__orders-group-link {
@@ -745,37 +764,47 @@ textarea {
 }
 
 .basket__breadcrumbs {
-    display: inline-block;
+    width: max-content;
+    display: flex;
+    align-items: center;
     position: relative;
-    padding-left: 20px;
+    font-size: 14px;
+    line-height: 1;
+    min-height: 24px;
     text-decoration: none;
     color: #000;
+    background-color: #ffd600;
+    padding: 4px 10px;
+    border-radius: 10px;
 }
 
-.basket__breadcrumbs::before {
-    position: absolute;
-    content: '';
-    width: 100%;
-    height: 1px;
-    bottom: 1px;
-    left: 0;
-        background-color: #ffd600;
-}
 
 .basket__breadcrumbs:hover,
 .basket__breadcrumbs:active {
-    color: #ffd600;
+    color: #999;
 }
 
 .basket__breadcrumbs-icon {
     rotate: 180deg;
+    width: 20px;
+    height: 20px;
+    margin-right: 4px;
+}
+
+.basket__breadcrumbs:hover .basket__breadcrumbs-icon,
+.basket__breadcrumbs:active .basket__breadcrumbs-icon {
+    color: #999;
+}
+
+.basket__breadcrumbs span {
+    margin-top: 1.5px;
 }
 
 .basket__icon {
     width: 70px;
     height: auto;
     margin: 0 auto;
-    margin-top: 20px;
+    margin-top: 30px;
     margin-bottom: 30px;
 }
 
@@ -853,7 +882,7 @@ textarea {
     margin: 0;
     text-align: center;
     font-size: 26px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .page__order .basket__icon {

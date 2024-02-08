@@ -4,21 +4,12 @@ require_once('./functions/helpers.php');
 require_once('./functions/init.php');
 require_once('./functions/models.php');
 require_once('./functions/db.php');
+require_once('./functions/formatter.php');
 
-
-// if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-//     // Ответ сервера (может быть пустым или содержать информацию об успешном добавлении)
-//     echo 'Товар добавлен в корзину';
-// }
 
 
 // Получение данных из сессии
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
-print_r($productsData);
-
-
-// Получает активную категорию
-$activeCategory = isset($_GET['category']) ? $_GET['category'] : 'rolls';
 
 // Получает список категорий меню 
 $sql = get_query_categories();
@@ -26,15 +17,24 @@ $categories = mysqli_query($con, $sql);
 $categoryList = get_arrow($categories);
 
 
+// Получает активную категорию
+$activeCategory = isset($_GET['category']) ? $_GET['category'] : 'rolls';
+
+
+// Получает данные о выбранной категории
 $sql1 = get_query_selectedCategory($activeCategory);
 $category = mysqli_query($con, $sql1);
 $categoryName = get_arrow($category);
 
 
-// Получает список продуктов по выбранной категории 
-$sql = get_query_selectedProducts($activeCategory);
-$products = mysqli_query($con, $sql);
-$productList = get_arrow($products);
+if ($activeCategory == 'poke') {
+    $productList = array();
+} else {
+    // Получает список продуктов по выбранной категории 
+    $sql = get_query_selectedProducts($activeCategory);
+    $products = mysqli_query($con, $sql);
+    $productList = get_arrow($products);
+}
 
 
 $page_head = include_template(
@@ -64,7 +64,9 @@ $page_body = include_template(
 
 $page_footer = include_template(
     'footer.php',
-    []
+    [
+        'categoryList' => $categoryList,
+    ]
 );
 
 $layout_content = include_template(

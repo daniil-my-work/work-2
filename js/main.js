@@ -26,16 +26,43 @@ function getProductInBasket() {
 }
 
 
+// Закрывает меню при клике вне области Меню
+function closeMenu(evt) {
+    const burger = document.querySelector(".header__burger");
+    const nav = document.querySelector(".header__nav");
+    const target = evt.target
+
+    if (target.closest('.header__burger')) {
+        return;
+    }
+
+    if (!target.closest('.header__nav')) {
+        nav.classList.remove("show");
+        burger.classList.remove("show");
+    }
+}
+
 // Функция для открытия и закртия меню
 document.addEventListener("DOMContentLoaded", function () {
     const burger = document.querySelector(".header__burger");
     const nav = document.querySelector(".header__nav");
+    const body = document.querySelector(".page__body");
 
     burger.addEventListener("click", function () {
         nav.classList.toggle("show");
         burger.classList.toggle("show");
+
+        if (nav.classList.contains('show')) {
+            body.style.overflowY = 'hidden';
+            body.addEventListener('click', closeMenu);
+        } else {
+            body.style.overflowY = 'scroll';
+            body.removeEventListener('click', closeMenu);
+        }
     });
 });
+
+
 
 // Показывет кнопку: В корзину
 function openCounter(button, counter) {

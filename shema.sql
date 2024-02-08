@@ -95,22 +95,6 @@ CREATE TABLE `component` (
     ) NOT NULL
 );
 
-CREATE TABLE `poke` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `title` VARCHAR(255),
-    `img` VARCHAR(255),
-    `description` VARCHAR(255),
-    `price` INT
-);
-
-CREATE TABLE `poke_component` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `component_id` INT,
-    `poke_id` INT,
-    FOREIGN KEY (`component_id`) REFERENCES `component` (`id`),
-    FOREIGN KEY (`poke_id`) REFERENCES `poke` (`id`)
-);
-
 CREATE TABLE `address` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `city` VARCHAR(255),

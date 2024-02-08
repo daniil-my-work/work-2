@@ -21,11 +21,13 @@
                 </h3>
 
                 <ul class="footer__list">
-                    <li class="footer__item">
-                        <a class="footer__item-link" href="#">
-                            ...
-                        </a>
-                    </li>
+                    <?php foreach ($categoryList as $category) : ?>
+                        <li class="footer__item">
+                            <a href="./menu.php?category=<?= $category['category__title']; ?>" class="footer__item-link">
+                                <?= $category['category__name']; ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
                 </ul>
             </div>
 
