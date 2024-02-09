@@ -145,15 +145,21 @@
 
 
                         <fieldset class="constructor__poke-shema">
-                            <input type="radio" class="constructor__poke-item-radio" id="shema1" name="shema" value="1">
-                            <label for="shema1">
-                                Удон
-                            </label>
+                            <div class="constructor__poke-shema-item">
+                                <input type="radio" class="constructor__poke-item-radio" id="shema1" name="shema"
+                                    value="1">
+                                <label for="shema1">
+                                    5 наполнителей + 1 топинг
+                                </label>
+                            </div>
 
-                            <input type="radio" class="constructor__poke-item-radio" id="shema2" name="shema" value="2">
-                            <label for="shema2">
-                                Ав
-                            </label>
+                            <div class="constructor__poke-shema-item">
+                                <input type="radio" class="constructor__poke-item-radio" id="shema2" name="shema"
+                                    value="2">
+                                <label for="shema2">
+                                    3 наполнителя + 2 топинга
+                                </label>
+                            </div>
                         </fieldset>
 
 
@@ -176,13 +182,41 @@
                                     Удон
                                 </label>
                             </li>
+                        </ul>
+                    </div>
 
+                    <!-- Наполнитель -->
+                    <div class="constructor__poke-component">
+                        <div class="constructor__poke-step">
+                            <span class="constructor__poke-step-number">
+                                4
+                            </span>
+
+                            <img class="constructor__poke-step-icon" src="../img/c-poke/c-poke-step4.png" alt="">
+                        </div>
+
+                        <h3 class="constructor__poke-title">
+                            Топпинг
+                        </h3>
+
+                        <div class="constructor__poke-info">
+                            <span class="constructor__poke-info-text">
+                                Топпинг
+                            </span>
+
+                            <span class="constructor__poke-info-number" id="fillerCounter">
+                                / Осталось 5 из 5
+                            </span>
+                        </div>
+
+                        <ul class="constructor__poke-list">
                             <li class="constructor__poke-item">
-                                <!-- <label class="constructor__poke-item-label" for="filler">
-                                    <input type="checkbox" class="constructor__poke-item-checkbox" name="filler"
-                                        value="">
-                                    - удон
-                                </label> -->
+                                <input type="checkbox" class="constructor__poke-item-checkbox" id="happy" name="happy"
+                                    value="">
+
+                                <label for="happy">
+                                    Удон
+                                </label>
                             </li>
                         </ul>
                     </div>
