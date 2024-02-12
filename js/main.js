@@ -384,6 +384,21 @@ shemaPoke.addEventListener('click', (evt) => {
 });
 
 
+// Селект Протеин
+const selectProtein = document.querySelector('#constructor-poke__select--protein');
+const basketSum = document.querySelector('.basket__order-number');
+
+// Назначаем обработчик изменения состояния каждому чекбоксу
+selectProtein.addEventListener('change', (evt) => {
+    const selectedIndex = evt.target.selectedIndex;
+    const selectedOption = evt.target.options[selectedIndex];
+    const price = selectedOption.getAttribute('data-price');
+
+    basketSum.textContent = `${price} руб`;
+});
+
+
+
 // Список инпутов Наполнитель
 const checkboxFillerList = document.querySelectorAll('.constructor-poke-item-checkbox--filler');
 
@@ -397,8 +412,6 @@ function handleFillerCheckboxChange(event) {
             checkedCount++;
         }
     });
-
-    console.log(checkedCount);
 
     if (checkedCount > shemaPokeNumber[number]['filler']) {
         event.preventDefault(); // Предотвращаем изменение состояния
@@ -440,3 +453,88 @@ checkboxTopingList.forEach(topppingItem => {
 });
 
 
+
+
+// Селект с протеином: Добавка к Поке
+const selectProteinAdd = document.querySelector('#constructor-poke__select-proteinAdd');
+const labelProteinAdd = document.querySelector('#constructor-poke__add-price--protein');
+
+selectProteinAdd.addEventListener('change', (evt) => {
+    const selectedIndex = evt.target.selectedIndex;
+    const selectedOption = evt.target.options[selectedIndex];
+    const price = selectedOption.getAttribute('data-price');
+
+    labelProteinAdd.textContent = `+ ${price} руб`;
+});
+
+
+// Селект с соусом: Добавка к Поке
+const selectSauceAdd = document.querySelector('#constructor-poke__select-sauceAdd');
+const labelSauceAdd = document.querySelector('#constructor-poke__add-price--sauce');
+
+selectSauceAdd.addEventListener('change', (evt) => {
+    const selectedIndex = evt.target.selectedIndex;
+    const selectedOption = evt.target.options[selectedIndex];
+    const price = selectedOption.getAttribute('data-price');
+
+    labelSauceAdd.textContent = `+ ${price} руб`;
+});
+
+// Селект с соусом: Добавка к Поке
+const selectСrunchAdd = document.querySelector('#constructor-poke__select-crunchAdd');
+const labelСrunchAdd = document.querySelector('#constructor-poke__add-price--crunch');
+
+selectСrunchAdd.addEventListener('change', (evt) => {
+    const selectedIndex = evt.target.selectedIndex;
+    const selectedOption = evt.target.options[selectedIndex];
+    const price = selectedOption.getAttribute('data-price');
+
+    labelСrunchAdd.textContent = `+ ${price} руб`;
+});
+
+
+
+// Список инпутов Наполнитель дополнительно
+const labelFillerAdd = document.querySelector('#constructor-poke__add-price--filler');
+const checkboxFillerAddList = document.querySelectorAll('.constructor-poke-item-checkbox--fillerAdd');
+
+// Обработчик изменения состояния чекбоксов
+function handleFillerAddCheckboxChange() {
+    let fillerAddSum = 0;
+
+    checkboxFillerAddList.forEach(fillerItem => {
+        if (fillerItem.checked) {
+            fillerAddSum += Number(fillerItem.dataset.price);
+        }
+    });
+
+    labelFillerAdd.textContent = `+ ${fillerAddSum} руб`;
+}
+
+// Назначаем обработчик изменения состояния каждому чекбоксу
+checkboxFillerAddList.forEach(fillerItem => {
+    fillerItem.addEventListener('change', handleFillerAddCheckboxChange);
+});
+
+
+// Список инпутов Топинг дополнительно
+const labelToppingAdd = document.querySelector('#constructor-poke__add-price--topping');
+const checkboxToppingAddList = document.querySelectorAll('.constructor-poke-item-checkbox--toppingAdd');
+
+// Обработчик изменения состояния чекбоксов
+function handleToppingAddCheckboxChange() {
+    let toppingAddSum = 0;
+
+    checkboxToppingAddList.forEach(toppingItem => {
+        if (toppingItem.checked) {
+            toppingAddSum += Number(toppingItem.dataset.price);
+        }
+    });
+
+    labelToppingAdd.textContent = `+ ${toppingAddSum} руб`;
+}
+
+// Назначаем обработчик изменения состояния каждому чекбоксу
+checkboxToppingAddList.forEach(toppingItem => {
+    toppingItem.addEventListener('change', handleToppingAddCheckboxChange);
+});

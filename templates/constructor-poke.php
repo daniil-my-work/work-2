@@ -33,9 +33,13 @@
                         Выберите протеин
                     </h3>
 
-                    <select class="form-select constructor-poke__select" aria-label="" name="protein">
+                    <select class="form-select constructor-poke__select" id="constructor-poke__select--protein" aria-label="" name="protein">
+                        <option value="" selected>
+                            Не выбран
+                        </option>
+
                         <?php foreach ($proteinList as $proteinItem) : ?>
-                            <option value="<?= $proteinItem['title']; ?>">
+                            <option value="<?= $proteinItem['title']; ?>" data-price="<?= $proteinItem['price']; ?>">
                                 <?= $proteinItem['title']; ?>
                             </option>
                         <?php endforeach; ?>
@@ -57,6 +61,10 @@
                     </h3>
 
                     <select class="form-select constructor-poke__select" aria-label="" name="base">
+                        <option value="" selected>
+                            Не выбран
+                        </option>
+
                         <?php foreach ($baseList as $baseItem) : ?>
                             <option value="<?= $baseItem['title']; ?>">
                                 <?= $baseItem['title']; ?>
@@ -172,6 +180,10 @@
                     </h3>
 
                     <select class="form-select constructor-poke__select" aria-label="" name="sauce">
+                        <option value="" selected>
+                            Не выбран
+                        </option>
+
                         <?php foreach ($sauceList as $sauceItem) : ?>
                             <option value="<?= $sauceItem['title']; ?>">
                                 <?= $sauceItem['title']; ?>
@@ -195,6 +207,10 @@
                     </h3>
 
                     <select class="form-select constructor-poke__select" aria-label="" name="crunch">
+                        <option value="" selected>
+                            Не выбран
+                        </option>
+
                         <?php foreach ($crunchList as $crunchItem) : ?>
                             <option value="<?= $crunchItem['title']; ?>">
                                 <?= $crunchItem['title']; ?>
@@ -206,7 +222,7 @@
 
 
             <div class="constructor-poke__add">
-                <h3 class="sub-title">
+                <h3 class="mb-3">
                     Дополнительно
                 </h3>
 
@@ -217,11 +233,14 @@
                 <label>
                     Протеин
 
-                    <span class="constructor-poke__add-price">
-                        + 436 руб
+                    <span class="constructor-poke__add-price" id="constructor-poke__add-price--protein">
                     </span>
                 </label>
-                <select class="form-select constructor-poke__select" aria-label="" name="protein">
+                <select class="form-select constructor-poke__select" id="constructor-poke__select-proteinAdd" aria-label="" name="protein">
+                    <option value="" selected>
+                        Не выбран
+                    </option>
+
                     <?php foreach ($proteinAddList as $proteinAddItem) : ?>
                         <option value="<?= $proteinAddItem['title']; ?>" data-price="<?= $proteinAddItem['price']; ?>">
                             <?= $proteinAddItem['title']; ?>
@@ -233,14 +252,15 @@
                 <label>
                     Наполнитель
 
-                    <span class="constructor-poke__add-price">
-                        + 436 руб
+                    <span class="constructor-poke__add-price" id="constructor-poke__add-price--filler">
                     </span>
                 </label>
-                <ul class="constructor-poke-list constructor-poke-list--second">
+                <ul class="constructor-poke-list constructor-poke-list--second" id="constructor-poke__fillerAdd">
+                    <input type="hidden" id="constructor-poke__fillerAdd-input" value="">
+
                     <?php foreach ($fillerList as $fillerItem) : ?>
                         <li class="constructor-poke-item" data-price="<?= $fillerItem['price']; ?>">
-                            <input type="checkbox" class="constructor-poke-item-checkbox" id="<?= $fillerItem['title']; ?>-add" name="filler" value="<?= $fillerItem['price']; ?>">
+                            <input type="checkbox" class="constructor-poke-item-checkbox constructor-poke-item-checkbox--fillerAdd" id="<?= $fillerItem['title']; ?>-add" name="filler" value="<?= $fillerItem['title']; ?>" data-price="<?= $fillerItem['price']; ?>">
 
                             <label for="<?= $fillerItem['title']; ?>-add">
                                 <?= $fillerItem['title']; ?>
@@ -253,14 +273,13 @@
                 <label>
                     Топпинг
 
-                    <span class="constructor-poke__add-price">
-                        + 436 руб
+                    <span class="constructor-poke__add-price" id="constructor-poke__add-price--topping">
                     </span>
                 </label>
-                <ul class="constructor-poke-list constructor-poke-list--second">
+                <ul class="constructor-poke-list constructor-poke-list--second" id="constructor-poke__toppingAdd">
                     <?php foreach ($toppingList as $toppingItem) : ?>
                         <li class="constructor-poke-item" data-price="<?= $toppingItem['price']; ?>">
-                            <input type="checkbox" class="constructor-poke-item-checkbox" id="<?= $toppingItem['title']; ?>-add" name="topping" value="<?= $toppingItem['price']; ?>">
+                            <input type="checkbox" class="constructor-poke-item-checkbox constructor-poke-item-checkbox--toppingAdd" id="<?= $toppingItem['title']; ?>-add" name="topping" value="<?= $toppingItem['title']; ?>" data-price="<?= $toppingItem['price']; ?>">
 
                             <label for="<?= $toppingItem['title']; ?>-add">
                                 <?= $toppingItem['title']; ?>
@@ -273,13 +292,16 @@
                 <label>
                     Соус
 
-                    <span class="constructor-poke__add-price">
-                        + 436 руб
+                    <span class="constructor-poke__add-price" id="constructor-poke__add-price--sauce">
                     </span>
                 </label>
-                <select class="form-select constructor-poke__select" aria-label="" name="sauce">
+                <select class="form-select constructor-poke__select" id="constructor-poke__select-sauceAdd" aria-label="" name="sauce">
+                    <option value="" selected>
+                        Не выбран
+                    </option>
+
                     <?php foreach ($sauceList as $sauceItem) : ?>
-                        <option value="<?= $sauceItem['title']; ?>" data-price="<?= $crunchItem['price']; ?>">
+                        <option value="<?= $sauceItem['title']; ?>" data-price="<?= $sauceItem['price']; ?>">
                             <?= $sauceItem['title']; ?>
                         </option>
                     <?php endforeach; ?>
@@ -288,11 +310,14 @@
                 <label>
                     Хруст
 
-                    <span class="constructor-poke__add-price">
-                        + 436 руб
+                    <span class="constructor-poke__add-price" id="constructor-poke__add-price--crunch">
                     </span>
                 </label>
-                <select class="form-select constructor-poke__select" aria-label="" name="crunch">
+                <select class="form-select constructor-poke__select" id="constructor-poke__select-crunchAdd" aria-label="" name="crunch">
+                    <option value="" selected>
+                        Не выбран
+                    </option>
+
                     <?php foreach ($crunchList as $crunchItem) : ?>
                         <option value="<?= $crunchItem['title']; ?>" data-price="<?= $crunchItem['price']; ?>">
                             <?= $crunchItem['title']; ?>
@@ -307,7 +332,6 @@
                     Ваш заказ:
 
                     <span class="basket__order-number">
-                        660 руб
                     </span>
                 </p>
 
