@@ -344,13 +344,43 @@ shemaPoke.addEventListener('click', (evt) => {
         topingPokeItem.textContent = `/ Осталось 1 из 1`;
 
         localStorage.setItem('shemaPoke', 1);
-
     } else {
         fillerPokeItem.textContent = `/ Осталось 3 из 3`;
         topingPokeItem.textContent = `/ Осталось 2 из 2`;
 
         localStorage.setItem('shemaPoke', 2);
     }
+
+    // Схеама из стореджа
+    const number = localStorage.getItem('shemaPoke');
+
+    // Очищает чекбоксы Наполнителя 
+    let fillerItemNumber = 0;
+    checkboxFillerList.forEach(fillerItem => {
+        if (fillerItem.checked) {
+            fillerItemNumber++;
+        }
+    });
+
+    checkboxFillerList.forEach(fillerItem => {
+        if (fillerItemNumber > shemaPokeNumber[number]['filler']) {
+            fillerItem.checked = false;
+        }
+    });
+
+    // Очищает чекбоксы Топинга  
+    let topppingItemNumber = 0;
+    checkboxTopingList.forEach(topppingItem => {
+        if (topppingItem.checked) {
+            topppingItemNumber++;
+        }
+    });
+
+    checkboxTopingList.forEach(topppingItem => {
+        if (topppingItemNumber > shemaPokeNumber[number]['toping']) {
+            topppingItem.checked = false;
+        }
+    });
 });
 
 
@@ -391,8 +421,8 @@ function handleTopingCheckboxChange(event) {
     const number = localStorage.getItem('shemaPoke');
     let checkedCount = 0;
 
-    checkboxTopingList.forEach(fillerItem => {
-        if (fillerItem.checked) {
+    checkboxTopingList.forEach(topppingItem => {
+        if (topppingItem.checked) {
             checkedCount++;
         }
     });
@@ -405,8 +435,8 @@ function handleTopingCheckboxChange(event) {
 }
 
 // Назначаем обработчик изменения состояния каждому чекбоксу
-checkboxTopingList.forEach(fillerItem => {
-    fillerItem.addEventListener('change', handleTopingCheckboxChange);
+checkboxTopingList.forEach(topppingItem => {
+    topppingItem.addEventListener('change', handleTopingCheckboxChange);
 });
 
 
