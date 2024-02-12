@@ -314,3 +314,7 @@ if (basketList) {
     basketList.addEventListener("click", addProductInBasketSecond);
 }
 
+
+
+
+const shemaPoke = document.querySelector('.constructor-poke-shema');

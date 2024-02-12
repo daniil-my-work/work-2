@@ -84,6 +84,16 @@ textarea {
 }
 
 
+.button--second {
+    border: none;
+    background-color: #ffd600;
+    padding: 13px 20px;
+    font-weight: 700;
+    color: #000;
+    border-radius: 25px;
+}
+
+
 
 /* Хедер */
 .header {}
@@ -1053,7 +1063,11 @@ textarea {
     margin-bottom: 40px;
 }
 
-.constructor__poke-component {
+.constructor-poke__list {
+    margin-bottom: 40px;
+}
+
+.constructor-poke__component {
     font-size: 16px;
     background-color: #F6F6F6;
     border-radius: 10px;
@@ -1061,18 +1075,18 @@ textarea {
     margin-bottom: 15px;
 }
 
-.constructor__poke-component:last-child {
+.constructor-poke__component:last-child {
     margin-bottom: 0;
 }
 
-.constructor__poke-step {
+.constructor-poke__step {
     display: flex;
     align-items: center;
     position: relative;
     min-height: 70px;
 }
 
-.constructor__poke-step-number {
+.constructor-poke__step-number {
     position: absolute;
     top: 4px;
     left: 0;
@@ -1082,7 +1096,7 @@ textarea {
     z-index: 2;
 }
 
-.constructor__poke-step-icon {
+.constructor-poke__step-icon {
     top: 0;
     left: 20px;
     position: absolute;
@@ -1090,11 +1104,11 @@ textarea {
     height: 60px;
 }
 
-.constructor__poke-info {
+.constructor-poke-info {
     margin-bottom: 20px;
 }
 
-.constructor__poke-select {
+.constructor-poke__select {
     width: 100%;
     padding: 10px 10px;
     font-size: 18px;
@@ -1105,31 +1119,35 @@ textarea {
 }
 
 
-.constructor__poke-item {
+.constructor-poke-item {
     margin-bottom: 10px;
     height: 30px;
 }
 
-.constructor__poke-shema {
+.constructor-poke-shema {
     border: none;
     padding: 0;
     margin: 0;
     margin-bottom: 20px;
 }
 
-.constructor__poke-shema-item {
+.constructor-poke-shema-item {
     background-color: #fff;
     padding: 15px 10px;
     border-radius: 10px;
     margin-bottom: 10px;
 }
 
-.constructor__poke-shema-item:last-child {
+.constructor-poke-shema-item:last-child {
     margin-bottom: 0;
 }
 
+.constructor-poke-item {
+    /* overflow: hidden; */
+}
+
 /* Радиокнопка */
-.constructor__poke-item-radio {
+.constructor-poke-item-radio {
     position: absolute;
     z-index: -1;
     opacity: 0;
@@ -1138,7 +1156,7 @@ textarea {
     margin: 0;
 }
 
-.constructor__poke-item-radio+label {
+.constructor-poke-item-radio+label {
     display: flex;
     align-items: center;
     user-select: none;
@@ -1146,7 +1164,7 @@ textarea {
     margin: 0;
 }
 
-.constructor__poke-item-radio+label::before {
+.constructor-poke-item-radio+label::before {
     content: '';
     display: inline-block;
     width: 20px;
@@ -1162,27 +1180,29 @@ textarea {
     background-size: 50% 50%;
 }
 
-.constructor__poke-item-radio:checked+label::before {
+.constructor-poke-item-radio:checked+label::before {
     border-color: #31688F;
     box-shadow: inset 0 0 0 6px #31688F;
     transition: 0.2s all linear;
 }
 
 /* Чекбокс */
-.constructor__poke-item-checkbox {
+.constructor-poke-item-checkbox {
     position: absolute;
     z-index: -1;
     opacity: 0;
+    width: 0;
+    height: 0;
 }
 
-.constructor__poke-item-checkbox+label {
+.constructor-poke-item-checkbox+label {
     display: flex;
     align-items: center;
     user-select: none;
     height: 100%;
 }
 
-.constructor__poke-item-checkbox+label::before {
+.constructor-poke-item-checkbox+label::before {
     content: '';
     display: inline-block;
     width: 24px;
@@ -1197,23 +1217,30 @@ textarea {
     background-size: 50% 50%;
 }
 
-.constructor__poke-item-checkbox:checked+label::before {
+.constructor-poke-item-checkbox:checked+label::before {
     border-color: #31688F;
     box-shadow: inset 0 0 0 5px #31688F;
     transition: 0.2s all linear;
 }
 
-.constructor__poke-info-text {
+.constructor-poke-info-text {
     font-weight: 600;
     font-size: 18px;
     line-height: 120%;
     color: #414042;
 }
 
-.constructor__poke-info-number {
+.constructor-poke-info-number {
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
     line-height: 120%;
     color: #0DB9BB;
+}
+
+
+.constructor-poke__button {
+    display: block;
+    width: 100%;
+    margin-left: auto;
 }
