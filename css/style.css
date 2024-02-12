@@ -1118,10 +1118,24 @@ textarea {
     border-radius: 5px;
 }
 
+.constructor-poke-list--second {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.constructor-poke-list--second .constructor-poke-item-checkbox + label {
+    margin: 0;
+}
 
 .constructor-poke-item {
     margin-bottom: 10px;
     height: 30px;
+}
+
+.constructor-poke-list--second .constructor-poke-item {
+    margin-bottom: 0;
 }
 
 .constructor-poke-shema {
@@ -1133,7 +1147,6 @@ textarea {
 
 .constructor-poke-shema-item {
     background-color: #fff;
-    padding: 15px 10px;
     border-radius: 10px;
     margin-bottom: 10px;
 }
@@ -1162,6 +1175,7 @@ textarea {
     user-select: none;
     height: 100%;
     margin: 0;
+    padding: 15px 10px;
 }
 
 .constructor-poke-item-radio+label::before {
@@ -1238,9 +1252,24 @@ textarea {
     color: #0DB9BB;
 }
 
-
 .constructor-poke__button {
     display: block;
-    width: 100%;
+    padding: 13px 30px;
     margin-left: auto;
+}
+
+.constructor-poke__add {
+    font-size: 16px;
+    background-color: #F6F6F6;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.constructor-poke__add .constructor-poke__select {
+    margin-bottom: 20px;
+}
+
+.constructor-poke__add-price {
+    color: #ffd600;
 }

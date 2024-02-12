@@ -123,7 +123,7 @@
                                 Выберите основу
                             </h3>
 
-                            <select class="form-select constructor-poke__select" aria-label="" name="protein">
+                            <select class="form-select constructor-poke__select" aria-label="" name="base">
                                 <option value="1">One</option>
                                 <option value="2">Two</option>
                                 <option value="3">Three</option>
@@ -146,7 +146,7 @@
 
 
                             <fieldset class="constructor-poke-shema">
-                                <div class="constructor-poke-shema-item">
+                                <div class="constructor-poke-shema-item" data-shema-poke="1">
                                     <input type="radio" class="constructor-poke-item-radio" id="shema1" name="shema"
                                         value="1">
                                     <label for="shema1">
@@ -154,7 +154,7 @@
                                     </label>
                                 </div>
 
-                                <div class="constructor-poke-shema-item">
+                                <div class="constructor-poke-shema-item" data-shema-poke="2">
                                     <input type="radio" class="constructor-poke-item-radio" id="shema2" name="shema"
                                         value="2">
                                     <label for="shema2">
@@ -176,17 +176,17 @@
 
                             <ul class="constructor-poke-list">
                                 <li class="constructor-poke-item">
-                                    <input type="checkbox" class="constructor-poke-item-checkbox" id="happy"
-                                        name="happy" value="">
+                                    <input type="checkbox" class="constructor-poke-item-checkbox" id="filler1"
+                                        name="filler1" value="">
 
-                                    <label for="happy">
+                                    <label for="filler1">
                                         Удон
                                     </label>
                                 </li>
                             </ul>
                         </div>
 
-                        <!-- Наполнитель -->
+                        <!-- Топпинг -->
                         <div class="constructor-poke__component">
                             <div class="constructor-poke__step">
                                 <span class="constructor-poke__step-number">
@@ -205,23 +205,22 @@
                                     Топпинг
                                 </span>
 
-                                <span class="constructor-poke-info-number" id="fillerCounter">
-                                    / Осталось 5 из 5
+                                <span class="constructor-poke-info-number" id="topingCounter">
+                                    / Осталось 1 из 1
                                 </span>
                             </div>
 
                             <ul class="constructor-poke-list">
                                 <li class="constructor-poke-item">
-                                    <input type="checkbox" class="constructor-poke-item-checkbox" id="happy"
-                                        name="happy" value="">
+                                    <input type="checkbox" class="constructor-poke-item-checkbox" id="topping"
+                                        name="topping" value="">
 
-                                    <label for="happy">
+                                    <label for="topping">
                                         Удон
                                     </label>
                                 </li>
                             </ul>
                         </div>
-
 
                         <!-- Соус -->
                         <div class="constructor-poke__component">
@@ -237,7 +236,7 @@
                                 Соус
                             </h3>
 
-                            <select class="form-select constructor-poke__select" aria-label="" name="protein">
+                            <select class="form-select constructor-poke__select" aria-label="" name="sauce">
                                 <option value="1">One</option>
                                 <option value="2">Two</option>
                                 <option value="3">Three</option>
@@ -258,7 +257,7 @@
                                 Хруст
                             </h3>
 
-                            <select class="form-select constructor-poke__select" aria-label="" name="protein">
+                            <select class="form-select constructor-poke__select" aria-label="" name="crunch">
                                 <option value="1">One</option>
                                 <option value="2">Two</option>
                                 <option value="3">Three</option>
@@ -267,9 +266,113 @@
                     </div>
 
 
-                    <button type="submit" class="button--second constructor-poke__button">
-                        Заказать
-                    </button>
+                    <div class="constructor-poke__add">
+                        <h3 class="sub-title">
+                            Дополнительно
+                        </h3>
+
+                        <p class="text">
+                            Если хотите вы можете добавить дополнительные ингредиенты
+                        </p>
+
+                        <label>
+                            Протеин
+
+                            <span class="constructor-poke__add-price">
+                                + 436 руб
+                            </span>
+                        </label>
+                        <select class="form-select constructor-poke__select" aria-label="" name="protein">
+                            <option value="1">One</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                        </select>
+
+
+                        <label>
+                            Наполнитель
+
+                            <span class="constructor-poke__add-price">
+                                + 436 руб
+                            </span>
+                        </label>
+                        <ul class="constructor-poke-list constructor-poke-list--second">
+                            <li class="constructor-poke-item">
+                                <input type="checkbox" class="constructor-poke-item-checkbox" id="filler" name="filler"
+                                    value="">
+
+                                <label for="filler">
+                                    Удон
+                                </label>
+                            </li>
+                            <li class="constructor-poke-item">
+                                <input type="checkbox" class="constructor-poke-item-checkbox" id="filler2" name="filler"
+                                    value="">
+
+                                <label for="filler2">
+                                    Удон
+                                </label>
+                            </li>
+                            <li class="constructor-poke-item">
+                                <input type="checkbox" class="constructor-poke-item-checkbox" id="filler3" name="filler"
+                                    value="">
+
+                                <label for="filler3">
+                                    Удон
+                                </label>
+                            </li>
+                        </ul>
+
+
+                        <label>
+                            Топпинг
+                        </label>
+                        <ul class="constructor-poke-list constructor-poke-list--second">
+                            <li class="constructor-poke-item">
+                                <input type="checkbox" class="constructor-poke-item-checkbox" id="topping"
+                                    name="topping" value="">
+
+                                <label for="topping">
+                                    Удон
+                                </label>
+                            </li>
+                        </ul>
+
+
+                        <label>
+                            Соус
+                        </label>
+                        <select class="form-select constructor-poke__select" aria-label="" name="sauce">
+                            <option value="1">One</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                        </select>
+
+                        <label>
+                            Хруст
+                        </label>
+                        <select class="form-select constructor-poke__select" aria-label="" name="crunch">
+                            <option value="1">One</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                        </select>
+                    </div>
+
+
+                    <div class="basket__order">
+                        <p class="basket__order-text">
+                            Ваш заказ:
+
+                            <span class="basket__order-number">
+                                660 руб
+                            </span>
+                        </p>
+
+                        <button type="submit" class="button--second constructor-poke__button">
+                            Заказать
+                        </button>
+                    </div>
+
                 </div>
             </div>
         </div>

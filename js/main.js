@@ -318,3 +318,32 @@ if (basketList) {
 
 
 const shemaPoke = document.querySelector('.constructor-poke-shema');
+
+shemaPoke.addEventListener('click', (evt) => {
+    const target = evt.target;
+
+    const shemaItem = target.closest('.constructor-poke-shema-item');
+    
+    const shemaItemValue = shemaItem.dataset.shemaPoke
+    console.log(shemaItemValue);
+
+
+    const fillerPokeItem = document.querySelector('#fillerCounter');
+    const topingPokeItem = document.querySelector('#topingCounter');
+    if (shemaItemValue === '1') {
+        fillerPokeItem.textContent = `/ Осталось 5 из 5`;
+        topingPokeItem.textContent = `/ Осталось 1 из 1`;
+    } else {
+        fillerPokeItem.textContent = `/ Осталось 3 из 3`;
+        topingPokeItem.textContent = `/ Осталось 2 из 2`;
+    }
+
+
+    // if (target.classList.contains('constructor-poke-shema-item')) {
+
+
+    //     const input = target.querySelector('.constructor-poke-item-radio');
+    //     console.log(input.value);
+    //     return;
+    // }
+});
