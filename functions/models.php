@@ -102,6 +102,14 @@ function get_query_create_orderItem()
 }
 
 
+/**
+ * Формирует SQL-запрос для получения компонентов Поке
+ * @return string SQL-запрос
+ */
+function get_query_components()
+{
+    return "SELECT * FROM component";
+}
 
 
 

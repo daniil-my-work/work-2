@@ -316,34 +316,97 @@ if (basketList) {
 
 
 
+const shemaPokeNumber = {
+    1: {
+        'filler': 5,
+        'toping': 1,
+    },
+    2: {
+        'filler': 3,
+        'toping': 2,
+    },
+};
 
+localStorage.setItem('shemaPoke', 1);
 const shemaPoke = document.querySelector('.constructor-poke-shema');
 
 shemaPoke.addEventListener('click', (evt) => {
     const target = evt.target;
 
     const shemaItem = target.closest('.constructor-poke-shema-item');
-    
-    const shemaItemValue = shemaItem.dataset.shemaPoke
-    console.log(shemaItemValue);
-
+    const shemaItemValue = shemaItem.dataset.shemaPoke;
 
     const fillerPokeItem = document.querySelector('#fillerCounter');
     const topingPokeItem = document.querySelector('#topingCounter');
+
     if (shemaItemValue === '1') {
         fillerPokeItem.textContent = `/ Осталось 5 из 5`;
         topingPokeItem.textContent = `/ Осталось 1 из 1`;
+
+        localStorage.setItem('shemaPoke', 1);
+
     } else {
         fillerPokeItem.textContent = `/ Осталось 3 из 3`;
         topingPokeItem.textContent = `/ Осталось 2 из 2`;
+
+        localStorage.setItem('shemaPoke', 2);
     }
-
-
-    // if (target.classList.contains('constructor-poke-shema-item')) {
-
-
-    //     const input = target.querySelector('.constructor-poke-item-radio');
-    //     console.log(input.value);
-    //     return;
-    // }
 });
+
+
+// Список инпутов Наполнитель
+const checkboxFillerList = document.querySelectorAll('.constructor-poke-item-checkbox--filler');
+
+// Обработчик изменения состояния чекбоксов
+function handleFillerCheckboxChange(event) {
+    const number = localStorage.getItem('shemaPoke');
+    let checkedCount = 0;
+
+    checkboxFillerList.forEach(fillerItem => {
+        if (fillerItem.checked) {
+            checkedCount++;
+        }
+    });
+
+    console.log(checkedCount);
+
+    if (checkedCount > shemaPokeNumber[number]['filler']) {
+        event.preventDefault(); // Предотвращаем изменение состояния
+        event.target.checked = false;
+        return false;
+    }
+}
+
+// Назначаем обработчик изменения состояния каждому чекбоксу
+checkboxFillerList.forEach(fillerItem => {
+    fillerItem.addEventListener('change', handleFillerCheckboxChange);
+});
+
+
+// Список инпутов Топпинг
+const checkboxTopingList = document.querySelectorAll('.constructor-poke-item-checkbox--toping');
+
+// Обработчик изменения состояния чекбоксов
+function handleTopingCheckboxChange(event) {
+    const number = localStorage.getItem('shemaPoke');
+    let checkedCount = 0;
+
+    checkboxTopingList.forEach(fillerItem => {
+        if (fillerItem.checked) {
+            checkedCount++;
+        }
+    });
+
+    if (checkedCount > shemaPokeNumber[number]['toping']) {
+        event.preventDefault(); // Предотвращаем изменение состояния
+        event.target.checked = false;
+        return false;
+    }
+}
+
+// Назначаем обработчик изменения состояния каждому чекбоксу
+checkboxTopingList.forEach(fillerItem => {
+    fillerItem.addEventListener('change', handleTopingCheckboxChange);
+});
+
+

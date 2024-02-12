@@ -27,14 +27,10 @@ $category = mysqli_query($con, $sql1);
 $categoryName = get_arrow($category);
 
 
-if ($activeCategory == 'poke') {
-    $productList = array();
-} else {
-    // Получает список продуктов по выбранной категории 
-    $sql = get_query_selectedProducts($activeCategory);
-    $products = mysqli_query($con, $sql);
-    $productList = get_arrow($products);
-}
+// Получает список продуктов по выбранной категории 
+$sql = get_query_selectedProducts($activeCategory);
+$products = mysqli_query($con, $sql);
+$productList = get_arrow($products);
 
 
 $page_head = include_template(

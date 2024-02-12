@@ -87,6 +87,7 @@ CREATE TABLE `component` (
     `price` INT,
     `component_type` ENUM(
         'protein',
+        'protein-add',
         'base',
         'filler',
         'topping',

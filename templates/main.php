@@ -3,13 +3,13 @@
     <!-- Предложение -->
     <div class="offer">
         <div class="offer__wrapper">
-            <button class="offer__button" type="button">
+            <a class="offer__button" href="./menu.php">
                 Меню
-            </button>
+            </a>
 
-            <button class="offer__button" type="button">
+            <a class="offer__button" href="./constructor-poke.php">
                 Создать поке
-            </button>
+            </a>
         </div>
     </div>
 
@@ -133,7 +133,7 @@
 
 
     <!-- Ссылка на корзину -->
-    <?php $isHidden = count($productsData) === 0 ? 'hidden' : '';?>
+    <?php $isHidden = count($productsData) === 0 ? 'hidden' : ''; ?>
     <a href="./basket.php" class="action__basket <?= $isHidden; ?>">
         <svg class="action__basket-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
             <path d="M28 8h-4a1 1 0 0 0 0 2h4c.551 0 1 .449 1 1v2c0 .551-.449 1-1 1H4c-.551 0-1-.449-1-1v-2c0-.551.449-1 1-1h4a1 1 0 0 0 0-2H4c-1.654 0-3 1.346-3 3v2c0 1.34.889 2.464 2.104 2.848l1.64 12.301C4.957 29.748 6.387 31 8 31h16c1.613 0 3.043-1.252 3.255-2.85l1.64-12.302A2.994 2.994 0 0 0 31 13v-2c0-1.654-1.346-3-3-3zm-2.727 19.886C25.194 28.479 24.599 29 24 29H8c-.599 0-1.194-.521-1.273-1.115L5.142 16h21.716l-1.585 11.886z" />

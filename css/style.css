@@ -233,6 +233,8 @@ textarea {
     font-weight: 700;
     font-size: 14px;
     border-radius: 25px;
+    text-decoration: none;
+    color: #000;
 }
 
 .offer__button:hover {
@@ -649,6 +651,7 @@ textarea {
 }
 
 .account__orders-group-link {
+    width: max-content;
     position: relative;
     display: block;
     padding: 10px 15px;
@@ -656,6 +659,7 @@ textarea {
     color: #000;
     text-decoration: none;
     border-radius: 0;
+    flex-shrink: 0;
 }
 
 .account__orders-group-link--active {
@@ -783,7 +787,7 @@ textarea {
     text-decoration: none;
     color: #000;
     background-color: #ffd600;
-    padding: 4px 10px;
+    padding: 6px 14px;
     border-radius: 10px;
 }
 
@@ -1084,6 +1088,7 @@ textarea {
     align-items: center;
     position: relative;
     min-height: 70px;
+    margin-bottom: 15px;
 }
 
 .constructor-poke__step-number {
@@ -1104,13 +1109,17 @@ textarea {
     height: 60px;
 }
 
+.constructor-poke__title {
+    margin-bottom: 6px;
+}
+
 .constructor-poke-info {
     margin-bottom: 20px;
 }
 
 .constructor-poke__select {
     width: 100%;
-    padding: 10px 10px;
+    padding: 6px 10px;
     font-size: 18px;
     align-self: center;
     background-color: #fff;
@@ -1126,12 +1135,12 @@ textarea {
 }
 
 .constructor-poke-list--second .constructor-poke-item-checkbox + label {
+    min-height: 40px;
     margin: 0;
 }
 
 .constructor-poke-item {
     margin-bottom: 10px;
-    height: 30px;
 }
 
 .constructor-poke-list--second .constructor-poke-item {
@@ -1213,7 +1222,7 @@ textarea {
     display: flex;
     align-items: center;
     user-select: none;
-    height: 100%;
+    /* height: 100%; */
 }
 
 .constructor-poke-item-checkbox+label::before {
@@ -1229,6 +1238,7 @@ textarea {
     background-repeat: no-repeat;
     background-position: center center;
     background-size: 50% 50%;
+    border: none;
 }
 
 .constructor-poke-item-checkbox:checked+label::before {
