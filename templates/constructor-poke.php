@@ -280,7 +280,7 @@
                     <ul class="constructor-poke-list constructor-poke-list--second" id="constructor-poke__toppingAdd">
                         <?php foreach ($toppingList as $toppingItem) : ?>
                             <li class="constructor-poke-item" data-price="<?= $toppingItem['price']; ?>">
-                                <input type="checkbox" class="constructor-poke-item-checkbox constructor-poke-item-checkbox--toppingAdd" id="<?= $toppingItem['id']; ?>-add" name="toppingAdd[]" value="<?= $toppingItem['title']; ?>" data-price="<?= $toppingItem['price']; ?>">
+                                <input type="checkbox" class="constructor-poke-item-checkbox constructor-poke-item-checkbox--toppingAdd" id="<?= $toppingItem['title']; ?>-add" name="toppingAdd[]" value="<?= $toppingItem['id']; ?>" data-price="<?= $toppingItem['price']; ?>">
 
                                 <label for="<?= $toppingItem['title']; ?>-add">
                                     <?= $toppingItem['title']; ?>

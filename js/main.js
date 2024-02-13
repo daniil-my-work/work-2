@@ -314,6 +314,9 @@ if (basketList) {
     basketList.addEventListener("click", addProductInBasketSecond);
 }
 
+
+localStorage.clear();
+
 const basketSum = document.querySelector('.basket__order-number');
 const sumOfPoke = {
     'protein': 0,
@@ -568,12 +571,15 @@ checkboxFillerAddList.forEach(fillerItem => {
 });
 
 
-// Список инпутов Топинг дополнительно
+
+// Список инпутов Топпинг дополнительно
 const labelToppingAdd = document.querySelector('#constructor-poke__add-price--topping');
 const checkboxToppingAddList = document.querySelectorAll('.constructor-poke-item-checkbox--toppingAdd');
 
+
 // Обработчик изменения состояния чекбоксов
 function handleToppingAddCheckboxChange() {
+    console.log('dsd');
     let toppingAddSum = 0;
 
     checkboxToppingAddList.forEach(toppingItem => {
