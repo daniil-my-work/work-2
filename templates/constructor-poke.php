@@ -30,7 +30,7 @@
                             <img class="constructor-poke__step-icon" src="../img/c-poke/c-poke-step1.png" alt="">
                         </div>
 
-                        <h3 class="constructor-poke__title">
+                        <h3 class="sub-title constructor-poke__title">
                             Выберите протеин
                         </h3>
 
@@ -57,7 +57,7 @@
                             <img class="constructor-poke__step-icon" src="../img/c-poke/c-poke-step2.png" alt="">
                         </div>
 
-                        <h3 class="constructor-poke__title">
+                        <h3 class="sub-title constructor-poke__title">
                             Выберите основу
                         </h3>
 
@@ -84,7 +84,7 @@
                             <img class="constructor-poke__step-icon" src="../img/c-poke/c-poke-step3.png" alt="">
                         </div>
 
-                        <h3 class="constructor-poke__title">
+                        <h3 class="sub-title constructor-poke__title">
                             Наполнитель
                         </h3>
 
@@ -139,7 +139,7 @@
                             <img class="constructor-poke__step-icon" src="../img/c-poke/c-poke-step4.png" alt="">
                         </div>
 
-                        <h3 class="constructor-poke__title">
+                        <h3 class="sub-title constructor-poke__title">
                             Топпинг
                         </h3>
 
@@ -176,7 +176,7 @@
                             <img class="constructor-poke__step-icon" src="../img/c-poke/c-poke-step5.png" alt="">
                         </div>
 
-                        <h3 class="constructor-poke__title">
+                        <h3 class="sub-title constructor-poke__title">
                             Соус
                         </h3>
 
@@ -203,7 +203,7 @@
                             <img class="constructor-poke__step-icon" src="../img/c-poke/c-poke-step6.png" alt="">
                         </div>
 
-                        <h3 class="constructor-poke__title">
+                        <h3 class="sub-title constructor-poke__title">
                             Хруст
                         </h3>
 
@@ -231,7 +231,7 @@
                         Если хотите вы можете добавить дополнительные ингредиенты
                     </p>
 
-                    <label>
+                    <label class="sub-title constructor-poke__add-label">
                         Протеин
 
                         <span class="constructor-poke__add-price" id="constructor-poke__add-price--protein">
@@ -250,7 +250,7 @@
                     </select>
 
 
-                    <label>
+                    <label class="sub-title constructor-poke__add-label">
                         Наполнитель
 
                         <span class="constructor-poke__add-price" id="constructor-poke__add-price--filler">
@@ -271,7 +271,7 @@
                     </ul>
 
 
-                    <label>
+                    <label class="sub-title constructor-poke__add-label">
                         Топпинг
 
                         <span class="constructor-poke__add-price" id="constructor-poke__add-price--topping">
@@ -290,7 +290,7 @@
                     </ul>
 
 
-                    <label>
+                    <label class="sub-title constructor-poke__add-label">
                         Соус
 
                         <span class="constructor-poke__add-price" id="constructor-poke__add-price--sauce">
@@ -308,7 +308,7 @@
                         <?php endforeach; ?>
                     </select>
 
-                    <label>
+                    <label class="sub-title constructor-poke__add-label">
                         Хруст
 
                         <span class="constructor-poke__add-price" id="constructor-poke__add-price--crunch">

@@ -1276,6 +1276,10 @@ textarea {
     margin-bottom: 30px;
 }
 
+.constructor-poke__add-label {
+    margin-bottom: 8px;
+}
+
 .constructor-poke__add .constructor-poke__select {
     margin-bottom: 20px;
 }
