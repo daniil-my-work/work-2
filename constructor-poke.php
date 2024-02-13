@@ -7,13 +7,13 @@ require_once('./functions/db.php');
 
 
 
+
+
 // Получает список категорий меню 
 $sql = get_query_components();
 $components = mysqli_query($con, $sql);
 $componentList = get_arrow($components);
 
-
-// print_r($componentList);
 
 // Массив для хранения уникальных ключей component_type
 $uniqueComponentTypes = array();
@@ -50,13 +50,50 @@ $sauceList = $sortComponentList['sauce'];
 $crunchList = $sortComponentList['crunch'];
 $proteinAddList = $sortComponentList['protein-add'];
 
-// print_r($proteinAddList);
-
 
 // Получает список категорий меню 
 $sql = get_query_categories();
 $categories = mysqli_query($con, $sql);
 $categoryList = get_arrow($categories);
+
+
+
+// Массив для хранения уникальных ключей component_type
+$uniqueComponentNames = array();
+
+// Проходим по массиву и извлекаем уникальные значения ключа component_type
+foreach ($componentList as $item) {
+    if (!in_array($item['component_name'], $uniqueComponentNames)) {
+        $uniqueComponentNames[$item['component_type']] = $item['component_name'];
+    }
+}
+
+
+
+if ($_SERVER['REQUEST_METHOD'] === "POST") {
+    // Обязательные поля для заполненения 
+    $required = ['protein', 'base', 'shema', 'sauce', 'crunch'];
+    $errors = [];
+
+    $rules = [
+        'component' => function ($value) use ($uniqueComponentTypes) {
+            return validate_component($value, $uniqueComponentTypes);
+        }
+    ];
+
+    $createdPoke = filter_input_array(INPUT_POST, ['protein' => FILTER_DEFAULT, 'base' => FILTER_DEFAULT, 'shema' => FILTER_DEFAULT, 'sauce' => FILTER_DEFAULT, 'crunch' => FILTER_DEFAULT, 'proteinAdd' => FILTER_DEFAULT, 'fillerAdd' => FILTER_DEFAULT, 'toppingAdd' => FILTER_DEFAULT, 'sauceAdd' => FILTER_DEFAULT, 'crunchAdd' => FILTER_DEFAULT], true);
+
+    foreach ($createdPoke as $key => $value) {
+        if (in_array($key, $required) && empty($value)) {
+            $fieldName = $uniqueComponentNames[$key];
+            $errors[$key] = "Поле . $fieldName . должно быть заполено";
+        }
+    }
+
+    print_r($_POST['protein']);
+}
+
+
 
 
 $page_head = include_template(

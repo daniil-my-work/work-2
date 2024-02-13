@@ -93,7 +93,8 @@ CREATE TABLE `component` (
         'topping',
         'sauce',
         'crunch'
-    ) NOT NULL
+    ) NOT NULL,
+    `component_name` VARCHAR(255)
 );
 
 CREATE TABLE `address` (

@@ -38,3 +38,9 @@ function validate_length($value, $min, $max)
         }
     }
 }
+
+// Проверяет наличие компонента
+function validate_component($value) 
+{
+
+}

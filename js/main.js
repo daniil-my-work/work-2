@@ -314,6 +314,35 @@ if (basketList) {
     basketList.addEventListener("click", addProductInBasketSecond);
 }
 
+const basketSum = document.querySelector('.basket__order-number');
+const sumOfPoke = {
+    'protein': 0,
+    'proteinAdd': 0,
+    'filler': 0,
+    'topping': 0,
+    'sauce': 0,
+    'crunch': 0,
+};
+
+// Преобразуем объект в строку JSON и сохраняем в localStorage
+localStorage.setItem('constructorPokeSum', JSON.stringify(sumOfPoke));
+
+
+function updatePokeSum(pokeObj) {
+    localStorage.setItem('constructorPokeSum', JSON.stringify(pokeObj));
+}
+
+function updatePokeBasketSum() {
+    const storedSumOfPoke = JSON.parse(localStorage.getItem('constructorPokeSum'));
+    console.log(storedSumOfPoke); // Выведет сохраненный объект
+
+    let result = 0;
+    for (const key in storedSumOfPoke) {
+        result += storedSumOfPoke[key];
+    }
+
+    basketSum.textContent = `${result} руб`;
+}
 
 
 const shemaPokeNumber = {
@@ -386,7 +415,6 @@ shemaPoke.addEventListener('click', (evt) => {
 
 // Селект Протеин
 const selectProtein = document.querySelector('#constructor-poke__select--protein');
-const basketSum = document.querySelector('.basket__order-number');
 
 // Назначаем обработчик изменения состояния каждому чекбоксу
 selectProtein.addEventListener('change', (evt) => {
@@ -394,7 +422,10 @@ selectProtein.addEventListener('change', (evt) => {
     const selectedOption = evt.target.options[selectedIndex];
     const price = selectedOption.getAttribute('data-price');
 
-    basketSum.textContent = `${price} руб`;
+    // Обновляет сумму в Хранилище
+    sumOfPoke.protein = Number(price);
+    updatePokeSum(sumOfPoke);
+    updatePokeBasketSum();
 });
 
 
@@ -465,6 +496,11 @@ selectProteinAdd.addEventListener('change', (evt) => {
     const price = selectedOption.getAttribute('data-price');
 
     labelProteinAdd.textContent = `+ ${price} руб`;
+
+    // Обновляет сумму в Хранилище
+    sumOfPoke.proteinAdd = Number(price);
+    updatePokeSum(sumOfPoke);
+    updatePokeBasketSum();
 });
 
 
@@ -478,6 +514,11 @@ selectSauceAdd.addEventListener('change', (evt) => {
     const price = selectedOption.getAttribute('data-price');
 
     labelSauceAdd.textContent = `+ ${price} руб`;
+
+    // Обновляет сумму в Хранилище
+    sumOfPoke.sauce = Number(price);
+    updatePokeSum(sumOfPoke);
+    updatePokeBasketSum();
 });
 
 // Селект с соусом: Добавка к Поке
@@ -490,6 +531,11 @@ selectСrunchAdd.addEventListener('change', (evt) => {
     const price = selectedOption.getAttribute('data-price');
 
     labelСrunchAdd.textContent = `+ ${price} руб`;
+
+    // Обновляет сумму в Хранилище
+    sumOfPoke.crunch = Number(price);
+    updatePokeSum(sumOfPoke);
+    updatePokeBasketSum();
 });
 
 
@@ -507,6 +553,11 @@ function handleFillerAddCheckboxChange() {
             fillerAddSum += Number(fillerItem.dataset.price);
         }
     });
+
+    // Обновляет сумму в Хранилище
+    sumOfPoke.filler = fillerAddSum;
+    updatePokeSum(sumOfPoke);
+    updatePokeBasketSum();
 
     labelFillerAdd.textContent = `+ ${fillerAddSum} руб`;
 }
@@ -530,6 +581,11 @@ function handleToppingAddCheckboxChange() {
             toppingAddSum += Number(toppingItem.dataset.price);
         }
     });
+
+    // Обновляет сумму в Хранилище
+    sumOfPoke.topping = toppingAddSum;
+    updatePokeSum(sumOfPoke);
+    updatePokeBasketSum();
 
     labelToppingAdd.textContent = `+ ${toppingAddSum} руб`;
 }
