@@ -78,10 +78,35 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $rules = [
         'component' => function ($value) use ($uniqueComponentTypes) {
             return validate_component($value, $uniqueComponentTypes);
+        },
+        'shema' => function ($value) {
+            return in_array((int)$value, [1, 2]);
         }
     ];
 
-    $createdPoke = filter_input_array(INPUT_POST, ['protein' => FILTER_DEFAULT, 'base' => FILTER_DEFAULT, 'shema' => FILTER_DEFAULT, 'filler' => FILTER_DEFAULT, 'topping' => FILTER_DEFAULT, 'sauce' => FILTER_DEFAULT, 'crunch' => FILTER_DEFAULT, 'proteinAdd' => FILTER_DEFAULT, 'fillerAdd' => FILTER_DEFAULT, 'toppingAdd' => FILTER_DEFAULT, 'sauceAdd' => FILTER_DEFAULT, 'crunchAdd' => FILTER_DEFAULT], true);
+    // var_dump($_POST['shema']);
+
+    $createdPoke = filter_input_array(INPUT_POST, ['protein' => FILTER_DEFAULT, 'base' => FILTER_DEFAULT, 'shema' => FILTER_DEFAULT, 'filler' => FILTER_DEFAULT, 'topping' => FILTER_DEFAULT, 'sauce' => FILTER_DEFAULT, 'crunch' => FILTER_DEFAULT, 'proteinAdd' => FILTER_DEFAULT, 'sauceAdd' => FILTER_DEFAULT, 'crunchAdd' => FILTER_DEFAULT], true);
+
+    $toppingPostList = isset($_POST['topping']) ? $_POST['topping'] : null;
+    if (!is_null($toppingPostList)) {
+        $createdPoke['topping'] = $_POST['topping'];
+    }
+
+    $fillerPostList = isset($_POST['filler']) ? $_POST['filler'] : null;
+    if (!is_null($fillerPostList)) {
+        $createdPoke['filler'] = $_POST['filler'];
+    }
+
+    $toppingAddPostList = isset($_POST['toppingAdd']) ? $_POST['toppingAdd'] : null;
+    if (!is_null($toppingAddPostList)) {
+        $createdPoke['toppingAdd'] = $_POST['toppingAdd'];
+    }
+
+    $fillerAddPostList = isset($_POST['fillerAdd']) ? $_POST['fillerAdd'] : null;
+    if (!is_null($fillerAddPostList)) {
+        $createdPoke['fillerAdd'] = $_POST['fillerAdd'];
+    }
 
     print_r($createdPoke);
 
@@ -90,8 +115,11 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             $fieldName = $uniqueComponentNames[$key];
             $errors[$key] = "Поле . $fieldName . должно быть заполено";
         }
-    }
 
+        if ($key == 'shema') {
+            $errors['shema'] = 'Указана неверная схема для наполнителя и топпинга';
+        }
+    }
 }
 
 

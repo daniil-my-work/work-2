@@ -450,7 +450,7 @@ function handleFillerCheckboxChange(event) {
     if (checkedCount > shemaPokeNumber[number]['filler']) {
         event.preventDefault(); // Предотвращаем изменение состояния
         event.target.checked = false;
-        return false;
+        return;
     }
 }
 
@@ -477,7 +477,7 @@ function handleTopingCheckboxChange(event) {
     if (checkedCount > shemaPokeNumber[number]['toping']) {
         event.preventDefault(); // Предотвращаем изменение состояния
         event.target.checked = false;
-        return false;
+        return;
     }
 }
 
@@ -579,7 +579,6 @@ const checkboxToppingAddList = document.querySelectorAll('.constructor-poke-item
 
 // Обработчик изменения состояния чекбоксов
 function handleToppingAddCheckboxChange() {
-    console.log('dsd');
     let toppingAddSum = 0;
 
     checkboxToppingAddList.forEach(toppingItem => {
@@ -599,4 +598,35 @@ function handleToppingAddCheckboxChange() {
 // Назначаем обработчик изменения состояния каждому чекбоксу
 checkboxToppingAddList.forEach(toppingItem => {
     toppingItem.addEventListener('change', handleToppingAddCheckboxChange);
+});
+
+
+
+// Обработчик отправки формы
+document.querySelector('.constructor-poke__form').addEventListener('submit', function (event) {
+    const number = localStorage.getItem('shemaPoke');
+    let checkedFillerCheckbox = 0;
+    let checkedToppingCheckbox = 0;
+
+    checkboxFillerList.forEach(fillerItem => {
+        if (fillerItem.checked) {
+            checkedFillerCheckbox++;
+        }
+    });
+
+    checkboxTopingList.forEach(toppingItem => {
+        if (toppingItem.checked) {
+            checkedToppingCheckbox++;
+        }
+    })
+
+    if (checkedFillerCheckbox !== shemaPokeNumber[number]['filler']) {
+        event.preventDefault(); // Предотвращаем отправку формы
+        alert(`Выберите в категории наполнитель ${shemaPokeNumber[number]['filler']} чекбокса(ов)`);
+    }
+    
+    if (checkedToppingCheckbox !== shemaPokeNumber[number]['toping']) {
+        event.preventDefault(); // Предотвращаем отправку формы
+        alert(`Выберите в категории топпинг ${shemaPokeNumber[number]['toping']} чекбокса(ов)`);
+    }
 });

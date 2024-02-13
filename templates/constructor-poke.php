@@ -18,7 +18,7 @@
                 Конструктор Поке
             </h2>
 
-            <form action="./constructor-poke.php" class="constructor-poke__form">
+            <form action="./constructor-poke.php" method="post" class="constructor-poke__form">
                 <div class="constructor-poke__list">
                     <!-- Протеин -->
                     <div class="constructor-poke__component">
@@ -34,7 +34,7 @@
                             Выберите протеин
                         </h3>
 
-                        <select class="form-select constructor-poke__select" id="constructor-poke__select--protein" aria-label="" name="protein">
+                        <select class="form-select constructor-poke__select" id="constructor-poke__select--protein" aria-label="" name="protein" required>
                             <option value="" selected>
                                 Не выбран
                             </option>
@@ -61,7 +61,7 @@
                             Выберите основу
                         </h3>
 
-                        <select class="form-select constructor-poke__select" aria-label="" name="base">
+                        <select class="form-select constructor-poke__select" aria-label="" name="base" required>
                             <option value="" selected>
                                 Не выбран
                             </option>
@@ -180,7 +180,7 @@
                             Соус
                         </h3>
 
-                        <select class="form-select constructor-poke__select" aria-label="" name="sauce">
+                        <select class="form-select constructor-poke__select" aria-label="" name="sauce" required>
                             <option value="" selected>
                                 Не выбран
                             </option>
@@ -207,7 +207,7 @@
                             Хруст
                         </h3>
 
-                        <select class="form-select constructor-poke__select" aria-label="" name="crunch">
+                        <select class="form-select constructor-poke__select" aria-label="" name="crunch" required>
                             <option value="" selected>
                                 Не выбран
                             </option>
