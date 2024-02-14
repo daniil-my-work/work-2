@@ -4,9 +4,7 @@ require_once('./functions/helpers.php');
 require_once('./functions/init.php');
 require_once('./functions/models.php');
 require_once('./functions/db.php');
-
-
-
+require_once('./functions/validators.php');
 
 
 // Получает список категорий меню 
@@ -72,19 +70,23 @@ foreach ($componentList as $item) {
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
     // Обязательные поля для заполненения 
-    $required = ['protein', 'base', 'shema', 'filler', 'topping', 'sauce', 'crunch'];
+    $required = ['shema', 'protein', 'base', 'filler', 'topping', 'sauce', 'crunch'];
     $errors = [];
 
     $rules = [
-        'component' => function ($value) use ($uniqueComponentTypes) {
-            return validate_component($value, $uniqueComponentTypes);
+        'component' => function ($key, $value) use ($con) {
+            return validate_component($con, $key, $value);
         },
         'shema' => function ($value) {
-            return in_array((int)$value, [1, 2]);
+            return in_array($value, ['1', '2']) ? 'Указана неверная схема для наполнителя и топпинга' : null;
+        },
+        'filler' => function ($value) {
+            return;
+        },
+        'topping' => function ($value) {
+            return;
         }
     ];
-
-    // var_dump($_POST['shema']);
 
     $createdPoke = filter_input_array(INPUT_POST, ['protein' => FILTER_DEFAULT, 'base' => FILTER_DEFAULT, 'shema' => FILTER_DEFAULT, 'filler' => FILTER_DEFAULT, 'topping' => FILTER_DEFAULT, 'sauce' => FILTER_DEFAULT, 'crunch' => FILTER_DEFAULT, 'proteinAdd' => FILTER_DEFAULT, 'sauceAdd' => FILTER_DEFAULT, 'crunchAdd' => FILTER_DEFAULT], true);
 
@@ -98,28 +100,61 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $createdPoke['filler'] = $_POST['filler'];
     }
 
-    $toppingAddPostList = isset($_POST['toppingAdd']) ? $_POST['toppingAdd'] : null;
-    if (!is_null($toppingAddPostList)) {
-        $createdPoke['toppingAdd'] = $_POST['toppingAdd'];
-    }
-
     $fillerAddPostList = isset($_POST['fillerAdd']) ? $_POST['fillerAdd'] : null;
     if (!is_null($fillerAddPostList)) {
         $createdPoke['fillerAdd'] = $_POST['fillerAdd'];
     }
 
-    print_r($createdPoke);
+    $toppingAddPostList = isset($_POST['toppingAdd']) ? $_POST['toppingAdd'] : null;
+    if (!is_null($toppingAddPostList)) {
+        $createdPoke['toppingAdd'] = $_POST['toppingAdd'];
+    }
 
+    // print_r($createdPoke);
+    
     foreach ($createdPoke as $key => $value) {
         if (in_array($key, $required) && empty($value)) {
             $fieldName = $uniqueComponentNames[$key];
             $errors[$key] = "Поле . $fieldName . должно быть заполено";
         }
-
+        
         if ($key == 'shema') {
-            $errors['shema'] = 'Указана неверная схема для наполнителя и топпинга';
+            $shemaId = (string)$value; // Приведение к строке
+            var_dump($shemaId);
+            $rule = $rules['shema'];
+            $errors['shema'] = $rule($shemaId);
+            continue;
         }
+
+        if ($key == 'filler') {
+            $rule = $rules['filler'];
+            $errors['filler'] = $rule($value);
+        }
+
+        if ($key == 'topping') {
+            $rule = $rules['topping'];
+            $errors['topping'] = $rule($value);
+        }
+
+        $isAddComponent = $key == 'proteinAdd' || $key == 'fillerAdd' || $key == 'toppingAdd' || $key == 'sauceAdd' || $key == 'crunchAdd';
+        if ($isAddComponent) {
+
+            $isSingleAddComponent = $key == 'proteinAdd' || $key == 'sauceAdd' || $key == 'crunchAdd';
+            if ($isSingleAddComponent && $value != '') {
+                $rule = $rules['component'];
+                $errors[$key] = $rule($key, $value);
+            }
+
+            continue;
+        }
+
+        // Проверка на наличие компонента в Поке
+        $rule = $rules['component'];
+        $errors[$key] = $rule($key, $value);
     }
+
+    $errors = array_filter($errors);
+    print_r($errors);
 }
 
 

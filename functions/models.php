@@ -112,6 +112,16 @@ function get_query_components()
 }
 
 
+/**
+ * Формирует SQL-запрос для проверки наличия компонента в Поке
+ * @return string SQL-запрос
+ */
+function get_query_checkComponent($componentId, $componentType)
+{
+    return "SELECT * FROM component WHERE component.id = '$componentId' AND component.component_type = '$componentType'";
+}
+
+
 
 
 

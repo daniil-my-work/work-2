@@ -40,7 +40,23 @@ function validate_length($value, $min, $max)
 }
 
 // Проверяет наличие компонента
-function validate_component($value) 
+function validate_component($con, $componentType, $value)
 {
+    if (check_if_array($value)) {
+        foreach ($value as $id) {
+            $sql = get_query_checkComponent($id, $componentType);
+            $result = mysqli_query($con, $sql);
 
+            if (mysqli_num_rows($result) == 0) {
+                return "Указанный компонент отсутствует в Поке";
+            }
+        }
+    } else {
+        $sql = get_query_checkComponent($value, $componentType);
+        $result = mysqli_query($con, $sql);
+
+        if (mysqli_num_rows($result) == 0) {
+            return "Указанный компонент отсутствует в Поке";
+        }
+    }
 }

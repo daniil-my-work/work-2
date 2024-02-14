@@ -361,15 +361,15 @@ const shemaPokeNumber = {
 
 localStorage.setItem('shemaPoke', 1);
 const shemaPoke = document.querySelector('.constructor-poke-shema');
+const fillerPokeItem = document.querySelector('#fillerCounter');
+const topingPokeItem = document.querySelector('#topingCounter');
+
 
 shemaPoke.addEventListener('click', (evt) => {
     const target = evt.target;
 
     const shemaItem = target.closest('.constructor-poke-shema-item');
     const shemaItemValue = shemaItem.dataset.shemaPoke;
-
-    const fillerPokeItem = document.querySelector('#fillerCounter');
-    const topingPokeItem = document.querySelector('#topingCounter');
 
     if (shemaItemValue === '1') {
         fillerPokeItem.textContent = `/ Осталось 5 из 5`;
@@ -432,6 +432,34 @@ selectProtein.addEventListener('change', (evt) => {
 });
 
 
+function changeFillerCountValue(number, diff) {
+    // Заполняет данные об оставшемся кол-ве ингредиентов
+    if (diff < 0) {
+        return;
+    }
+
+    if (number === '1') {
+        fillerPokeItem.textContent = `/ Осталось ${diff} из 5`;
+    } else {
+        fillerPokeItem.textContent = `/ Осталось ${diff} из 3`;
+    }
+}
+
+
+function changeTopingCountValue(number, diff) {
+    // Заполняет данные об оставшемся кол-ве ингредиентов
+    if (diff < 0) {
+        return;
+    }
+
+    if (number === '1') {
+        topingPokeItem.textContent = `/ Осталось ${diff} из 1`;
+    } else {
+        topingPokeItem.textContent = `/ Осталось ${diff} из 2`;
+    }
+}
+
+
 
 // Список инпутов Наполнитель
 const checkboxFillerList = document.querySelectorAll('.constructor-poke-item-checkbox--filler');
@@ -446,6 +474,9 @@ function handleFillerCheckboxChange(event) {
             checkedCount++;
         }
     });
+
+    const diff = shemaPokeNumber[number]['filler'] - checkedCount;
+    changeFillerCountValue(number, diff);
 
     if (checkedCount > shemaPokeNumber[number]['filler']) {
         event.preventDefault(); // Предотвращаем изменение состояния
@@ -473,6 +504,9 @@ function handleTopingCheckboxChange(event) {
             checkedCount++;
         }
     });
+
+    const diff = shemaPokeNumber[number]['toping'] - checkedCount;
+    changeTopingCountValue(number, diff);
 
     if (checkedCount > shemaPokeNumber[number]['toping']) {
         event.preventDefault(); // Предотвращаем изменение состояния
@@ -624,7 +658,7 @@ document.querySelector('.constructor-poke__form').addEventListener('submit', fun
         event.preventDefault(); // Предотвращаем отправку формы
         alert(`Выберите в категории наполнитель ${shemaPokeNumber[number]['filler']} чекбокса(ов)`);
     }
-    
+
     if (checkedToppingCheckbox !== shemaPokeNumber[number]['toping']) {
         event.preventDefault(); // Предотвращаем отправку формы
         alert(`Выберите в категории топпинг ${shemaPokeNumber[number]['toping']} чекбокса(ов)`);
