@@ -67,6 +67,33 @@ foreach ($componentList as $item) {
 }
 
 
+$page_head = include_template(
+    'head.php',
+    [
+        'title' => 'Конструктор «Много рыбы»',
+    ]
+);
+
+$page_header = include_template(
+    'header.php',
+    [
+        'isAuth' => $isAuth,
+    ]
+);
+
+$page_body = include_template(
+    'constructor-poke.php',
+    [
+        'proteinList' => $proteinList,
+        'proteinAddList' => $proteinAddList,
+        'baseList' => $baseList,
+        'fillerList' => $fillerList,
+        'toppingList' => $toppingList,
+        'sauceList' => $sauceList,
+        'crunchList' => $crunchList,
+    ]
+);
+
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
     // Обязательные поля для заполненения 
@@ -78,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             return validate_component($con, $key, $value);
         },
         'shema' => function ($value) {
-            return in_array($value, ['1', '2']) ? 'Указана неверная схема для наполнителя и топпинга' : null;
+            return !in_array($value, [1, 2]) ? 'Указана неверная схема для наполнителя и топпинга' : null;
         },
         'filler' => function ($value) {
             return;
@@ -110,17 +137,19 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $createdPoke['toppingAdd'] = $_POST['toppingAdd'];
     }
 
-    // print_r($createdPoke);
-    
+    print_r($createdPoke);
+
+
     foreach ($createdPoke as $key => $value) {
         if (in_array($key, $required) && empty($value)) {
             $fieldName = $uniqueComponentNames[$key];
             $errors[$key] = "Поле . $fieldName . должно быть заполено";
         }
-        
+
         if ($key == 'shema') {
-            $shemaId = (string)$value; // Приведение к строке
+            $shemaId = (int)$value;
             var_dump($shemaId);
+
             $rule = $rules['shema'];
             $errors['shema'] = $rule($shemaId);
             continue;
@@ -155,37 +184,32 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
     $errors = array_filter($errors);
     print_r($errors);
+
+
+    // Проверяет на наличие ошибок
+    if (!empty($errors)) {
+        $page_body = include_template(
+            'constructor-poke.php',
+            [
+                'proteinList' => $proteinList,
+                'proteinAddList' => $proteinAddList,
+                'baseList' => $baseList,
+                'fillerList' => $fillerList,
+                'toppingList' => $toppingList,
+                'sauceList' => $sauceList,
+                'crunchList' => $crunchList,
+                'errors' => $errors,
+            ]
+        );
+    } else {
+        echo 'Заказ отправлен в базу';
+    }
 }
 
 
 
 
-$page_head = include_template(
-    'head.php',
-    [
-        'title' => 'Конструктор «Много рыбы»',
-    ]
-);
 
-$page_header = include_template(
-    'header.php',
-    [
-        'isAuth' => $isAuth,
-    ]
-);
-
-$page_body = include_template(
-    'constructor-poke.php',
-    [
-        'proteinList' => $proteinList,
-        'proteinAddList' => $proteinAddList,
-        'baseList' => $baseList,
-        'fillerList' => $fillerList,
-        'toppingList' => $toppingList,
-        'sauceList' => $sauceList,
-        'crunchList' => $crunchList,
-    ]
-);
 
 $page_footer = include_template(
     'footer.php',

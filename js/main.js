@@ -365,71 +365,77 @@ const fillerPokeItem = document.querySelector('#fillerCounter');
 const topingPokeItem = document.querySelector('#topingCounter');
 
 
-shemaPoke.addEventListener('click', (evt) => {
-    const target = evt.target;
+if (shemaPoke) {
+    shemaPoke.addEventListener('click', (evt) => {
+        const target = evt.target;
 
-    const shemaItem = target.closest('.constructor-poke-shema-item');
-    const shemaItemValue = shemaItem.dataset.shemaPoke;
+        const shemaItem = target.closest('.constructor-poke-shema-item');
+        const shemaItemValue = shemaItem.dataset.shemaPoke;
 
-    if (shemaItemValue === '1') {
-        fillerPokeItem.textContent = `/ Осталось 5 из 5`;
-        topingPokeItem.textContent = `/ Осталось 1 из 1`;
+        if (shemaItemValue === '1') {
+            fillerPokeItem.textContent = `/ Осталось 5 из 5`;
+            topingPokeItem.textContent = `/ Осталось 1 из 1`;
 
-        localStorage.setItem('shemaPoke', 1);
-    } else {
-        fillerPokeItem.textContent = `/ Осталось 3 из 3`;
-        topingPokeItem.textContent = `/ Осталось 2 из 2`;
+            localStorage.setItem('shemaPoke', 1);
+        } else {
+            fillerPokeItem.textContent = `/ Осталось 3 из 3`;
+            topingPokeItem.textContent = `/ Осталось 2 из 2`;
 
-        localStorage.setItem('shemaPoke', 2);
-    }
-
-    // Схеама из стореджа
-    const number = localStorage.getItem('shemaPoke');
-
-    // Очищает чекбоксы Наполнителя 
-    let fillerItemNumber = 0;
-    checkboxFillerList.forEach(fillerItem => {
-        if (fillerItem.checked) {
-            fillerItemNumber++;
+            localStorage.setItem('shemaPoke', 2);
         }
-    });
 
-    checkboxFillerList.forEach(fillerItem => {
-        if (fillerItemNumber > shemaPokeNumber[number]['filler']) {
-            fillerItem.checked = false;
-        }
-    });
+        // Схеама из стореджа
+        const number = localStorage.getItem('shemaPoke');
 
-    // Очищает чекбоксы Топинга  
-    let topppingItemNumber = 0;
-    checkboxTopingList.forEach(topppingItem => {
-        if (topppingItem.checked) {
-            topppingItemNumber++;
-        }
-    });
+        // Очищает чекбоксы Наполнителя 
+        let fillerItemNumber = 0;
+        checkboxFillerList.forEach(fillerItem => {
+            if (fillerItem.checked) {
+                fillerItemNumber++;
+            }
+        });
 
-    checkboxTopingList.forEach(topppingItem => {
-        if (topppingItemNumber > shemaPokeNumber[number]['toping']) {
-            topppingItem.checked = false;
-        }
+        checkboxFillerList.forEach(fillerItem => {
+            if (fillerItemNumber > shemaPokeNumber[number]['filler']) {
+                fillerItem.checked = false;
+            }
+        });
+
+        // Очищает чекбоксы Топинга  
+        let topppingItemNumber = 0;
+        checkboxTopingList.forEach(topppingItem => {
+            if (topppingItem.checked) {
+                topppingItemNumber++;
+            }
+        });
+
+        checkboxTopingList.forEach(topppingItem => {
+            if (topppingItemNumber > shemaPokeNumber[number]['toping']) {
+                topppingItem.checked = false;
+            }
+        });
     });
-});
+}
+
 
 
 // Селект Протеин
 const selectProtein = document.querySelector('#constructor-poke__select--protein');
 
 // Назначаем обработчик изменения состояния каждому чекбоксу
-selectProtein.addEventListener('change', (evt) => {
-    const selectedIndex = evt.target.selectedIndex;
-    const selectedOption = evt.target.options[selectedIndex];
-    const price = selectedOption.getAttribute('data-price');
+if (selectProtein) {
+    selectProtein.addEventListener('change', (evt) => {
+        const selectedIndex = evt.target.selectedIndex;
+        const selectedOption = evt.target.options[selectedIndex];
+        const price = selectedOption.getAttribute('data-price');
 
-    // Обновляет сумму в Хранилище
-    sumOfPoke.protein = Number(price);
-    updatePokeSum(sumOfPoke);
-    updatePokeBasketSum();
-});
+        // Обновляет сумму в Хранилище
+        sumOfPoke.protein = Number(price);
+        updatePokeSum(sumOfPoke);
+        updatePokeBasketSum();
+    });
+}
+
 
 
 function changeFillerCountValue(number, diff) {
@@ -527,53 +533,61 @@ checkboxTopingList.forEach(topppingItem => {
 const selectProteinAdd = document.querySelector('#constructor-poke__select-proteinAdd');
 const labelProteinAdd = document.querySelector('#constructor-poke__add-price--protein');
 
-selectProteinAdd.addEventListener('change', (evt) => {
-    const selectedIndex = evt.target.selectedIndex;
-    const selectedOption = evt.target.options[selectedIndex];
-    const price = selectedOption.getAttribute('data-price');
+if (selectProteinAdd) {
+    selectProteinAdd.addEventListener('change', (evt) => {
+        const selectedIndex = evt.target.selectedIndex;
+        const selectedOption = evt.target.options[selectedIndex];
+        const price = selectedOption.getAttribute('data-price');
 
-    labelProteinAdd.textContent = `+ ${price} руб`;
+        labelProteinAdd.textContent = `+ ${price} руб`;
 
-    // Обновляет сумму в Хранилище
-    sumOfPoke.proteinAdd = Number(price);
-    updatePokeSum(sumOfPoke);
-    updatePokeBasketSum();
-});
+        // Обновляет сумму в Хранилище
+        sumOfPoke.proteinAdd = Number(price);
+        updatePokeSum(sumOfPoke);
+        updatePokeBasketSum();
+    });
+}
 
 
 // Селект с соусом: Добавка к Поке
 const selectSauceAdd = document.querySelector('#constructor-poke__select-sauceAdd');
 const labelSauceAdd = document.querySelector('#constructor-poke__add-price--sauce');
 
-selectSauceAdd.addEventListener('change', (evt) => {
-    const selectedIndex = evt.target.selectedIndex;
-    const selectedOption = evt.target.options[selectedIndex];
-    const price = selectedOption.getAttribute('data-price');
 
-    labelSauceAdd.textContent = `+ ${price} руб`;
+if (selectProteinAdd) {
+    selectSauceAdd.addEventListener('change', (evt) => {
+        const selectedIndex = evt.target.selectedIndex;
+        const selectedOption = evt.target.options[selectedIndex];
+        const price = selectedOption.getAttribute('data-price');
 
-    // Обновляет сумму в Хранилище
-    sumOfPoke.sauce = Number(price);
-    updatePokeSum(sumOfPoke);
-    updatePokeBasketSum();
-});
+        labelSauceAdd.textContent = `+ ${price} руб`;
+
+        // Обновляет сумму в Хранилище
+        sumOfPoke.sauce = Number(price);
+        updatePokeSum(sumOfPoke);
+        updatePokeBasketSum();
+    });
+}
 
 // Селект с соусом: Добавка к Поке
 const selectСrunchAdd = document.querySelector('#constructor-poke__select-crunchAdd');
 const labelСrunchAdd = document.querySelector('#constructor-poke__add-price--crunch');
 
-selectСrunchAdd.addEventListener('change', (evt) => {
-    const selectedIndex = evt.target.selectedIndex;
-    const selectedOption = evt.target.options[selectedIndex];
-    const price = selectedOption.getAttribute('data-price');
 
-    labelСrunchAdd.textContent = `+ ${price} руб`;
+if (selectProteinAdd) {
+    selectСrunchAdd.addEventListener('change', (evt) => {
+        const selectedIndex = evt.target.selectedIndex;
+        const selectedOption = evt.target.options[selectedIndex];
+        const price = selectedOption.getAttribute('data-price');
 
-    // Обновляет сумму в Хранилище
-    sumOfPoke.crunch = Number(price);
-    updatePokeSum(sumOfPoke);
-    updatePokeBasketSum();
-});
+        labelСrunchAdd.textContent = `+ ${price} руб`;
+
+        // Обновляет сумму в Хранилище
+        sumOfPoke.crunch = Number(price);
+        updatePokeSum(sumOfPoke);
+        updatePokeBasketSum();
+    });
+}
 
 
 
@@ -637,30 +651,34 @@ checkboxToppingAddList.forEach(toppingItem => {
 
 
 // Обработчик отправки формы
-document.querySelector('.constructor-poke__form').addEventListener('submit', function (event) {
-    const number = localStorage.getItem('shemaPoke');
-    let checkedFillerCheckbox = 0;
-    let checkedToppingCheckbox = 0;
+const constructorPokeForm = document.querySelector('.constructor-poke__form');
 
-    checkboxFillerList.forEach(fillerItem => {
-        if (fillerItem.checked) {
-            checkedFillerCheckbox++;
+if (constructorPokeForm) {
+    constructorPokeForm.addEventListener('submit', function (event) {
+        const number = localStorage.getItem('shemaPoke');
+        let checkedFillerCheckbox = 0;
+        let checkedToppingCheckbox = 0;
+
+        checkboxFillerList.forEach(fillerItem => {
+            if (fillerItem.checked) {
+                checkedFillerCheckbox++;
+            }
+        });
+
+        checkboxTopingList.forEach(toppingItem => {
+            if (toppingItem.checked) {
+                checkedToppingCheckbox++;
+            }
+        })
+
+        if (checkedFillerCheckbox !== shemaPokeNumber[number]['filler']) {
+            event.preventDefault(); // Предотвращаем отправку формы
+            alert(`Выберите в категории наполнитель ${shemaPokeNumber[number]['filler']} чекбокса(ов)`);
+        }
+
+        if (checkedToppingCheckbox !== shemaPokeNumber[number]['toping']) {
+            event.preventDefault(); // Предотвращаем отправку формы
+            alert(`Выберите в категории топпинг ${shemaPokeNumber[number]['toping']} чекбокса(ов)`);
         }
     });
-
-    checkboxTopingList.forEach(toppingItem => {
-        if (toppingItem.checked) {
-            checkedToppingCheckbox++;
-        }
-    })
-
-    if (checkedFillerCheckbox !== shemaPokeNumber[number]['filler']) {
-        event.preventDefault(); // Предотвращаем отправку формы
-        alert(`Выберите в категории наполнитель ${shemaPokeNumber[number]['filler']} чекбокса(ов)`);
-    }
-
-    if (checkedToppingCheckbox !== shemaPokeNumber[number]['toping']) {
-        event.preventDefault(); // Предотвращаем отправку формы
-        alert(`Выберите в категории топпинг ${shemaPokeNumber[number]['toping']} чекбокса(ов)`);
-    }
-});
+}

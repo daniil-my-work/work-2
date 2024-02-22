@@ -79,7 +79,7 @@ function include_template($name, array $data = [])
 
 
 // Определяет, является ли значение массивом или нет
-function check_if_array($value)
+function check_is_array($value)
 {
     if (is_array($value)) {
         return true; // значение является массивом

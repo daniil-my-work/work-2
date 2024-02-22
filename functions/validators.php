@@ -39,10 +39,22 @@ function validate_length($value, $min, $max)
     }
 }
 
+
+// component_name
+
 // Проверяет наличие компонента
 function validate_component($con, $componentType, $value)
 {
-    if (check_if_array($value)) {
+    $sql = get_query_componentNames();
+    $res = mysqli_query($con, $sql);
+
+    if (!$res) {
+        return 'Ошибка запроса';
+    }
+
+    $componentNames = get_arrow($res);
+
+    if (check_is_array($value)) {
         foreach ($value as $id) {
             $sql = get_query_checkComponent($id, $componentType);
             $result = mysqli_query($con, $sql);
