@@ -40,8 +40,6 @@ function validate_length($value, $min, $max)
 }
 
 
-// component_name
-
 // Проверяет наличие компонента
 function validate_component($con, $componentType, $value)
 {
@@ -54,21 +52,33 @@ function validate_component($con, $componentType, $value)
 
     $componentNames = get_arrow($res);
 
+    $newData = [];
+    // Проходимся по исходным данным и добавляем в новый массив
+    foreach ($componentNames as $item) {
+        $newData[$item['component_type']] = $item['component_name'];
+    }
+
+    $componentName = $newData[$componentType];
+
     if (check_is_array($value)) {
         foreach ($value as $id) {
             $sql = get_query_checkComponent($id, $componentType);
             $result = mysqli_query($con, $sql);
 
             if (mysqli_num_rows($result) == 0) {
-                return "Указанный компонент отсутствует в Поке";
+                return "Ошибка при выборе $componentName. Вы выбрали несуществующий компонент.";
             }
         }
+
+        return null;
     } else {
         $sql = get_query_checkComponent($value, $componentType);
         $result = mysqli_query($con, $sql);
 
         if (mysqli_num_rows($result) == 0) {
-            return "Указанный компонент отсутствует в Поке";
+            return "Ошибка при выборе $componentName. Вы выбрали несуществующий компонент.";
         }
+
+        return null;
     }
 }

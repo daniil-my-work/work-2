@@ -122,14 +122,13 @@ function get_query_checkComponent($componentId, $componentType)
 }
 
 
-
 /**
  * Формирует SQL-запрос для получения Названия компонентов
  * @return string SQL-запрос
  */
 function get_query_componentNames()
 {
-    return "SELECT component_name FROM component";
+    return "SELECT DISTINCT component_type, component_name FROM component";
 }
 
 

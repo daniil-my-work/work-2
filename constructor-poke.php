@@ -95,6 +95,7 @@ $page_body = include_template(
 );
 
 
+
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
     // Обязательные поля для заполненения 
     $required = ['shema', 'protein', 'base', 'filler', 'topping', 'sauce', 'crunch'];
@@ -106,12 +107,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         },
         'shema' => function ($value) {
             return !in_array($value, [1, 2]) ? 'Указана неверная схема для наполнителя и топпинга' : null;
-        },
-        'filler' => function ($value) {
-            return;
-        },
-        'topping' => function ($value) {
-            return;
         }
     ];
 
@@ -137,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $createdPoke['toppingAdd'] = $_POST['toppingAdd'];
     }
 
-    print_r($createdPoke);
+    // print_r($createdPoke);
 
 
     foreach ($createdPoke as $key => $value) {
@@ -148,32 +143,34 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
         if ($key == 'shema') {
             $shemaId = (int)$value;
-            var_dump($shemaId);
-
             $rule = $rules['shema'];
             $errors['shema'] = $rule($shemaId);
             continue;
         }
 
-        if ($key == 'filler') {
-            $rule = $rules['filler'];
-            $errors['filler'] = $rule($value);
-        }
-
-        if ($key == 'topping') {
-            $rule = $rules['topping'];
-            $errors['topping'] = $rule($value);
-        }
-
         $isAddComponent = $key == 'proteinAdd' || $key == 'fillerAdd' || $key == 'toppingAdd' || $key == 'sauceAdd' || $key == 'crunchAdd';
-        if ($isAddComponent) {
+        if ($isAddComponent && $value != '') {
 
-            $isSingleAddComponent = $key == 'proteinAdd' || $key == 'sauceAdd' || $key == 'crunchAdd';
-            if ($isSingleAddComponent && $value != '') {
-                $rule = $rules['component'];
-                $errors[$key] = $rule($key, $value);
+            $newKey = '';
+            if ($key === 'proteinAdd') {
+                $newKey = 'protein-add';
+            } elseif ($key === 'fillerAdd') {
+                $newKey = 'filler';
+            } elseif ($key === 'toppingAdd') {
+                $newKey = 'topping';
+            } elseif ($key === 'sauceAdd') {
+                $newKey = 'sauce';
+            } else {
+                $newKey = 'crunch';
             }
 
+            $rule = $rules['component'];
+            $errors[$key] = $rule($newKey, $value);
+
+            continue;
+        }
+
+        if ($isAddComponent && $value == '') {
             continue;
         }
 

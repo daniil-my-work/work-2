@@ -35,4 +35,3 @@ $fieldDescriptions = [
 //     'crunchAdd' => 'хруст'
 // ];
 
-// [protein] => 9 [base] => 29 [shema] => 1 [filler] => Array ( [0] => 35 [1] => 36 [2] => 37 [3] => 38 [4] => 39 ) [topping] => Array ( [0] => 55 ) [sauce] => 67 [crunch] => 77 [proteinAdd] => [sauceAdd] => [crunchAdd] => ) int(1) Array ( ) Заказ отправлен в базу 
