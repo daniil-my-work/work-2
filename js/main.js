@@ -318,6 +318,9 @@ if (basketList) {
 localStorage.clear();
 
 const basketSum = document.querySelector('.basket__order-number');
+const basketSumInput = document.querySelector('#total-price');
+console.log(basketSumInput);
+
 const sumOfPoke = {
     'protein': 0,
     'proteinAdd': 0,
@@ -345,6 +348,7 @@ function updatePokeBasketSum() {
     }
 
     basketSum.textContent = `${result} руб`;
+    basketSumInput.value = result;
 }
 
 
@@ -437,7 +441,6 @@ if (selectProtein) {
 }
 
 
-
 function changeFillerCountValue(number, diff) {
     // Заполняет данные об оставшемся кол-ве ингредиентов
     if (diff < 0) {
@@ -464,7 +467,6 @@ function changeTopingCountValue(number, diff) {
         topingPokeItem.textContent = `/ Осталось ${diff} из 2`;
     }
 }
-
 
 
 // Список инпутов Наполнитель
@@ -553,8 +555,7 @@ if (selectProteinAdd) {
 const selectSauceAdd = document.querySelector('#constructor-poke__select-sauceAdd');
 const labelSauceAdd = document.querySelector('#constructor-poke__add-price--sauce');
 
-
-if (selectProteinAdd) {
+if (selectSauceAdd) {
     selectSauceAdd.addEventListener('change', (evt) => {
         const selectedIndex = evt.target.selectedIndex;
         const selectedOption = evt.target.options[selectedIndex];
@@ -569,12 +570,12 @@ if (selectProteinAdd) {
     });
 }
 
+
 // Селект с соусом: Добавка к Поке
 const selectСrunchAdd = document.querySelector('#constructor-poke__select-crunchAdd');
 const labelСrunchAdd = document.querySelector('#constructor-poke__add-price--crunch');
 
-
-if (selectProteinAdd) {
+if (selectСrunchAdd) {
     selectСrunchAdd.addEventListener('change', (evt) => {
         const selectedIndex = evt.target.selectedIndex;
         const selectedOption = evt.target.options[selectedIndex];
@@ -588,8 +589,6 @@ if (selectProteinAdd) {
         updatePokeBasketSum();
     });
 }
-
-
 
 // Список инпутов Наполнитель дополнительно
 const labelFillerAdd = document.querySelector('#constructor-poke__add-price--filler');
@@ -682,3 +681,20 @@ if (constructorPokeForm) {
         }
     });
 }
+
+
+// Добавляет Поке в корзину
+const constructorPokeButton = document.querySelector('#constructor-poke-button');
+constructorPokeButton.addEventListener('click', () => {
+    // Айди продукта
+    const productDataId = productItem.dataset.productId;
+
+    // Формирование строки параметров
+    const params = new URLSearchParams();
+    params.append("productId", productDataId);
+
+
+    params.append("quantity", 0);
+    apiUpdateProductList(params);
+});
+

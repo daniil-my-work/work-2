@@ -28,6 +28,7 @@ CREATE TABLE `category_menu` (
         'desserts',
         'beverages',
         'sauce',
+        'constructor-poke',
     ),
     `category__name` ENUM(
         'поке',
@@ -39,7 +40,8 @@ CREATE TABLE `category_menu` (
         'сэндвичи',
         'десерты',
         'напитки',
-        'соус'
+        'соус',
+        'авторский поке'
     )
 );
 
@@ -78,6 +80,17 @@ CREATE TABLE `order_items` (
     unit_price INT,
     order_id CHAR(13), -- Ссылка на order_id в таблице orders
     FOREIGN KEY (order_id) REFERENCES orders(order_id)
+);
+
+CREATE TABLE `poke` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `title` VARCHAR(255),
+    `img` VARCHAR(255),
+    `description` TEXT,
+    `price` INT,
+    `cooking_time` INT,
+    `category__id` INT,
+    FOREIGN KEY (`category__id`) REFERENCES `category_menu` (`id`)
 );
 
 CREATE TABLE `component` (

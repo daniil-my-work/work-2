@@ -131,9 +131,31 @@ function get_query_componentNames()
     return "SELECT DISTINCT component_type, component_name FROM component";
 }
 
+/**
+ * Формирует SQL-запрос для получения Заголовка компонента
+ * @return string SQL-запрос
+ */
+function get_query_componentTitle($componentId)
+{
+    return "SELECT title FROM component WHERE id = '$componentId'";
+}
 
 
-
+/**
+ * Формирует SQL-запрос для добавления записи в таблицу poke
+ * @return string SQL-запрос
+ */
+function get_query_create_poke()
+{
+    return "INSERT INTO `poke`(
+        title,
+        img,
+        description,
+        price,
+        cooking_time,
+        category__id
+    ) VALUES (?, ?, ?, ?, ?, 10)";
+}
 
 
 

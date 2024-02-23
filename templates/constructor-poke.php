@@ -334,10 +334,12 @@
 
                         <span class="basket__order-number">
                         </span>
+
+                        <input type="hidden" id="total-price" name="total-price" value="">
                     </p>
 
-                    <button type="submit" class="button--second constructor-poke__button">
-                        Заказать
+                    <button type="submit" class="button--second constructor-poke__button" id="constructor-poke-button">
+                        Добавить в корзину
                     </button>
                 </div>
             </form>

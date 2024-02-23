@@ -95,10 +95,29 @@ $page_body = include_template(
 );
 
 
+$pokeTitle = [
+    '1' => 'c кальмаром',
+    '2' => 'c коктельными креветками',
+    '3' => 'c крабом',
+    '4' => 'c курицей',
+    '5' => 'c лососем',
+    '6' => 'c тофу',
+    '7' => 'c тунцом',
+    '8' => 'c угрем',
+    '9' => 'cо свининой',
+    '10' => 'c морским гребешком',
+    '11' => 'c лососем-тунцом',
+    '12' => 'c креветкой',
+    '13' => 'c морским миксом',
+    '14' => 'c телятиной',
+];
+
+// print_r($_SESSION['order']);
+
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
     // Обязательные поля для заполненения 
-    $required = ['shema', 'protein', 'base', 'filler', 'topping', 'sauce', 'crunch'];
+    $required = ['shema', 'protein', 'base', 'filler', 'topping', 'sauce', 'crunch', 'total-price'];
     $errors = [];
 
     $rules = [
@@ -107,10 +126,13 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         },
         'shema' => function ($value) {
             return !in_array($value, [1, 2]) ? 'Указана неверная схема для наполнителя и топпинга' : null;
+        },
+        'total-price' => function ($value) {
+            return $value < 0 ? 'Вы ничего не выбрали' : null;
         }
     ];
 
-    $createdPoke = filter_input_array(INPUT_POST, ['protein' => FILTER_DEFAULT, 'base' => FILTER_DEFAULT, 'shema' => FILTER_DEFAULT, 'filler' => FILTER_DEFAULT, 'topping' => FILTER_DEFAULT, 'sauce' => FILTER_DEFAULT, 'crunch' => FILTER_DEFAULT, 'proteinAdd' => FILTER_DEFAULT, 'sauceAdd' => FILTER_DEFAULT, 'crunchAdd' => FILTER_DEFAULT], true);
+    $createdPoke = filter_input_array(INPUT_POST, ['protein' => FILTER_DEFAULT, 'base' => FILTER_DEFAULT, 'shema' => FILTER_DEFAULT, 'filler' => FILTER_DEFAULT, 'topping' => FILTER_DEFAULT, 'sauce' => FILTER_DEFAULT, 'crunch' => FILTER_DEFAULT, 'total-price' => FILTER_DEFAULT, 'proteinAdd' => FILTER_DEFAULT, 'sauceAdd' => FILTER_DEFAULT, 'crunchAdd' => FILTER_DEFAULT], true);
 
     $toppingPostList = isset($_POST['topping']) ? $_POST['topping'] : null;
     if (!is_null($toppingPostList)) {
@@ -145,6 +167,12 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             $shemaId = (int)$value;
             $rule = $rules['shema'];
             $errors['shema'] = $rule($shemaId);
+            continue;
+        }
+
+        if ($key == 'total-price') {
+            $rule = $rules['total-price'];
+            $errors['total-price'] = $rule($value);
             continue;
         }
 
@@ -199,7 +227,40 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             ]
         );
     } else {
-        echo 'Заказ отправлен в базу';
+        print_r($createdPoke);
+
+        $poke['title'] = "Поке " . $pokeTitle[$createdPoke['protein']];
+        $poke['img'] = './poke-my-1.jpg';
+
+        $poke['description'] = 'Наполнитель: ';
+        foreach ($createdPoke['filler'] as $fillerItem) {
+            $sql = get_query_componentTitle($fillerItem);
+            $itemTitle = get_arrow(mysqli_query($con, $sql));
+
+            print_r($itemTitle['title']);
+
+            if ($itemTitle) {
+                $poke['description'] = $poke['description'] . $itemTitle['title'] . ', ';
+            }
+        }
+
+        // Удаляем последний символ запятой
+        $poke['description'] = rtrim($poke['description'], ', ');
+
+        print_r($poke);
+
+
+
+        // $sql = get_query_create_poke();
+        // $stmt = db_get_prepare_stmt($con, $sql, $createdPoke);
+        // $res = mysqli_stmt_execute($stmt);
+
+
+        if ($res) {
+            echo 'Заказ отправлен в базу';
+        } else {
+            echo 'Заказ незавершен в базу';
+        }
     }
 }
 
