@@ -137,7 +137,7 @@ function get_query_componentNames()
  */
 function get_query_componentTitle($componentId)
 {
-    return "SELECT title FROM component WHERE id = '$componentId'";
+    return "SELECT title, component_name FROM component WHERE id = '$componentId'";
 }
 
 
