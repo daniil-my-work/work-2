@@ -153,8 +153,8 @@ function get_query_create_poke()
         description,
         price,
         cooking_time,
-        category__id
-    ) VALUES (?, ?, ?, ?, ?, 10)";
+        category_id
+    ) VALUES (?, ?, ?, ?, ?, ?)";
 }
 
 

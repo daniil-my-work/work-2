@@ -1067,6 +1067,33 @@ textarea {
     margin-bottom: 40px;
 }
 
+.page__poke-error {
+    background-color: #F6F6F6;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid red;
+    margin-bottom: 30px;
+}
+
+.page__poke-error-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.page__poke-error-item {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #999;
+    padding-bottom: 3px;
+}
+
+.page__poke-error-item:last-child {
+    margin-bottom: 0;
+}
+
 .constructor-poke__list {
     margin-bottom: 40px;
 }

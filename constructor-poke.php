@@ -129,7 +129,10 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         },
         'total-price' => function ($value) {
             return $value < 0 ? 'Вы ничего не выбрали' : null;
-        }
+        },
+        'component-length' => function ($name, $value, $shema) {
+            return validate_component_length($name, $value, $shema);
+        },
     ];
 
     $createdPoke = filter_input_array(INPUT_POST, ['protein' => FILTER_DEFAULT, 'base' => FILTER_DEFAULT, 'shema' => FILTER_DEFAULT, 'filler' => FILTER_DEFAULT, 'topping' => FILTER_DEFAULT, 'sauce' => FILTER_DEFAULT, 'crunch' => FILTER_DEFAULT, 'total-price' => FILTER_DEFAULT, 'proteinAdd' => FILTER_DEFAULT, 'sauceAdd' => FILTER_DEFAULT, 'crunchAdd' => FILTER_DEFAULT], true);
@@ -165,6 +168,12 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             $shemaId = (int)$value;
             $rule = $rules['shema'];
             $errors['shema'] = $rule($shemaId);
+            continue;
+        }
+
+        if ($key == 'filler' || $key == 'topping') {
+            $rule = $rules['component-length'];
+            $errors[$key] = $rule($key, $value, $createdPoke['shema']);
             continue;
         }
 
@@ -206,6 +215,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     }
 
     $errors = array_filter($errors);
+    // print_r($errors);
 
 
     // Проверяет на наличие ошибок
@@ -224,20 +234,55 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             ]
         );
     } else {
+        // Формирует объект для записи в таблицу Poke
         $poke['title'] = "Поке " . $pokeTitle[$createdPoke['protein']];
         $poke['img'] = './poke-my-1.jpg';
-        $poke['price'] = $createdPoke['total-price'];
-
 
         // Словарь для конструктора Поке
         $poke['dictionary'] = array();
 
         foreach ($createdPoke as $createdPokeKey => $createdPokeValue) {
+            if ($createdPokeKey == 'shema' || $createdPokeKey == 'fillerAdd' || $createdPokeKey == 'toppingAdd' || $createdPokeKey == 'total-price') {
+                continue;
+            }
+
+            // Обработка proteinAdd
+            if ($createdPokeKey == 'proteinAdd' || $createdPokeKey == 'sauceAdd' || $createdPokeKey == 'crunchAdd') {
+                switch ($createdPokeKey) {
+                    case 'proteinAdd':
+                        $poke['dictionary']['protein'] = array(
+                            $createdPoke["protein"],
+                            $createdPoke["proteinAdd"]
+                        );
+
+                        $poke['dictionary']['protein'] = array_count_values($poke['dictionary']['protein']);
+                        break;
+                    case 'sauceAdd':
+                        $poke['dictionary']['sauce'] = array(
+                            $createdPoke["sauce"],
+                            $createdPoke["sauceAdd"]
+                        );
+
+                        $poke['dictionary']['sauce'] = array_count_values($poke['dictionary']['sauce']);
+                        break;
+                    case 'crunchAdd':
+                        $poke['dictionary']['crunch'] = array(
+                            $createdPoke["crunch"],
+                            $createdPoke["crunchAdd"]
+                        );
+
+                        $poke['dictionary']['crunch'] = array_count_values($poke['dictionary']['crunch']);
+                        break;
+                }
+
+                continue;
+            }
+
             // Обработка filler
             if ($createdPokeKey == 'filler') {
                 if (isset($createdPoke["fillerAdd"])) {
                     $fillerArray = array_merge($createdPoke["filler"], $createdPoke["fillerAdd"]);
-                    $fillerCount = array_count_values($fillerArray); // Получаем количество каждого уникального значения
+                    $fillerCount = array_count_values($fillerArray);
                     $poke['dictionary'][$createdPokeKey] = $fillerCount;
                     continue;
                 }
@@ -256,50 +301,80 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
                 $poke['dictionary'][$createdPokeKey] = $createdPokeValue;
             }
+
+            $poke['dictionary'][$createdPokeKey] = $createdPokeValue;
         }
 
+        // Формирует описание для Поке: компоненты из которых состоит
+        $poke['description'] = '';
+        foreach ($poke['dictionary'] as $pokeItem => $pokeItemValue) {
+            if (is_array($pokeItemValue)) {
+                switch ($pokeItem) {
+                    case 'protein':
+                        $poke['description'] .=  "Протеин: ";
+                        break;
+                    case 'filler':
+                        $poke['description'] .=  "Наполнитель: ";
+                        break;
+                    case 'topping':
+                        $poke['description'] .=  "Топпинг: ";
+                        break;
+                    case 'sauce':
+                        $poke['description'] .=  "Соус: ";
+                        break;
+                    case 'crunch':
+                        $poke['description'] .=  "Хруст: ";
+                        break;
+                }
 
-        print_r($poke['dictionary']);
+                foreach ($pokeItemValue as $pokeSubItemKey => $pokeSubItemValue) {
+                    $sql = get_query_componentTitle($pokeSubItemKey);
+                    $result = mysqli_query($con, $sql);
+                    $pokeSubItemInfo = get_arrow($result);
+
+                    if ($pokeSubItemValue > 1) {
+                        $poke['description'] .= $pokeSubItemInfo['title'] . ' ' . "*$pokeSubItemValue" . ', ';
+                    } else {
+                        $poke['description'] .= $pokeSubItemInfo['title'] . ', ';
+                    }
+                }
+
+                continue;
+            }
+
+            $sql = get_query_componentTitle($pokeItemValue);
+            $result = mysqli_query($con, $sql);
+            $pokeItemInfo = get_arrow($result);
+
+            $poke['description'] .= $pokeItemInfo['component_name'] . ": " . $pokeItemInfo['title'] . ', ';
+        }
+
+        $poke['description'] = rtrim($poke['description'], ', ') . '.';
+        // Удаляет Словарь из объекта
+        unset($poke['dictionary']);
+        
+        // Формирует объект для записи в таблицу Poke
+        $poke['price'] = $createdPoke['total-price'];
+        $poke['cooking_time'] = 40;
+        
+        // Получает айди категории для авторского поке
+        $sql = get_query_selectedCategory('constructor-poke');
+        $result = mysqli_query($con, $sql);
+        $categoryInfo = get_arrow($result);
+        $poke['category_id'] = (int) $categoryInfo['id'];
 
 
-        // $poke['description'] = '';
-        // foreach ($poke['dictionary'] as $pokeItem => $pokeItemValue) {
-        //     if (is_array($pokeItemValue)) {
-        //         foreach ($pokeItemValue as $pokeSubItemKey => $pokeSubItemValue) {
-        //             // $sql = get_query_componentTitle($pokeSubItemValue);
-        //             // $pokeSubItemInfo = get_arrow(mysqli_query($con, $sql));
-
-        //             // print_r($pokeSubItemValue);
-        //             //     $poke['description'] .= $pokeSubItemInfo['component_name'] . ': ' . $pokeSubItemInfo['title'] . ', ';
-        //         }
-
-        //         continue;
-        //     }
-
-        //     // print_r($pokeItemValue);
-
-        //     $sql = get_query_componentTitle($pokeItemValue);
-        //     $result = mysqli_query($con, $sql);
-
-        //     $pokeItemInfo = get_arrow($result);
-
-        //     // $poke['description'] .= $pokeItemInfo['title'] . ', ';
-        // }
-
-        // print_r($poke['description']);
-
-
-
-        // Удаляем последнюю запятую и добавляем точку в конце
-        // $poke['description'] = rtrim($poke['description'], ', ') . '.';
-        // print_r($poke['description']);
-
-        // $sql = get_query_create_poke();
-        // $stmt = db_get_prepare_stmt($con, $sql, $createdPoke);
-        // $res = mysqli_stmt_execute($stmt);
+        // Добавляет запись в таблицу Poke
+        $sql = get_query_create_poke();
+        $stmt = db_get_prepare_stmt($con, $sql, $poke);
+        $res = mysqli_stmt_execute($stmt);
 
 
         if ($res) {
+            $insertId = mysqli_insert_id($con);
+
+            echo $insertId;
+
             echo 'Заказ отправлен в базу';
         } else {
             echo 'Заказ незавершен в базу';

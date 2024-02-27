@@ -10,6 +10,17 @@
         </span>
     </a>
 
+    <div class="page__poke-error hidden">
+        <h3 class="page__poke-error-title">
+            Ошибка:
+        </h3>
+
+        <ul class="page__poke-error-list">
+            <li class="page__poke-error-item">
+                Выберете 1 топпинг
+            </li>
+        </ul>
+    </div>
 
     <!-- Меню -->
     <div class="constructor-poke">

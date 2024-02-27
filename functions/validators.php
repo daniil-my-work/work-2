@@ -82,3 +82,38 @@ function validate_component($con, $componentType, $value)
         return null;
     }
 }
+
+
+// Проверяет длину
+function validate_component_length($name, $value, $shema)
+{
+    $len = count($value);
+
+    if ($shema == 1) {
+        if ($name === 'filler') {
+            if ($len != 5) {
+                print_r('Сработало');
+
+                return "Выберете 5 наполнителей";
+            }
+        }
+
+        if ($name === 'topping') {
+            if ($len != 1) {
+                return "Выберете 1 топпинг";
+            }
+        }
+    } else {
+        if ($name === 'filler') {
+            if ($len != 3) {
+                return "Выберете 3 наполнителя";
+            }
+        }
+
+        if ($name === 'topping') {
+            if ($len != 2) {
+                return "Выберете 2 топпинга";
+            }
+        }
+    }
+}
