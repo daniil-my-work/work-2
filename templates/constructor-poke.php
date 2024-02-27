@@ -56,6 +56,11 @@
                                 </option>
                             <?php endforeach; ?>
                         </select>
+
+                        <?php $classHidden = isset($errors['protein']) ? '' : 'hidden'; ?>
+                        <span class="constructor-poke-error <?= $classHidden; ?>">
+                            <?= isset($errors['protein']) ? $errors['protein'] : ''; ?>
+                        </span>
                     </div>
 
                     <!-- Основа -->
@@ -83,6 +88,11 @@
                                 </option>
                             <?php endforeach; ?>
                         </select>
+
+                        <?php $classHidden = isset($errors['base']) ? '' : 'hidden'; ?>
+                        <span class="constructor-poke-error <?= $classHidden; ?>">
+                            <?= isset($errors['base']) ? $errors['base'] : ''; ?>
+                        </span>
                     </div>
 
                     <!-- Наполнитель -->
@@ -116,6 +126,10 @@
                             </div>
                         </fieldset>
 
+                        <?php $classHidden = isset($errors['filler']) ? '' : 'hidden'; ?>
+                        <span class="constructor-poke-error constructor-poke-error--second <?= $classHidden; ?>">
+                            <?= isset($errors['filler']) ? $errors['filler'] : ''; ?>
+                        </span>
 
                         <div class="constructor-poke-info">
                             <span class="constructor-poke-info-text">
@@ -153,6 +167,11 @@
                         <h3 class="sub-title constructor-poke__title">
                             Топпинг
                         </h3>
+
+                        <?php $classHidden = isset($errors['topping']) ? '' : 'hidden'; ?>
+                        <span class="constructor-poke-error constructor-poke-error--second <?= $classHidden; ?>">
+                            <?= isset($errors['topping']) ? $errors['topping'] : ''; ?>
+                        </span>
 
                         <div class="constructor-poke-info">
                             <span class="constructor-poke-info-text">
@@ -202,6 +221,11 @@
                                 </option>
                             <?php endforeach; ?>
                         </select>
+
+                        <?php $classHidden = isset($errors['sauce']) ? '' : 'hidden'; ?>
+                        <span class="constructor-poke-error <?= $classHidden; ?>">
+                            <?= isset($errors['sauce']) ? $errors['sauce'] : ''; ?>
+                        </span>
                     </div>
 
                     <!-- Хруст -->
@@ -229,6 +253,11 @@
                                 </option>
                             <?php endforeach; ?>
                         </select>
+
+                        <?php $classHidden = isset($errors['crunch']) ? '' : 'hidden'; ?>
+                        <span class="constructor-poke-error <?= $classHidden; ?>">
+                            <?= isset($errors['crunch']) ? $errors['crunch'] : ''; ?>
+                        </span>
                     </div>
                 </div>
 
@@ -248,6 +277,12 @@
                         <span class="constructor-poke__add-price" id="constructor-poke__add-price--protein">
                         </span>
                     </label>
+
+                    <?php $classHidden = isset($errors['proteinAdd']) ? '' : 'hidden'; ?>
+                    <span class="constructor-poke-error constructor-poke-error--second <?= $classHidden; ?>">
+                        <?= isset($errors['proteinAdd']) ? $errors['proteinAdd'] : ''; ?>
+                    </span>
+
                     <select class="form-select constructor-poke__select" id="constructor-poke__select-proteinAdd" aria-label="" name="proteinAdd">
                         <option value="" selected>
                             Не выбран
@@ -267,9 +302,13 @@
                         <span class="constructor-poke__add-price" id="constructor-poke__add-price--filler">
                         </span>
                     </label>
-                    <ul class="constructor-poke-list constructor-poke-list--second" id="constructor-poke__fillerAdd">
-                        <!-- <input type="hidden" id="constructor-poke__fillerAdd-input" value=""> -->
 
+                    <?php $classHidden = isset($errors['fillerAdd']) ? '' : 'hidden'; ?>
+                    <span class="constructor-poke-error constructor-poke-error--second <?= $classHidden; ?>">
+                        <?= isset($errors['fillerAdd']) ? $errors['fillerAdd'] : ''; ?>
+                    </span>
+
+                    <ul class="constructor-poke-list constructor-poke-list--second" id="constructor-poke__fillerAdd">
                         <?php foreach ($fillerList as $fillerItem) : ?>
                             <li class="constructor-poke-item" data-price="<?= $fillerItem['price']; ?>">
                                 <input type="checkbox" class="constructor-poke-item-checkbox constructor-poke-item-checkbox--fillerAdd" id="<?= $fillerItem['title']; ?>-add" name="fillerAdd[]" value="<?= $fillerItem['id']; ?>" data-price="<?= $fillerItem['price']; ?>">
@@ -288,6 +327,12 @@
                         <span class="constructor-poke__add-price" id="constructor-poke__add-price--topping">
                         </span>
                     </label>
+
+                    <?php $classHidden = isset($errors['toppingAdd']) ? '' : 'hidden'; ?>
+                    <span class="constructor-poke-error constructor-poke-error--second <?= $classHidden; ?>">
+                        <?= isset($errors['toppingAdd']) ? $errors['toppingAdd'] : ''; ?>
+                    </span>
+
                     <ul class="constructor-poke-list constructor-poke-list--second" id="constructor-poke__toppingAdd">
                         <?php foreach ($toppingList as $toppingItem) : ?>
                             <li class="constructor-poke-item" data-price="<?= $toppingItem['price']; ?>">
@@ -307,6 +352,12 @@
                         <span class="constructor-poke__add-price" id="constructor-poke__add-price--sauce">
                         </span>
                     </label>
+
+                    <?php $classHidden = isset($errors['sauceAdd']) ? '' : 'hidden'; ?>
+                    <span class="constructor-poke-error constructor-poke-error--second <?= $classHidden; ?>">
+                        <?= isset($errors['sauceAdd']) ? $errors['sauceAdd'] : ''; ?>
+                    </span>
+
                     <select class="form-select constructor-poke__select" id="constructor-poke__select-sauceAdd" aria-label="" name="sauceAdd">
                         <option value="" selected>
                             Не выбран
@@ -319,12 +370,19 @@
                         <?php endforeach; ?>
                     </select>
 
+
                     <label class="sub-title constructor-poke__add-label">
                         Хруст
 
                         <span class="constructor-poke__add-price" id="constructor-poke__add-price--crunch">
                         </span>
                     </label>
+
+                    <?php $classHidden = isset($errors['crunchAdd']) ? '' : 'hidden'; ?>
+                    <span class="constructor-poke-error constructor-poke-error--second <?= $classHidden; ?>">
+                        <?= isset($errors['crunchAdd']) ? $errors['crunchAdd'] : ''; ?>
+                    </span>
+
                     <select class="form-select constructor-poke__select" id="constructor-poke__select-crunchAdd" aria-label="" name="crunchAdd">
                         <option value="" selected>
                             Не выбран

@@ -319,7 +319,6 @@ localStorage.clear();
 
 const basketSum = document.querySelector('.basket__order-number');
 const basketSumInput = document.querySelector('#total-price');
-console.log(basketSumInput);
 
 const sumOfPoke = {
     'protein': 0,
@@ -684,17 +683,17 @@ if (constructorPokeForm) {
 
 
 // Добавляет Поке в корзину
-const constructorPokeButton = document.querySelector('#constructor-poke-button');
-constructorPokeButton.addEventListener('click', () => {
-    // Айди продукта
-    const productDataId = productItem.dataset.productId;
+// const constructorPokeButton = document.querySelector('#constructor-poke-button');
+// constructorPokeButton.addEventListener('click', () => {
+//     // Айди продукта
+//     const productDataId = productItem.dataset.productId;
 
-    // Формирование строки параметров
-    const params = new URLSearchParams();
-    params.append("productId", productDataId);
+//     // Формирование строки параметров
+//     const params = new URLSearchParams();
+//     params.append("productId", productDataId);
 
 
-    params.append("quantity", 0);
-    apiUpdateProductList(params);
-});
+//     params.append("quantity", 0);
+//     apiUpdateProductList(params);
+// });
 

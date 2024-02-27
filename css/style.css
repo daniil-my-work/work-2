@@ -1106,6 +1106,19 @@ textarea {
     margin-bottom: 15px;
 }
 
+.constructor-poke-error {
+    display: block;
+    padding: 5px 10px;
+    color: red;
+    border: 1px solid red;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.constructor-poke-error--second {
+    margin-bottom: 15px;
+}
+
 .constructor-poke__component:last-child {
     margin-bottom: 0;
 }

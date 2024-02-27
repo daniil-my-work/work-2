@@ -112,7 +112,6 @@ $pokeTitle = [
     '14' => 'c телятиной',
 ];
 
-// print_r($_SESSION['order']);
 
 
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
@@ -137,14 +136,14 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
     $createdPoke = filter_input_array(INPUT_POST, ['protein' => FILTER_DEFAULT, 'base' => FILTER_DEFAULT, 'shema' => FILTER_DEFAULT, 'filler' => FILTER_DEFAULT, 'topping' => FILTER_DEFAULT, 'sauce' => FILTER_DEFAULT, 'crunch' => FILTER_DEFAULT, 'total-price' => FILTER_DEFAULT, 'proteinAdd' => FILTER_DEFAULT, 'sauceAdd' => FILTER_DEFAULT, 'crunchAdd' => FILTER_DEFAULT], true);
 
-    $toppingPostList = isset($_POST['topping']) ? $_POST['topping'] : null;
-    if (!is_null($toppingPostList)) {
-        $createdPoke['topping'] = $_POST['topping'];
-    }
-
     $fillerPostList = isset($_POST['filler']) ? $_POST['filler'] : null;
     if (!is_null($fillerPostList)) {
         $createdPoke['filler'] = $_POST['filler'];
+    }
+
+    $toppingPostList = isset($_POST['topping']) ? $_POST['topping'] : null;
+    if (!is_null($toppingPostList)) {
+        $createdPoke['topping'] = $_POST['topping'];
     }
 
     $fillerAddPostList = isset($_POST['fillerAdd']) ? $_POST['fillerAdd'] : null;
@@ -157,7 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $createdPoke['toppingAdd'] = $_POST['toppingAdd'];
     }
 
-
+    // Проверка для полей $createdPoke
     foreach ($createdPoke as $key => $value) {
         if (in_array($key, $required) && empty($value)) {
             $fieldName = $uniqueComponentNames[$key];
@@ -174,6 +173,11 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         if ($key == 'filler' || $key == 'topping') {
             $rule = $rules['component-length'];
             $errors[$key] = $rule($key, $value, $createdPoke['shema']);
+           
+            // Проверка наличия компонента в Поке
+            $ruleSecond = $rules['component'];
+            $errors[$key] .=  $ruleSecond($key, $value);
+
             continue;
         }
 
@@ -215,7 +219,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     }
 
     $errors = array_filter($errors);
-    // print_r($errors);
 
 
     // Проверяет на наличие ошибок
@@ -305,6 +308,12 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             $poke['dictionary'][$createdPokeKey] = $createdPokeValue;
         }
 
+
+        // Ошибка в создании словаря  [protein] => Array ( [11] => 1 [] => 1 ) 
+        // (не указан номер продкта, который надо найти [] => 1 )
+        print_r($poke['dictionary']);
+
+
         // Формирует описание для Поке: компоненты из которых состоит
         $poke['description'] = '';
         foreach ($poke['dictionary'] as $pokeItem => $pokeItemValue) {
@@ -327,10 +336,21 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                         break;
                 }
 
+                // print_r($pokeItemValue);
+
                 foreach ($pokeItemValue as $pokeSubItemKey => $pokeSubItemValue) {
                     $sql = get_query_componentTitle($pokeSubItemKey);
                     $result = mysqli_query($con, $sql);
+
+                    // print_r($pokeSubItemKey);
+
+                    if (!$result) {
+                        return;
+                    }
+
                     $pokeSubItemInfo = get_arrow($result);
+
+                    // echo $poke['description'];
 
                     if ($pokeSubItemValue > 1) {
                         $poke['description'] .= $pokeSubItemInfo['title'] . ' ' . "*$pokeSubItemValue" . ', ';
@@ -352,11 +372,11 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $poke['description'] = rtrim($poke['description'], ', ') . '.';
         // Удаляет Словарь из объекта
         unset($poke['dictionary']);
-        
+
         // Формирует объект для записи в таблицу Poke
         $poke['price'] = $createdPoke['total-price'];
         $poke['cooking_time'] = 40;
-        
+
         // Получает айди категории для авторского поке
         $sql = get_query_selectedCategory('constructor-poke');
         $result = mysqli_query($con, $sql);
@@ -373,7 +393,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         if ($res) {
             $insertId = mysqli_insert_id($con);
 
-            echo $insertId;
+            // echo $insertId;
 
             echo 'Заказ отправлен в базу';
         } else {
@@ -381,8 +401,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         }
     }
 }
-
-
 
 
 

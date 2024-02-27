@@ -60,7 +60,7 @@ function validate_component($con, $componentType, $value)
 
     $componentName = $newData[$componentType];
 
-    if (check_is_array($value)) {
+    if (is_array($value)) {
         foreach ($value as $id) {
             $sql = get_query_checkComponent($id, $componentType);
             $result = mysqli_query($con, $sql);
@@ -94,25 +94,25 @@ function validate_component_length($name, $value, $shema)
             if ($len != 5) {
                 print_r('Сработало');
 
-                return "Выберете 5 наполнителей";
+                return "Для выбора доступно 5 наполнителей";
             }
         }
 
         if ($name === 'topping') {
             if ($len != 1) {
-                return "Выберете 1 топпинг";
+                return "Для выбора доступен 1 топпинг";
             }
         }
     } else {
         if ($name === 'filler') {
             if ($len != 3) {
-                return "Выберете 3 наполнителя";
+                return "Для выбора доступно 3 наполнителя";
             }
         }
 
         if ($name === 'topping') {
             if ($len != 2) {
-                return "Выберете 2 топпинга";
+                return "Для выбора доступно 2 топпинга";
             }
         }
     }
