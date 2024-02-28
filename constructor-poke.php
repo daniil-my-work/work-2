@@ -134,29 +134,34 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         },
     ];
 
-    $createdPoke = filter_input_array(INPUT_POST, ['protein' => FILTER_DEFAULT, 'base' => FILTER_DEFAULT, 'shema' => FILTER_DEFAULT, 'filler' => FILTER_DEFAULT, 'topping' => FILTER_DEFAULT, 'sauce' => FILTER_DEFAULT, 'crunch' => FILTER_DEFAULT, 'total-price' => FILTER_DEFAULT, 'proteinAdd' => FILTER_DEFAULT, 'sauceAdd' => FILTER_DEFAULT, 'crunchAdd' => FILTER_DEFAULT], true);
+    $createdPoke = filter_input_array(INPUT_POST, ['protein' => FILTER_DEFAULT, 'base' => FILTER_DEFAULT, 'shema' => FILTER_DEFAULT, 'filler' => FILTER_DEFAULT, 'topping' => FILTER_DEFAULT, 'sauce' => FILTER_DEFAULT, 'crunch' => FILTER_DEFAULT, 'total-price' => FILTER_DEFAULT, 'proteinAdd' => FILTER_DEFAULT, 'fillerAdd' => FILTER_DEFAULT, 'toppingAdd' => FILTER_DEFAULT, 'sauceAdd' => FILTER_DEFAULT, 'crunchAdd' => FILTER_DEFAULT], true);
 
-    $fillerPostList = isset($_POST['filler']) ? $_POST['filler'] : null;
-    if (!is_null($fillerPostList)) {
-        $createdPoke['filler'] = $_POST['filler'];
+    // Список полей содеражащих массив
+    $inputList = ['filler', 'topping', 'fillerAdd', 'toppingAdd'];
+
+    // Форматирует поля в объекте $createdPoke
+    foreach ($createdPoke as $key => $value) {
+        if (in_array($key, $inputList)) {
+            $createdPokeItem = isset($_POST[$key]) ? $_POST[$key] : null;
+
+            if (is_null($createdPokeItem)) {
+                unset($createdPoke[$key]);
+                continue;
+            }
+
+            $createdPoke[$key] = $createdPokeItem;
+            continue;
+        }
+
+        if ($value == '') {
+            unset($createdPoke[$key]);
+            continue;
+        }
     }
 
-    $toppingPostList = isset($_POST['topping']) ? $_POST['topping'] : null;
-    if (!is_null($toppingPostList)) {
-        $createdPoke['topping'] = $_POST['topping'];
-    }
 
-    $fillerAddPostList = isset($_POST['fillerAdd']) ? $_POST['fillerAdd'] : null;
-    if (!is_null($fillerAddPostList)) {
-        $createdPoke['fillerAdd'] = $_POST['fillerAdd'];
-    }
 
-    $toppingAddPostList = isset($_POST['toppingAdd']) ? $_POST['toppingAdd'] : null;
-    if (!is_null($toppingAddPostList)) {
-        $createdPoke['toppingAdd'] = $_POST['toppingAdd'];
-    }
-
-    // Проверка для полей $createdPoke
+    // Проверка на валидность полей формы 
     foreach ($createdPoke as $key => $value) {
         if (in_array($key, $required) && empty($value)) {
             $fieldName = $uniqueComponentNames[$key];
@@ -173,7 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         if ($key == 'filler' || $key == 'topping') {
             $rule = $rules['component-length'];
             $errors[$key] = $rule($key, $value, $createdPoke['shema']);
-           
+
             // Проверка наличия компонента в Поке
             $ruleSecond = $rules['component'];
             $errors[$key] .=  $ruleSecond($key, $value);
@@ -218,6 +223,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $errors[$key] = $rule($key, $value);
     }
 
+
+    // Фильтрует массив ошибок
     $errors = array_filter($errors);
 
 
@@ -244,74 +251,45 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         // Словарь для конструктора Поке
         $poke['dictionary'] = array();
 
-        foreach ($createdPoke as $createdPokeKey => $createdPokeValue) {
-            if ($createdPokeKey == 'shema' || $createdPokeKey == 'fillerAdd' || $createdPokeKey == 'toppingAdd' || $createdPokeKey == 'total-price') {
+        // Заполняет словарь данными о состовляющих Поке 
+        foreach ($createdPoke as $key => $value) {
+            // Пропускает лишние поля
+            if ($key == 'shema' || $key == 'fillerAdd' || $key == 'toppingAdd' || $key == 'proteinAdd' || $key == 'sauceAdd' || $key == 'crunchAdd' || $key == 'total-price') {
                 continue;
             }
 
-            // Обработка proteinAdd
-            if ($createdPokeKey == 'proteinAdd' || $createdPokeKey == 'sauceAdd' || $createdPokeKey == 'crunchAdd') {
-                switch ($createdPokeKey) {
-                    case 'proteinAdd':
-                        $poke['dictionary']['protein'] = array(
-                            $createdPoke["protein"],
-                            $createdPoke["proteinAdd"]
-                        );
-
-                        $poke['dictionary']['protein'] = array_count_values($poke['dictionary']['protein']);
-                        break;
-                    case 'sauceAdd':
-                        $poke['dictionary']['sauce'] = array(
-                            $createdPoke["sauce"],
-                            $createdPoke["sauceAdd"]
-                        );
-
-                        $poke['dictionary']['sauce'] = array_count_values($poke['dictionary']['sauce']);
-                        break;
-                    case 'crunchAdd':
-                        $poke['dictionary']['crunch'] = array(
-                            $createdPoke["crunch"],
-                            $createdPoke["crunchAdd"]
-                        );
-
-                        $poke['dictionary']['crunch'] = array_count_values($poke['dictionary']['crunch']);
-                        break;
+            if ($key == 'filler' || $key == 'topping') {
+                $keyAdd = $key . 'Add';
+                if (isset($createdPoke[$keyAdd])) {
+                    $combineArray = array_merge($createdPoke[$key], $createdPoke[$keyAdd]);
+                    $combineArray = array_count_values($combineArray);
+                    $poke['dictionary'][$key] = $combineArray;
+                    continue;
                 }
 
+                $poke['dictionary'][$key] = array_count_values($value);
                 continue;
             }
 
-            // Обработка filler
-            if ($createdPokeKey == 'filler') {
-                if (isset($createdPoke["fillerAdd"])) {
-                    $fillerArray = array_merge($createdPoke["filler"], $createdPoke["fillerAdd"]);
-                    $fillerCount = array_count_values($fillerArray);
-                    $poke['dictionary'][$createdPokeKey] = $fillerCount;
+            if ($key == 'protein' || $key == 'sauce' || $key == 'crunch') {
+                $keyAdd = $key . 'Add';
+
+                if (isset($createdPoke[$keyAdd])) {
+                    $createdPokeArr = [$createdPoke[$key]];
+                    $createdPokeAddArr = [$createdPoke[$keyAdd]];
+
+                    $combineArray = array_merge($createdPokeArr, $createdPokeAddArr);
+                    $combineArray = array_count_values($combineArray);
+                    $poke['dictionary'][$key] = $combineArray;
                     continue;
                 }
 
-                $poke['dictionary'][$createdPokeKey] = $createdPokeValue;
+                $poke['dictionary'][$key] = array_count_values([$createdPoke[$key]]);
+                continue;
             }
 
-            // Обработка topping
-            if ($createdPokeKey == 'topping') {
-                if (isset($createdPoke['toppingAdd'])) {
-                    $toppingArray = array_merge($createdPoke["topping"], $createdPoke["toppingAdd"]);
-                    $toppingCount = array_count_values($toppingArray);
-                    $poke['dictionary'][$createdPokeKey] = $toppingCount;
-                    continue;
-                }
-
-                $poke['dictionary'][$createdPokeKey] = $createdPokeValue;
-            }
-
-            $poke['dictionary'][$createdPokeKey] = $createdPokeValue;
+            $poke['dictionary'][$key] = array_count_values([$value]);
         }
-
-
-        // Ошибка в создании словаря  [protein] => Array ( [11] => 1 [] => 1 ) 
-        // (не указан номер продкта, который надо найти [] => 1 )
-        print_r($poke['dictionary']);
 
 
         // Формирует описание для Поке: компоненты из которых состоит
@@ -336,21 +314,15 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                         break;
                 }
 
-                // print_r($pokeItemValue);
-
                 foreach ($pokeItemValue as $pokeSubItemKey => $pokeSubItemValue) {
                     $sql = get_query_componentTitle($pokeSubItemKey);
                     $result = mysqli_query($con, $sql);
-
-                    // print_r($pokeSubItemKey);
 
                     if (!$result) {
                         return;
                     }
 
                     $pokeSubItemInfo = get_arrow($result);
-
-                    // echo $poke['description'];
 
                     if ($pokeSubItemValue > 1) {
                         $poke['description'] .= $pokeSubItemInfo['title'] . ' ' . "*$pokeSubItemValue" . ', ';
@@ -368,9 +340,11 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
             $poke['description'] .= $pokeItemInfo['component_name'] . ": " . $pokeItemInfo['title'] . ', ';
         }
-
+        
+        // Удаляет лишнюю запятую
         $poke['description'] = rtrim($poke['description'], ', ') . '.';
-        // Удаляет Словарь из объекта
+       
+        // Удаляет Словарь из объекта, чтобы оттправить объект в таблицу
         unset($poke['dictionary']);
 
         // Формирует объект для записи в таблицу Poke
