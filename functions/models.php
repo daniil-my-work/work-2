@@ -97,8 +97,8 @@ function get_query_create_order()
  */
 function get_query_create_orderItem()
 {
-    return "INSERT INTO order_items (product_id, quantity, unit_price, order_id) 
-    VALUES (?, ?, ?, ?)";
+    return "INSERT INTO order_items (product_id, quantity, unit_price, tableName, order_id) 
+    VALUES (?, ?, ?, ?, ?)";
 }
 
 

@@ -27,6 +27,8 @@ if (count($productIds) != 0) {
     $productList = get_arrow($products);
 }
 
+// print_r($productsData);
+// print_r($productList);
 
 // Цена товароа в корзине
 $fullPrice = 0;
@@ -85,12 +87,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $order['order_id'] = $order_id;
 
     // Добавляет запись в базу с заказами 
-    $sql = get_query_create_order();
-    $stmt = db_get_prepare_stmt($con, $sql, $order);
+    $createNewOrder = get_query_create_order();
+    $stmt = db_get_prepare_stmt($con, $createNewOrder, $order);
     $res = mysqli_stmt_execute($stmt);
 
     // SQL код для добавление записи в базу с состовляющими заказа 
-    $sqlSecond = get_query_create_orderItem();
+    $createNewOrderItem = get_query_create_orderItem();
 
     // Записывает в базу товары лежащие в корзине
     if (count($productIds) == 1) {
@@ -101,10 +103,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             "product_id" => $productId,
             "quantity" => $productsData[$productId],
             "unit_price" => $productList['price'],
+            // TODO должно подставляться динамически добавить !!!!
+            "tableName" => $productList['menu'],
             "order_id" => $order_id,
         );
 
-        $stmt = db_get_prepare_stmt($con, $sqlSecond, $data);
+        $stmt = db_get_prepare_stmt($con, $createNewOrderItem, $data);
         $res = mysqli_stmt_execute($stmt);
     } else {
         foreach ($productList as $product) {
@@ -115,10 +119,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 "product_id" => $product['id'],
                 "quantity" => $productsData[$productId],
                 "unit_price" => $product['price'],
+                // TODO должно подставляться динамически добавить !!!!
+                "tableName" => $productList['menu'],
                 "order_id" => $order_id,
             );
 
-            $stmt = db_get_prepare_stmt($con, $sqlSecond, $data);
+            $stmt = db_get_prepare_stmt($con, $createNewOrderItem, $data);
             $res = mysqli_stmt_execute($stmt);
         }
     }
