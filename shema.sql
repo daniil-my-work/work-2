@@ -13,6 +13,8 @@ CREATE TABLE `user` (
     `role` CHAR(55)
 );
 
+-- тест
+
 CREATE TABLE `category_menu` (
     `id` INT PRIMARY KEY AUTO_INCREMENT,
     `category_title` ENUM(
