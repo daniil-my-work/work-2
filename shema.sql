@@ -3,18 +3,15 @@ CREATE DATABASE `mnogoruba`;
 CREATE TABLE `user` (
     `id` INT PRIMARY KEY AUTO_INCREMENT,
     `date_reg` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    `name` VARCHAR(255),
-    `telephone` VARCHAR(20) UNIQUE,
-    `email` VARCHAR(255) UNIQUE,
-    `password` VARCHAR(255),
+    `user_name` VARCHAR(255),
+    `user_telephone` VARCHAR(20) UNIQUE,
+    `user_email` VARCHAR(255) UNIQUE,
+    `user_password` VARCHAR(255),
     `user_ip` VARCHAR(15),
-    `address` VARCHAR(255),
-    `rating` INT,
-    `role` CHAR(55)
+    `user_address` VARCHAR(255),
+    `user_rating` INT,
+    `user_role` CHAR(55)
 );
-
--- тест
-
 
 CREATE TABLE `category_menu` (
     `id` INT PRIMARY KEY AUTO_INCREMENT,

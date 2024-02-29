@@ -25,7 +25,7 @@ function get_query_userInfo($user_email)
  */
 function get_query_userAuth($user_email)
 {
-    return "SELECT user.id, user.name, user.email, user.user_password FROM user WHERE user.email = '$user_email'";
+    return "SELECT user.id, user.user_name, user.user_email, user.user_password FROM user WHERE user.user_email = '$user_email'";
 };
 
 

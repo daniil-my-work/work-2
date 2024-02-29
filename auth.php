@@ -57,7 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         // Формирует sql запрос для проверки наличия юзера в таблицу User
         $sql = get_query_userAuth($user['user_email']);
-
         $userInfo = mysqli_query($con, $sql);
 
         if (!$userInfo) {
