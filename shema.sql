@@ -15,6 +15,7 @@ CREATE TABLE `user` (
 
 -- тест
 
+
 CREATE TABLE `category_menu` (
     `id` INT PRIMARY KEY AUTO_INCREMENT,
     `category_title` ENUM(
