@@ -24,7 +24,11 @@
                 <?php if ($products) : ?>
                     <?= formatFirstLetter($categoryName['category__name']); ?>
                 <?php else : ?>
-                    Не найдено
+                    <div class="error">
+                        <p class="error__text">
+                            Произошла ошибка. Перезагрузите страницу
+                        </p>
+                    </div>
                 <?php endif; ?>
             </h2>
 

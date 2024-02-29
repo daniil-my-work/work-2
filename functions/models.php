@@ -6,7 +6,7 @@
  */
 function get_query_create_user()
 {
-    return "INSERT INTO user (date_reg, user_name, email, telephone, user_password, user_ip, user_role) 
+    return "INSERT INTO user (date_reg, user_name, user_email, user_telephone, user_password, user_ip, user_role) 
     VALUES (NOW(), ?, ?, ?, ?, ?, ?)";
 }
 
@@ -16,7 +16,7 @@ function get_query_create_user()
  */
 function get_query_userInfo($user_email)
 {
-    return "SELECT * FROM user WHERE user.email = '$user_email'";
+    return "SELECT * FROM user WHERE user.user_email = '$user_email'";
 };
 
 /**

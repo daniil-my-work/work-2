@@ -11,6 +11,10 @@ function validate_email($email)
 // Проверяет Номер телефона
 function validate_phone($phone)
 {
+    if ($phone === null) {
+        return 'Введите номер телефона';
+    }
+
     // Удаление всех символов, кроме цифр
     $phone = preg_replace("/[^0-9]/", "", $phone);
 

@@ -111,34 +111,11 @@
                     </button>
                 </nav>
             <?php else : ?>
-                <ul class="menu__list">
-                    <li class="menu__item" data-product-id="">
-
-                        <img src="не найдено" alt="" class="menu__item-img">
-
-                        <div class="menu__item-content">
-                            <h3 class="sub-title menu__item-title">
-                                Поке не найдено
-                            </h3>
-
-                            <p class="text menu__item-text">
-                            Поке не найдено
-                            </p>
-
-                            <div class="menu__item-info">
-                                <p class="text menu__item-price">
-                                    0 
-                                </p>
-
-                                <div class="product-item__counter">
-                                    <button class="product-item__counter-button" type="button">
-                                        В корзину
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+                <div class="error">
+                    <p class="error__text">
+                        Произошла ошибка. Перезагрузите страницу
+                    </p>
+                </div>
             <?php endif; ?>
         </div>
     </div>

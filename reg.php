@@ -13,15 +13,15 @@ $page_body = include_template('reg.php');
 // Проверка на отправку формы
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Обязательные поля для заполненения 
-    $required = ['user_name', 'telephone', 'email', 'user_password'];
+    $required = ['user_name', 'user_phone', 'user_email', 'user_password'];
     $errors = [];
 
     // Валидация полей
     $rules = [
-        'email' => function ($value) {
+        'user_email' => function ($value) {
             return validate_email($value);
         },
-        'phone' => function ($value) {
+        'user_phone' => function ($value) {
             return validate_phone($value);
         },
         'user_password' => function ($value) {
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
 
     // Получает данные из формы
-    $user = filter_input_array(INPUT_POST, ['user_name' => FILTER_DEFAULT, 'email' => FILTER_DEFAULT, 'phone' => FILTER_DEFAULT, 'user_password' => FILTER_DEFAULT], true);
+    $user = filter_input_array(INPUT_POST, ['user_name' => FILTER_DEFAULT, 'user_email' => FILTER_DEFAULT, 'user_phone' => FILTER_DEFAULT, 'user_password' => FILTER_DEFAULT], true);
 
     // Заполняет массив с ошибками
     foreach ($user as $key => $value) {
@@ -73,17 +73,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user['user_role'] = 'client';
 
         // Устанавливает роль: Админ
-        if (in_array($user['phone'], $adminTelephone)) {
+        if (in_array($user['user_phone'], $adminTelephone)) {
             $user['user_role'] = 'admin';
         }
 
         // Устанавливает роль: Собственник
-        if (in_array($user['phone'], $ownerTelephone)) {
+        if (in_array($user['user_phone'], $ownerTelephone)) {
             $user['user_role'] = 'owner';
         }
 
         // Хеширует пароль
         $user['user_password'] = password_hash($user['user_password'], PASSWORD_BCRYPT);
+
+        var_dump($user);
 
         $stmt = db_get_prepare_stmt($con, $sql, $user);
         $res = mysqli_stmt_execute($stmt);
