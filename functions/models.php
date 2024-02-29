@@ -25,7 +25,7 @@ function get_query_userInfo($user_email)
  */
 function get_query_userAuth($user_email)
 {
-    return "SELECT user.id, user.user_name, user.email, user.user_password FROM user WHERE user.email = '$user_email'";
+    return "SELECT user.id, user.name, user.email, user.user_password FROM user WHERE user.email = '$user_email'";
 };
 
 
@@ -58,7 +58,7 @@ function get_query_products()
  */
 function get_query_selectedProducts($activeCategory)
 {
-    return "SELECT menu.id, menu.title, menu.img, menu.description, menu.price, category_menu.category__name, category_menu.category__title FROM menu LEFT JOIN category_menu ON menu.category__id = category_menu.id WHERE category_menu.category__title = '$activeCategory'";
+    return "SELECT menu.id, menu.title, menu.img, menu.description, menu.price, category_menu.category_name, category_menu.category_title FROM menu LEFT JOIN category_menu ON menu.category_id = category_menu.id WHERE category_menu.category_title = '$activeCategory'";
 }
 
 
@@ -77,7 +77,7 @@ function get_query_categories()
  */
 function get_query_selectedCategory($activeCategory)
 {
-    return "SELECT * FROM category_menu WHERE category_menu.category__title = '$activeCategory'";
+    return "SELECT * FROM category_menu WHERE category_menu.category_title = '$activeCategory'";
 }
 
 

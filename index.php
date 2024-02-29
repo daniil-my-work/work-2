@@ -12,8 +12,13 @@ $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
 
 // Получает список продуктов
 $sql = get_query_products();
-$products = mysqli_query($con, $sql);
-$productList = get_arrow($products);
+$result = mysqli_query($con, $sql);
+
+if ($result && mysqli_num_rows($result) > 0) {
+    $productList = get_arrow($result);
+} else {
+    $productList = NULL;
+}
 
 
 $page_head = include_template(

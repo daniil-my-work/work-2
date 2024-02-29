@@ -12,9 +12,14 @@ require_once('./functions/formatter.php');
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
 
 // Получает список категорий меню 
-$sql = get_query_categories();
-$categories = mysqli_query($con, $sql);
-$categoryList = get_arrow($categories);
+$getСategories = get_query_categories();
+$categories = mysqli_query($con, $getСategories);
+
+if ($categories && mysqli_num_rows($categories) > 0) {
+    $categoryList = get_arrow($categories);
+} else {
+    $categoryList = NULL;
+}
 
 
 // Получает активную категорию
@@ -22,15 +27,25 @@ $activeCategory = isset($_GET['category']) ? $_GET['category'] : 'rolls';
 
 
 // Получает данные о выбранной категории
-$sql1 = get_query_selectedCategory($activeCategory);
-$category = mysqli_query($con, $sql1);
-$categoryName = get_arrow($category);
+$getSelectedCategory = get_query_selectedCategory($activeCategory);
+$category = mysqli_query($con, $getSelectedCategory);
+
+if ($category && mysqli_num_rows($category) > 0) {
+    $categoryName = get_arrow($category);
+} else {
+    $categoryName = NULL;
+}
 
 
 // Получает список продуктов по выбранной категории 
-$sql = get_query_selectedProducts($activeCategory);
-$products = mysqli_query($con, $sql);
-$productList = get_arrow($products);
+$getProductsByCategory = get_query_selectedProducts($activeCategory);
+$products = mysqli_query($con, $getProductsByCategory);
+
+if ($products && mysqli_num_rows($products) > 0) {
+    $productList = get_arrow($products);
+} else {
+    $productList = NULL;
+}
 
 
 $page_head = include_template(
