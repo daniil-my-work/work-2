@@ -7,6 +7,8 @@ require_once('./functions/db.php');
 require_once('./functions/validators.php');
 
 
+print_r($_SESSION['order']);
+
 // Получает список категорий меню 
 $sql = get_query_components();
 $components = mysqli_query($con, $sql);
@@ -160,7 +162,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     }
 
 
-
     // Проверка на валидность полей формы 
     foreach ($createdPoke as $key => $value) {
         if (in_array($key, $required) && empty($value)) {
@@ -179,9 +180,11 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             $rule = $rules['component-length'];
             $errors[$key] = $rule($key, $value, $createdPoke['shema']);
 
-            // Проверка наличия компонента в Поке
-            $ruleSecond = $rules['component'];
-            $errors[$key] .=  $ruleSecond($key, $value);
+            if (!$errors[$key]) {
+                // Проверка наличия компонента в Поке
+                $ruleSecond = $rules['component'];
+                $errors[$key] = $ruleSecond($key, $value);
+            }
 
             continue;
         }
@@ -226,7 +229,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
     // Фильтрует массив ошибок
     $errors = array_filter($errors);
-
 
 
     // Проверяет на наличие ошибок
@@ -337,6 +339,11 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
         if ($addedPoke) {
             // echo $insertId;
+
+            $tableName = 'poke';
+            $productId = $insertId;
+            $quantity = 1;
+            addProductInSession($tableName, $productId, $quantity);
 
             echo 'Заказ отправлен в базу';
         } else {

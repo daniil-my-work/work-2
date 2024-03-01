@@ -44,6 +44,21 @@ function get_query_productList(array $productIds)
 }
 
 /**
+ * Формирует SQL-запрос для показа списка Поке по списку идентификаторов продуктов
+ * @param array $productIds Массив идентификаторов продуктов
+ * @return string SQL-запрос
+ */
+function get_query_productPokeList(array $productIds)
+{
+    // Преобразуем массив идентификаторов в строку для использования в операторе IN
+    $productIdList = implode(',', array_map('intval', $productIds));
+
+    // Формируем SQL-запрос
+    return "SELECT * FROM poke WHERE poke.id IN ($productIdList)";
+}
+
+
+/**
  * Формирует SQL-запрос для показа списка продуктов 
  * @return string SQL-запрос
  */

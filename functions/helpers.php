@@ -90,3 +90,26 @@ function checkUniquenessValue($con, $order_id, $table, $value)
 
     return $count == 0;
 }
+
+
+// Добавляет данные о выбранном продукте в сессию
+function addProductInSession($tableName, $productId, $quantity)
+{
+    // Инициализируйте или обновите данные корзины в сессии
+    if (!isset($_SESSION['order'][$tableName])) {
+        $_SESSION['order'][$tableName] = array();
+    }
+
+    // Добавьте товар в корзину
+    if (isset($_SESSION['order'][$tableName][$productId])) {
+        // Удаление конкретного элемента из сессии
+        if ($quantity <= 0) {
+            unset($_SESSION['order'][$tableName][$productId]);
+            return;
+        }
+
+        $_SESSION['order'][$tableName][$productId] = $quantity;
+    } else {
+        $_SESSION['order'][$tableName][$productId] = 1;
+    }
+}

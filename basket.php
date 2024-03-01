@@ -16,25 +16,38 @@ if (!$isAuth) {
 // Получение данных из сессии
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
 
-// Устанавливает начальное значение списка товаров в корзине
-$productList = [];
 
 // Получает список продуктов для отрисовки в корзине
-$productIds = array_keys($productsData);
-if (count($productIds) != 0) {
-    $sql = get_query_productList($productIds);
-    $products = mysqli_query($con, $sql);
-    $productList = get_arrow($products);
+function getProductList($con, $productsData)
+{
+    $productList = array();
+
+    foreach ($productsData as $key) {
+        $productIds = array_keys($key);
+
+        if ($key == 'menu') {
+            $sql = get_query_productList($productIds);
+        } else {
+            $sql = get_query_productPokeList($productIds);
+        }
+
+        $products = mysqli_query($con, $sql);
+        $productList[] = get_arrow($products);
+    }
+
+    return $productList;
 }
 
-// print_r($productsData);
-// print_r($productList);
+// Получает список продуктов 
+$productList = getProductList($con, $productsData);
+print_r($productList);
+
 
 // Цена товароа в корзине
 $fullPrice = 0;
 
 // Подсчитывает цену в заивисмости от кол-ва товаров в корзине
-if (count($productIds) == 1) {
+if (count($productList) == 1) {
     $productId = $productList['id']; // Получаем ID продукта
     $quantity = $productsData[$productId]; // Получаем количество продукта из $productsData
     $price = $productList['price']; // Получаем цену продукта
@@ -161,7 +174,7 @@ $page_body = include_template(
     [
         'productsData' => $productsData,
         'products' => $productList,
-        'productLength' => count($productIds),
+        'productLength' => count($productList),
         'fullPrice' => $fullPrice,
     ]
 );

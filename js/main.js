@@ -132,6 +132,7 @@ function addProductInBasket(evt) {
     // Формирование строки параметров
     const params = new URLSearchParams();
     params.append("productId", productDataId);
+    params.append("tableName", 'menu');
 
     // Уменьшает кол-во блюд
     const decButton = element.classList.contains(
@@ -241,6 +242,7 @@ function addProductInBasketSecond(evt) {
     // Формирование строки параметров
     const params = new URLSearchParams();
     params.append("productId", productDataId);
+    params.append("tableName", 'menu');
 
     // Уменьшает кол-во блюд
     const decButton = element.classList.contains(
