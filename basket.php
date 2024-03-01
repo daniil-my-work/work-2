@@ -12,55 +12,68 @@ if (!$isAuth) {
     return;
 }
 
+// unset($_SESSION['order']);
 
 // Получение данных из сессии
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
 
 
+// print_r($_SESSION['order']);
+
 // Получает список продуктов для отрисовки в корзине
 function getProductList($con, $productsData)
 {
     $productList = array();
+    // $productsKey = array_keys($productsData);
 
-    foreach ($productsData as $key) {
-        $productIds = array_keys($key);
+    foreach ($productsData as $key => $productByCategory) {
+        // print_r($key);
+        // print_r($productByCategory);
 
-        if ($key == 'menu') {
-            $sql = get_query_productList($productIds);
-        } else {
-            $sql = get_query_productPokeList($productIds);
+        foreach ($productByCategory as $productId => $quantity) {
+            print_r($productId);
+            print_r($quantity);
+
         }
 
-        $products = mysqli_query($con, $sql);
-        $productList[] = get_arrow($products);
     }
+
+    // foreach ($productsKey as $key) {
+    //     $productByCategory = $productsData[$key];
+    //     $productsKeyByCategory = array_keys($productByCategory);
+
+    //     if ($key == 'menu') {
+    //         $sql = get_query_productList($productsKeyByCategory);
+    //     } else {
+    //         $sql = get_query_productPokeList($productsKeyByCategory);
+    //     }
+
+    //     $products = mysqli_query($con, $sql);
+    //     $productList[] = get_arrow($products);
+    // }
 
     return $productList;
 }
 
 // Получает список продуктов 
 $productList = getProductList($con, $productsData);
-print_r($productList);
+
+// print_r($productsData);
+// print_r($productList);
 
 
-
-// TODO ------
-
-// Цена товароа в корзине
+// Цена товаров в корзине
 $fullPrice = 0;
 
-// Подсчитывает цену в заивисмости от кол-ва товаров в корзине
-if (count($productList) == 1) {
-    $productId = $productList['id']; // Получаем ID продукта
-    $quantity = $productsData[$productId]; // Получаем количество продукта из $productsData
-    $price = $productList['price']; // Получаем цену продукта
 
-    // Умножаем цену продукта на его количество и добавляем к общей стоимости
-    $fullPrice += $price * $quantity;
-} else {
+// Подсчитывает цену в заивисмости от кол-ва товаров в корзине
+if (count($productList) > 0) {
     // Перебираем продукты из $productList
     foreach ($productList as $product) {
         $productId = $product['id']; // Получаем ID продукта
+       
+        // print_r($productId);
+
         $quantity = $productsData[$productId]; // Получаем количество продукта из $productsData
         $price = $product['price']; // Получаем цену продукта
 
@@ -68,6 +81,26 @@ if (count($productList) == 1) {
         $fullPrice += $price * $quantity;
     }
 }
+
+// Подсчитывает цену в заивисмости от кол-ва товаров в корзине
+// if (count($productList) == 1) {
+//     $productId = $productList['id']; // Получаем ID продукта
+//     $quantity = $productsData[$productId]; // Получаем количество продукта из $productsData
+//     $price = $productList['price']; // Получаем цену продукта
+
+//     // Умножаем цену продукта на его количество и добавляем к общей стоимости
+//     $fullPrice += $price * $quantity;
+// } else {
+//     // Перебираем продукты из $productList
+//     foreach ($productList as $product) {
+//         $productId = $product['id']; // Получаем ID продукта
+//         $quantity = $productsData[$productId]; // Получаем количество продукта из $productsData
+//         $price = $product['price']; // Получаем цену продукта
+
+//         // Умножаем цену продукта на его количество и добавляем к общей стоимости
+//         $fullPrice += $price * $quantity;
+//     }
+// }
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
