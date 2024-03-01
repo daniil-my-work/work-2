@@ -6,6 +6,8 @@ require_once('./functions/models.php');
 require_once('./functions/db.php');
 
 
+print_r($_SESSION['order']);
+
 // Получение данных из сессии
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
 
@@ -18,6 +20,17 @@ if ($result && mysqli_num_rows($result) > 0) {
     $productList = get_arrow($result);
 } else {
     $productList = NULL;
+}
+
+
+// Получает список категорий меню 
+$getСategories = get_query_categories();
+$categories = mysqli_query($con, $getСategories);
+
+if ($categories && mysqli_num_rows($categories) > 0) {
+    $categoryList = get_arrow($categories);
+} else {
+    $categoryList = NULL;
 }
 
 
@@ -45,7 +58,9 @@ $page_body = include_template(
 
 $page_footer = include_template(
     'footer.php',
-    []
+    [
+        'categoryList' => $categoryList,
+    ]
 );
 
 $layout_content = include_template(

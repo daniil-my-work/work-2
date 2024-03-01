@@ -108,7 +108,7 @@ function get_query_create_orderItem()
  */
 function get_query_components()
 {
-    return "SELECT * FROM component";
+    return "SELECT * FROM components";
 }
 
 
@@ -118,7 +118,7 @@ function get_query_components()
  */
 function get_query_checkComponent($componentId, $componentType)
 {
-    return "SELECT * FROM component WHERE component.id = '$componentId' AND component.component_type = '$componentType'";
+    return "SELECT * FROM components WHERE components.id = '$componentId' AND components.component_type = '$componentType'";
 }
 
 
@@ -128,7 +128,7 @@ function get_query_checkComponent($componentId, $componentType)
  */
 function get_query_componentNames()
 {
-    return "SELECT DISTINCT component_type, component_name FROM component";
+    return "SELECT DISTINCT component_type, component_name FROM components";
 }
 
 /**
@@ -137,7 +137,7 @@ function get_query_componentNames()
  */
 function get_query_componentTitle($componentId)
 {
-    return "SELECT title, component_name FROM component WHERE id = '$componentId'";
+    return "SELECT title, component_name FROM components WHERE id = '$componentId'";
 }
 
 

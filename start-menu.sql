@@ -1,6 +1,6 @@
 -- Таблица Категория
 INSERT INTO
-    category_menu (category__title, category__name)
+    category_menu (category_title, category_name)
 VALUES
     ('poke', 'поке'),
     ('rolls', 'роллы'),
@@ -12,6 +12,7 @@ VALUES
     ('desserts', 'десерты'),
     ('beverages', 'напитки'),
     ('sauce', 'соус');
+    ('constructor-poke', 'авторский поке');
 
 -- Таблица меню
 INSERT INTO
@@ -21,7 +22,7 @@ INSERT INTO
         description,
         price,
         cooking_time,
-        category__id
+        category_id
     )
 VALUES
     (
@@ -323,7 +324,7 @@ VALUES
 
 -- Таблица Компоненты поке
 INSERT INTO
-    component (
+    components (
         title,
         img,
         price,

@@ -20,15 +20,17 @@
                     Меню poke-room
                 </h3>
 
-                <ul class="footer__list">
-                    <?php foreach ($categoryList as $category) : ?>
-                        <li class="footer__item">
-                            <a href="./menu.php?category=<?= $category['category__title']; ?>" class="footer__item-link">
-                                <?= $category['category__name']; ?>
-                            </a>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
+                <?php if ($categoryList) : ?>
+                    <ul class="footer__list">
+                        <?php foreach ($categoryList as $category) : ?>
+                            <li class="footer__item">
+                                <a href="./menu.php?category=<?= $category['category_title']; ?>" class="footer__item-link">
+                                    <?= $category['category_name']; ?>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
             </div>
 
             <!-- Меню -->

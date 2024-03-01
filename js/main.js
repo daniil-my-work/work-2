@@ -1,5 +1,8 @@
 // Кнопка корзина
 const actionBasket = document.querySelector('.action__basket');
+if (actionBasket) {
+    actionBasket.classList.add('hidden');
+}
 
 
 // Получает значение из Корзины
@@ -147,7 +150,7 @@ function addProductInBasket(evt) {
             // console.log(params.toString());
 
             // Получает значение из Корзины
-            getProductInBasket();
+            // getProductInBasket();
 
             hideCounter(productCounterButton, productCounterWrapper);
             return;
@@ -159,7 +162,7 @@ function addProductInBasket(evt) {
         // console.log(params.toString());
 
         // Получает значение из Корзины
-        getProductInBasket();
+        // getProductInBasket();
 
         productCounterInput.value = newValue;
         productCounterNumber.textContent = newValue;
@@ -181,7 +184,7 @@ function addProductInBasket(evt) {
         // console.log(params.toString());
 
         // Получает значение из Корзины
-        getProductInBasket();
+        // getProductInBasket();
 
         productCounterInput.value = newValue;
         productCounterNumber.textContent = newValue;
@@ -207,7 +210,7 @@ function addProductInBasket(evt) {
     apiUpdateProductList(params);
 
     // Получает значение из Корзины
-    getProductInBasket();
+    // getProductInBasket();
 }
 
 // Обработчик для страницы Главная и Меню

@@ -77,7 +77,8 @@ CREATE TABLE `poke` (
     `description` TEXT,
     `price` INT,
     `cooking_time` INT,
-    `category_id` INT
+    `category_id` INT,
+    `poke_id` INT
 );
 
 CREATE TABLE `components` (
