@@ -275,7 +275,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         // Словарь для конструктора Поке
         $pokeDictionary = array();
 
-        // Заполняет словарь данными о состовляющих Поке 
+        // Заполняет словарь данными из каких компонентов собрано Поке 
         foreach ($createdPoke as $key => $value) {
             // Пропускает лишние поля
             if ($key == 'shema' || $key == 'fillerAdd' || $key == 'toppingAdd' || $key == 'proteinAdd' || $key == 'sauceAdd' || $key == 'crunchAdd' || $key == 'total-price') {
