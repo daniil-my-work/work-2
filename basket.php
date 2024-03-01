@@ -43,6 +43,9 @@ $productList = getProductList($con, $productsData);
 print_r($productList);
 
 
+
+// TODO ------
+
 // Цена товароа в корзине
 $fullPrice = 0;
 
