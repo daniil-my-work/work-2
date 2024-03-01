@@ -6,7 +6,7 @@ require_once('./functions/models.php');
 require_once('./functions/db.php');
 
 
-print_r($_SESSION['order']);
+// print_r($_SESSION['order']);
 
 // Получение данных из сессии
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();

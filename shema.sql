@@ -74,11 +74,10 @@ CREATE TABLE `poke` (
     `id` INT PRIMARY KEY AUTO_INCREMENT,
     `title` VARCHAR(255),
     `img` VARCHAR(255),
-    `description` TEXT,
     `price` INT,
     `cooking_time` INT,
     `category_id` INT,
-    `poke_id` INT
+    `poke_id` char(13) 
 );
 
 CREATE TABLE `components` (
@@ -100,7 +99,7 @@ CREATE TABLE `components` (
 
 CREATE TABLE `poke_consists` (
     `id` INT PRIMARY KEY AUTO_INCREMENT,
-    `poke_id` INT,
+    `poke_id` char(13),
     `component_id` INT,
     `quantity` int
 );

@@ -76,3 +76,17 @@ function include_template($name, array $data = [])
 
     return $result;
 }
+
+
+// Проверка на уникальность айди заказа
+function checkUniquenessValue($con, $order_id, $table, $value)
+{
+    // SQl код для проверки уникальности идентификатора заказа
+    $sql = "SELECT COUNT(*) AS count FROM $table WHERE $value = '$order_id'";
+
+    $result = mysqli_query($con, $sql);
+    $idList = get_arrow($result);
+    $count = $idList['count'];
+
+    return $count == 0;
+}

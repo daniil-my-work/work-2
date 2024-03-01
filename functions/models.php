@@ -150,13 +150,48 @@ function get_query_create_poke()
     return "INSERT INTO `poke`(
         title,
         img,
-        description,
         price,
         cooking_time,
-        category_id
+        category_id,
+        poke_id
     ) VALUES (?, ?, ?, ?, ?, ?)";
 }
 
+
+/**
+ * Формирует SQL-запрос для добавления состовляющих Поке в таблицу poke_consists
+ * @return string SQL-запрос
+ */
+function get_query_create_poke_contains()
+{
+    return "INSERT INTO `poke_consists`(
+        poke_id,
+        component_id,
+        quantity
+    ) VALUES (?, ?, ?)";
+}
+
+
+
+// /**
+//  * Формирует SQL-запрос для добавления записи в таблицу orders
+//  * @return string SQL-запрос
+//  */
+// function get_query_create_order()
+// {
+//     return "INSERT INTO orders (order_date, customer_id, total_amount, order_id) 
+//     VALUES (NOW(), ?, ?, ?)";
+// }
+
+// /**
+//  * Формирует SQL-запрос для добавления записи в таблицу order_items
+//  * @return string SQL-запрос
+//  */
+// function get_query_create_orderItem()
+// {
+//     return "INSERT INTO order_items (product_id, quantity, unit_price, tableName, order_id) 
+//     VALUES (?, ?, ?, ?, ?)";
+// }
 
 
 

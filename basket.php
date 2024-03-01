@@ -55,29 +55,16 @@ if (count($productIds) == 1) {
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Проверка на уникальность айди заказа
-    function checkOrderIdUniqueness($con, $order_id)
-    {
-        // SQl код для проверки уникальности идентификатора заказа
-        $sql = "SELECT COUNT(*) AS count FROM orders WHERE order_id = '$order_id'";
-
-        $result = mysqli_query($con, $sql);
-        $myResult = get_arrow($result);
-        $count = $myResult['count'];
-
-        return $count == 0;
-    }
-
     // Генерируем уникальный идентификатор
     do {
         $order_id = uniqid();
         // Проверяем, существует ли уже такой идентификатор в базе данных
-    } while (!checkOrderIdUniqueness($con, $order_id));
+    } while (!checkUniquenessValue($con, $order_id, 'orders', 'order_id'));
 
 
     // Получает айди пользователя, совершившего заказ
     $userEmail = $_SESSION['user_email'];
-    $sql = "SELECT user.id FROM user WHERE user.email = '$userEmail'";
+    $sql = "SELECT user.id FROM user WHERE user.user_email = '$userEmail'";
     $result = mysqli_query($con, $sql);
     $userId = get_arrow($result)['id'];
 
