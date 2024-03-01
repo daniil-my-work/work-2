@@ -18,48 +18,35 @@ if (!$isAuth) {
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
 
 
-// print_r($_SESSION['order']);
-
 // Получает список продуктов для отрисовки в корзине
 function getProductList($con, $productsData)
 {
     $productList = array();
-    // $productsKey = array_keys($productsData);
 
     foreach ($productsData as $key => $productByCategory) {
-        // print_r($key);
-        // print_r($productByCategory);
+        $productsKey = array_keys($productByCategory);
 
-        foreach ($productByCategory as $productId => $quantity) {
-            print_r($productId);
-            print_r($quantity);
-
+        if ($key == 'menu') {
+            $sql = get_query_productList($productsKey);
+        } else {
+            $sql = get_query_productPokeList($productsKey);
         }
 
+        $products = mysqli_query($con, $sql);
+        $productItem = get_arrow($products);
+
+        $productList[] = array(
+            'item' => $productItem,
+            'quantity' => $productByCategory[$productItem['id']],
+        );
     }
-
-    // foreach ($productsKey as $key) {
-    //     $productByCategory = $productsData[$key];
-    //     $productsKeyByCategory = array_keys($productByCategory);
-
-    //     if ($key == 'menu') {
-    //         $sql = get_query_productList($productsKeyByCategory);
-    //     } else {
-    //         $sql = get_query_productPokeList($productsKeyByCategory);
-    //     }
-
-    //     $products = mysqli_query($con, $sql);
-    //     $productList[] = get_arrow($products);
-    // }
 
     return $productList;
 }
 
 // Получает список продуктов 
 $productList = getProductList($con, $productsData);
-
-// print_r($productsData);
-// print_r($productList);
+$productLength = count($productList);
 
 
 // Цена товаров в корзине
@@ -70,37 +57,14 @@ $fullPrice = 0;
 if (count($productList) > 0) {
     // Перебираем продукты из $productList
     foreach ($productList as $product) {
-        $productId = $product['id']; // Получаем ID продукта
-       
-        // print_r($productId);
-
-        $quantity = $productsData[$productId]; // Получаем количество продукта из $productsData
-        $price = $product['price']; // Получаем цену продукта
+        $quantity = $product['quantity']; // Получаем количество продукта из $productsData
+        $price = $product['item']['price']; // Получаем цену продукта
 
         // Умножаем цену продукта на его количество и добавляем к общей стоимости
         $fullPrice += $price * $quantity;
     }
 }
 
-// Подсчитывает цену в заивисмости от кол-ва товаров в корзине
-// if (count($productList) == 1) {
-//     $productId = $productList['id']; // Получаем ID продукта
-//     $quantity = $productsData[$productId]; // Получаем количество продукта из $productsData
-//     $price = $productList['price']; // Получаем цену продукта
-
-//     // Умножаем цену продукта на его количество и добавляем к общей стоимости
-//     $fullPrice += $price * $quantity;
-// } else {
-//     // Перебираем продукты из $productList
-//     foreach ($productList as $product) {
-//         $productId = $product['id']; // Получаем ID продукта
-//         $quantity = $productsData[$productId]; // Получаем количество продукта из $productsData
-//         $price = $product['price']; // Получаем цену продукта
-
-//         // Умножаем цену продукта на его количество и добавляем к общей стоимости
-//         $fullPrice += $price * $quantity;
-//     }
-// }
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -130,41 +94,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // SQL код для добавление записи в базу с состовляющими заказа 
     $createNewOrderItem = get_query_create_orderItem();
 
+
     // Записывает в базу товары лежащие в корзине
-    if (count($productIds) == 1) {
-        $productId = $productList['id']; // Получаем ID продукта
+    foreach ($productList as $product) {
+        $productItem = $product['item']; // Получаем ID продукта
 
         // Формирует объект для отправки
         $data = array(
-            "product_id" => $productId,
-            "quantity" => $productsData[$productId],
-            "unit_price" => $productList['price'],
+            "product_id" => $productItem['id'],
+            "quantity" => $product['quantity'],
+            "unit_price" => $productItem['price'],
             // TODO должно подставляться динамически добавить !!!!
-            "tableName" => $productList['menu'],
+            "tableName" => 'menu',
             "order_id" => $order_id,
         );
 
         $stmt = db_get_prepare_stmt($con, $createNewOrderItem, $data);
         $res = mysqli_stmt_execute($stmt);
-    } else {
-        foreach ($productList as $product) {
-            $productId = $product['id']; // Получаем ID продукта
-
-            // Формирует объект для отправки
-            $data = array(
-                "product_id" => $product['id'],
-                "quantity" => $productsData[$productId],
-                "unit_price" => $product['price'],
-                // TODO должно подставляться динамически добавить !!!!
-                "tableName" => $productList['menu'],
-                "order_id" => $order_id,
-            );
-
-            $stmt = db_get_prepare_stmt($con, $createNewOrderItem, $data);
-            $res = mysqli_stmt_execute($stmt);
-        }
     }
-
 
     if ($res) {
         echo "Запись успешно добавлена в базу данных.";
@@ -208,9 +155,8 @@ $page_header = include_template(
 $page_body = include_template(
     'basket.php',
     [
-        'productsData' => $productsData,
         'products' => $productList,
-        'productLength' => count($productList),
+        'productLength' => $productLength,
         'fullPrice' => $fullPrice,
     ]
 );
