@@ -13,6 +13,7 @@ if (!$isAuth) {
 }
 
 // unset($_SESSION['order']);
+// print_r($_SESSION['order']);
 
 // Получение данных из сессии
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
@@ -38,6 +39,7 @@ function getProductList($con, $productsData)
         $productList[] = array(
             'item' => $productItem,
             'quantity' => $productByCategory[$productItem['id']],
+            'table' => $key,
         );
     }
 
@@ -52,7 +54,6 @@ $productLength = count($productList);
 // Цена товаров в корзине
 $fullPrice = 0;
 
-
 // Подсчитывает цену в заивисмости от кол-ва товаров в корзине
 if (count($productList) > 0) {
     // Перебираем продукты из $productList
@@ -64,7 +65,6 @@ if (count($productList) > 0) {
         $fullPrice += $price * $quantity;
     }
 }
-
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -94,7 +94,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // SQL код для добавление записи в базу с состовляющими заказа 
     $createNewOrderItem = get_query_create_orderItem();
 
-
     // Записывает в базу товары лежащие в корзине
     foreach ($productList as $product) {
         $productItem = $product['item']; // Получаем ID продукта
@@ -104,8 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             "product_id" => $productItem['id'],
             "quantity" => $product['quantity'],
             "unit_price" => $productItem['price'],
-            // TODO должно подставляться динамически добавить !!!!
-            "tableName" => 'menu',
+            "tableName" => $product['table'],
             "order_id" => $order_id,
         );
 
@@ -125,11 +123,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $res = mysqli_query($con, $sql);
         $order_id = get_arrow($res)['order_id'];
 
+        print_r($order_id);
         if (!$res) {
             return;
         }
 
-        header("Location: ./order.php?order=$order_id");
+        header("Location: ./order.php?orderId=$order_id");
     } else {
         echo "Ошибка при выполнении запроса: " . mysqli_error($con);
         echo "Номер ошибки: " . mysqli_errno($con);
