@@ -7,3 +7,10 @@ function formatFirstLetter($word)
     $endWord = mb_substr($word, 1, mb_strlen($word), 'UTF-8');
     return mb_strtoupper($firstLetter, 'UTF-8') . $endWord;
 }
+
+
+// Форматирует число: прибавляет валюту
+function formatSum($word)
+{
+    return "$word руб.";
+}

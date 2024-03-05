@@ -5,6 +5,7 @@ require_once('./functions/init.php');
 require_once('./functions/models.php');
 require_once('./functions/db.php');
 
+
 // unset($_SESSION['order']);
 print_r($_SESSION['order']);
 

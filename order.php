@@ -5,6 +5,7 @@ require_once('./functions/init.php');
 require_once('./functions/db.php');
 
 
+print_r($_SESSION['order']);
 
 // Данные об айди заказа
 $getOrderId = isset($_GET['orderId']) ? $_GET['orderId'] : null;
@@ -30,6 +31,10 @@ if ($result && mysqli_num_rows($result) > 0) {
 } else {
     $orderItems = null;
 }
+
+// unset($_SESSION['order']);
+// print_r($_SESSION['order']);
+
 
 // print_r($orderId);
 print_r($orderItems);

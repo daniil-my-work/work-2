@@ -9,6 +9,7 @@ require_once('./functions/validators.php');
 
 print_r($_SESSION['order']);
 
+
 // Получает список категорий меню 
 $sql = get_query_components();
 $components = mysqli_query($con, $sql);
@@ -161,7 +162,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         }
     }
 
-
     // Проверка на валидность полей формы 
     foreach ($createdPoke as $key => $value) {
         if (in_array($key, $required) && empty($value)) {
@@ -226,7 +226,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $errors[$key] = $rule($key, $value);
     }
 
-
     // Фильтрует массив ошибок
     $errors = array_filter($errors);
 
@@ -254,9 +253,58 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         } while (!checkUniquenessValue($con, $order_id, 'poke', 'poke_id'));
 
 
+        $pokeDescription = 'Основа: - ';
+        // Заполняет словарь данными из каких компонентов собрано Поке 
+        foreach ($createdPoke as $key => $createdPokeItem) {
+            // Пропускает лишние поля
+            if ($key == 'shema' || $key == 'total-price') {
+                continue;
+            }
+
+            if (is_array($createdPokeItem)) {
+                if ($key == 'fillerAdd' || $key == 'toppingAdd') {
+                    if (!strpos($pokeDescription, 'Дополнительно')) {
+                        $pokeDescription .= "Дополнительно: ";
+                    }
+
+                    foreach ($createdPokeItem as $value) {
+                        $sql = get_query_componentName($value);
+                        $result = mysqli_query($con, $sql);
+                        $description = get_arrow($result);
+                        $pokeDescription .= $description['title'] . " - ";
+                    }
+                    continue;
+                }
+
+                foreach ($createdPokeItem as $value) {
+                    $sql = get_query_componentName($value);
+                    $result = mysqli_query($con, $sql);
+                    $description = get_arrow($result);
+                    $pokeDescription .= $description['title'] . " - ";
+                }
+            } else {
+                $sql = get_query_componentName($createdPokeItem);
+                $result = mysqli_query($con, $sql);
+                $description = get_arrow($result);
+
+                if ($key == 'proteinAdd' || $key == 'sauceAdd' || $key == 'crunchAdd') {
+                    if (!strpos($pokeDescription, 'Дополнительно')) {
+                        $pokeDescription .= "Дополнительно: ";
+                    }
+
+                    $pokeDescription .= $description['title'] . " - ";
+                    continue;
+                }
+
+                $pokeDescription .= $description['title'] . " - ";
+            }
+        }
+
+
         // Формирует объект для записи в таблицу Poke
         $poke['title'] = "Поке " . $pokeTitle[$createdPoke['protein']];
         $poke['img'] = './poke-my-1.jpg';
+        $poke['description'] = $pokeDescription;
         $poke['price'] = $createdPoke['total-price'];
         $poke['cooking_time'] = 40;
 
@@ -267,12 +315,12 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $poke['category_id'] = (int) $categoryInfo['id'];
         $poke['poke_id'] = $order_id;
 
+
         // Добавляет запись в таблицу Poke
         $sql = get_query_create_poke();
         $stmt = db_get_prepare_stmt($con, $sql, $poke);
         $addedPoke = mysqli_stmt_execute($stmt);
         $insertId = mysqli_insert_id($con);
-
 
         // Словарь для конструктора Поке
         $pokeDictionary = array();
@@ -339,13 +387,15 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
         if ($addedPoke) {
             // echo $insertId;
+            echo 'Заказ отправлен в базу';
 
             $tableName = 'poke';
             $productId = $insertId;
             $quantity = 1;
             addProductInSession($tableName, $productId, $quantity);
 
-            echo 'Заказ отправлен в базу';
+            // header("Location: /order.php?orderId=$productId");
+            // die;
         } else {
             echo 'Заказ незавершен в базу';
         }

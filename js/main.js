@@ -107,7 +107,7 @@ function apiUpdateProductList(params) {
         });
 }
 
-// Добавляет продукт в корзину
+// Изменяет кол-во продуктов на странице Главная и Меню
 function addProductInBasket(evt) {
     // Элементы
     const element = evt.target;
@@ -223,7 +223,7 @@ if (mainList) {
 }
 
 
-// Добавляет продукт в корзину
+// Изменяет кол-во продуктов на странице Корзина
 function addProductInBasketSecond(evt) {
     // Элементы
     const element = evt.target;
@@ -238,11 +238,12 @@ function addProductInBasketSecond(evt) {
 
     // Айди продукта
     const productDataId = productItem.dataset.productId;
+    const tableName = productItem.dataset.tableName;
 
     // Формирование строки параметров
     const params = new URLSearchParams();
     params.append("productId", productDataId);
-    params.append("tableName", 'menu');
+    params.append("tableName", tableName);
 
     // Уменьшает кол-во блюд
     const decButton = element.classList.contains(

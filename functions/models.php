@@ -31,30 +31,22 @@ function get_query_userAuth($user_email)
 
 /**
  * Формирует SQL-запрос для показа списка продуктов по списку идентификаторов продуктов
- * @param array $productIds Массив идентификаторов продуктов
+ * @param int $productId Идентификатор продукта
  * @return string SQL-запрос
  */
-function get_query_productList(array $productIds)
+function get_query_productItem(int $productId)
 {
-    // Преобразуем массив идентификаторов в строку для использования в операторе IN
-    $productIdList = implode(',', array_map('intval', $productIds));
-
-    // Формируем SQL-запрос
-    return "SELECT * FROM menu WHERE menu.id IN ($productIdList)";
+    return "SELECT * FROM menu WHERE menu.id = $productId";
 }
 
 /**
  * Формирует SQL-запрос для показа списка Поке по списку идентификаторов продуктов
- * @param array $productIds Массив идентификаторов продуктов
+ * @param int $productId Идентификатор продукта
  * @return string SQL-запрос
  */
-function get_query_productPokeList(array $productIds)
+function get_query_productItemPoke(int $productId)
 {
-    // Преобразуем массив идентификаторов в строку для использования в операторе IN
-    $productIdList = implode(',', array_map('intval', $productIds));
-
-    // Формируем SQL-запрос
-    return "SELECT * FROM poke WHERE poke.id IN ($productIdList)";
+    return "SELECT * FROM poke WHERE poke.id = $productId";
 }
 
 
@@ -126,6 +118,15 @@ function get_query_components()
     return "SELECT * FROM components";
 }
 
+/**
+ * Формирует SQL-запрос для получения названия компонента Поке
+ * @return string SQL-запрос
+ */
+function get_query_componentName($componentId)
+{
+    return "SELECT components.title FROM components WHERE components.id = '$componentId'";
+}
+
 
 /**
  * Формирует SQL-запрос для проверки наличия компонента в Поке
@@ -165,11 +166,12 @@ function get_query_create_poke()
     return "INSERT INTO `poke`(
         title,
         img,
+        description,
         price,
         cooking_time,
         category_id,
         poke_id
-    ) VALUES (?, ?, ?, ?, ?, ?)";
+    ) VALUES (?, ?, ?, ?, ?, ?, ?)";
 }
 
 

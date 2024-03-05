@@ -4,6 +4,7 @@ require_once('./functions/helpers.php');
 require_once('./functions/init.php');
 require_once('./functions/models.php');
 require_once('./functions/db.php');
+require_once('./functions/formatter.php');
 
 
 // Проверка на авторизацию
@@ -12,11 +13,22 @@ if (!$isAuth) {
     return;
 }
 
-// unset($_SESSION['order']);
-// print_r($_SESSION['order']);
+
+// Получает список категорий меню 
+$getСategories = get_query_categories();
+$categories = mysqli_query($con, $getСategories);
+
+if ($categories && mysqli_num_rows($categories) > 0) {
+    $categoryList = get_arrow($categories);
+} else {
+    $categoryList = NULL;
+}
 
 // Получение данных из сессии
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
+
+// unset($_SESSION['order']);
+print_r($productsData);
 
 
 // Получает список продуктов для отрисовки в корзине
@@ -25,22 +37,31 @@ function getProductList($con, $productsData)
     $productList = array();
 
     foreach ($productsData as $key => $productByCategory) {
-        $productsKey = array_keys($productByCategory);
-
         if ($key == 'menu') {
-            $sql = get_query_productList($productsKey);
+            foreach ($productByCategory as $key => $value) {
+                $sql = get_query_productItem($key);
+                $products = mysqli_query($con, $sql);
+                $productItem = get_arrow($products);
+
+                $productList[] = array(
+                    'item' => $productItem,
+                    'quantity' => $value,
+                    'table' => 'menu',
+                );
+            }
         } else {
-            $sql = get_query_productPokeList($productsKey);
+            foreach ($productByCategory as $key => $value) {
+                $sql = get_query_productItemPoke($key);
+                $products = mysqli_query($con, $sql);
+                $productItem = get_arrow($products);
+
+                $productList[] = array(
+                    'item' => $productItem,
+                    'quantity' => $value,
+                    'table' => 'poke',
+                );
+            }
         }
-
-        $products = mysqli_query($con, $sql);
-        $productItem = get_arrow($products);
-
-        $productList[] = array(
-            'item' => $productItem,
-            'quantity' => $productByCategory[$productItem['id']],
-            'table' => $key,
-        );
     }
 
     return $productList;
@@ -49,6 +70,8 @@ function getProductList($con, $productsData)
 // Получает список продуктов 
 $productList = getProductList($con, $productsData);
 $productLength = count($productList);
+
+// print_r($productList);
 
 
 // Цена товаров в корзине
@@ -162,7 +185,9 @@ $page_body = include_template(
 
 $page_footer = include_template(
     'footer.php',
-    []
+    [
+        'categoryList' => $categoryList,
+    ]
 );
 
 $layout_content = include_template(
