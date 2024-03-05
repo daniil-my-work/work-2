@@ -31,44 +31,39 @@ if ($result && mysqli_num_rows($result) > 0) {
     $orderItems = null;
 }
 
+// print_r($orderId);
 print_r($orderItems);
 
 
 $productList = array();
 foreach ($orderItems as $orderItem) {
-    $table = $orderItem['tableName'];
     $productId = $orderItem['product_id'];
+    $table = $orderItem['tableName'];
 
     if ($table == 'menu') {
-        $sql = "SELECT order_items.product_id, order_items.quantity, order_items.unit_price, order_items.tableName, menu.title, menu.img, menu.description, menu.category_id FROM order_items 
-            LEFT JOIN menu
-            ON order_items.product_id = menu.id
-            WHERE order_items.order_id = '$productId'";
+        $sql = "SELECT order_items.product_id, order_items.quantity, order_items.unit_price, menu.title, menu.img, menu.description, menu.category_id 
+                FROM order_items 
+                LEFT JOIN menu ON order_items.product_id = menu.id
+                WHERE menu.id = '$productId' AND order_items.order_id = '$orderId'";
     } else {
-        $sql = "SELECT order_items.product_id, order_items.quantity, order_items.unit_price, order_items.tableName, * FROM order_items 
-            LEFT JOIN poke_consists
-            ON order_items.product_id = poke_consists.id
-            LEFT JOIN components
-            ON poke_consists.component_id = components.id
-            WHERE order_items.order_id = '$productId'";
+        $sql = "SELECT order_items.product_id, order_items.quantity, order_items.unit_price, poke.title, menu.img, poke.description, poke.category_id 
+        FROM order_items
+        LEFT JOIN poke ON order_items.product_id = poke.id
+        WHERE order_items.product_id = '$productId' AND order_items.order_id = '$orderId'";
     }
 
+
     $result = mysqli_query($con, $sql);
-    $productInfo = get_arrow($result);
+
+    if ($result) {
+        $productInfo = get_arrow($result);
+    }
+
     $productList[] = $productInfo;
 }
 
-
-// $sql = "SELECT order_items.product_id, order_items.quantity, order_items.unit_price, order_items.tableName, * FROM order_items 
-// LEFT JOIN menu
-// ON order_items.product_id = menu.id
-// WHERE order_items.order_id = '$orderId'";
-// $result = mysqli_query($con, $sql);
-// $orderItems = get_arrow($result);
-
-
-print_r($orderItems);
-print_r($productList);
+// print_r($orderItems);
+// print_r($productList);
 
 
 // Список продуктов это массив
