@@ -104,34 +104,33 @@ function addProductInSession($con, $tableName, $productId, $quantity)
     if (isset($_SESSION['order'][$tableName][$productId])) {
         // Удаление конкретного элемента из сессии
         if ($quantity <= 0) {
-            $pokeId = $_SESSION['order'][$tableName][$productId];
-            $sql = get_query_poke_unique_Id($pokeId);
-            $result = mysqli_query($con, $sql);
+            if ($tableName == 'poke') {
+                $pokeId = $_SESSION['order'][$tableName][$productId];
+                $sql = get_query_poke_unique_Id($pokeId);
+                $result = mysqli_query($con, $sql);
 
-            // Начало транзакции
-            mysqli_begin_transaction($con);
+                // Начало транзакции
+                mysqli_begin_transaction($con);
 
-            if ($result) {
-                $pokeUniqueId = get_arrow($result);
+                if ($result) {
+                    $pokeUniqueId = get_arrow($result);
 
-                $sqlDeletePoke = get_query_delete_poke($pokeId);
-                $resultDeletePoke = mysqli_query($con, $sqlDeletePoke);
+                    $sqlDeletePoke = get_query_delete_poke($pokeId);
+                    $resultDeletePoke = mysqli_query($con, $sqlDeletePoke);
 
-                $sqlDeletePokeConsists = get_query_delete_poke_consists($pokeUniqueId);
-                $resultDeletePokeConsists = mysqli_query($con, $sqlDeletePokeConsists);
+                    $sqlDeletePokeConsists = get_query_delete_poke_consists($pokeUniqueId);
+                    $resultDeletePokeConsists = mysqli_query($con, $sqlDeletePokeConsists);
 
-                // Проверка успешности выполнения запросов
-                if ($resultDeletePoke && $resultDeletePokeConsists) {
-                    // Если оба запроса выполнены успешно, фиксируем транзакцию
-                    mysqli_commit($con);
-                } else {
-                    // Если хотя бы один из запросов не выполнен успешно, откатываем транзакцию
-                    mysqli_rollback($con);
+                    // Проверка успешности выполнения запросов
+                    if ($resultDeletePoke && $resultDeletePokeConsists) {
+                        // Если оба запроса выполнены успешно, фиксируем транзакцию
+                        mysqli_commit($con);
+                    } else {
+                        // Если хотя бы один из запросов не выполнен успешно, откатываем транзакцию
+                        mysqli_rollback($con);
+                    }
                 }
             }
-
-            // Завершение транзакции
-            mysqli_close($con);
 
 
             unset($_SESSION['order'][$tableName][$productId]);
