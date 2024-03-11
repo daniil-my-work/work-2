@@ -105,33 +105,27 @@ function addProductInSession($con, $tableName, $productId, $quantity)
         // Удаление конкретного элемента из сессии
         if ($quantity <= 0) {
             if ($tableName == 'poke') {
-                $pokeId = $_SESSION['order'][$tableName][$productId];
-                $sql = get_query_poke_unique_Id($pokeId);
+                $sql = get_query_poke_unique_id($productId);
                 $result = mysqli_query($con, $sql);
+                $pokeUniqueId = get_arrow($result);
+                $pokeUniqueId = $pokeUniqueId['poke_id'];
 
-                // Начало транзакции
-                mysqli_begin_transaction($con);
+                $deletePoke = get_query_delete_poke($productId);
+                $resultDeletePoke = mysqli_query($con, $deletePoke);
 
-                if ($result) {
-                    $pokeUniqueId = get_arrow($result);
+                $deletePokeConsists = get_query_delete_poke_consists($pokeUniqueId);
+                $resultDeletePokeConsists = mysqli_query($con, $deletePokeConsists);
 
-                    $sqlDeletePoke = get_query_delete_poke($pokeId);
-                    $resultDeletePoke = mysqli_query($con, $sqlDeletePoke);
-
-                    $sqlDeletePokeConsists = get_query_delete_poke_consists($pokeUniqueId);
-                    $resultDeletePokeConsists = mysqli_query($con, $sqlDeletePokeConsists);
-
-                    // Проверка успешности выполнения запросов
-                    if ($resultDeletePoke && $resultDeletePokeConsists) {
-                        // Если оба запроса выполнены успешно, фиксируем транзакцию
-                        mysqli_commit($con);
-                    } else {
-                        // Если хотя бы один из запросов не выполнен успешно, откатываем транзакцию
-                        mysqli_rollback($con);
-                    }
+                if ($resultDeletePoke && $resultDeletePokeConsists) {
+                    // Успешно удалено, теперь удаляем из сессии
+                    unset($_SESSION['order'][$tableName][$productId]);
+                } else {
+                    // Обработка ошибки, если удаление не удалось
+                    echo "Ошибка при удалении записей из базы данных.";
                 }
-            }
 
+                return;
+            }
 
             unset($_SESSION['order'][$tableName][$productId]);
             return;

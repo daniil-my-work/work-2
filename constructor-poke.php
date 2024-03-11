@@ -392,7 +392,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
             $tableName = 'poke';
             $productId = $insertId;
             $quantity = 1;
-            addProductInSession($tableName, $productId, $quantity);
+            addProductInSession($con, $tableName, $productId, $quantity);
 
             // header("Location: /order.php?orderId=$productId");
             // die;

@@ -193,7 +193,7 @@ function get_query_create_poke_contains()
  * Формирует SQL-запрос для получения уникального айди Поке
  * @return string SQL-запрос
  */
-function get_query_poke_unique_Id($pokeId)
+function get_query_poke_unique_id($pokeId)
 {
     return "SELECT poke_id FROM poke WHERE poke.id = '$pokeId'";
 }

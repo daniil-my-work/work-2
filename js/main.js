@@ -96,6 +96,7 @@ function apiUpdateProductList(params) {
             return response.text();
         })
         .then((data) => {
+            console.log(data);
             // Обработка ответа (если необходимо)
             // location.reload();
         })
@@ -262,13 +263,13 @@ function addProductInBasketSecond(evt) {
         // Обновляет данные в сессии
         params.append("quantity", newValue);
         apiUpdateProductList(params);
-        console.log(params.toString());
+        // console.log(params.toString());
 
         productCounterInput.value = newValue;
         productCounterNumber.textContent = newValue;
 
         // Обновить страницу
-        location.reload();
+        // location.reload();
 
         return;
     }
@@ -290,7 +291,7 @@ function addProductInBasketSecond(evt) {
         productCounterNumber.textContent = newValue;
 
         // Обновить страницу
-        location.reload();
+        // location.reload();
 
         return;
     }
@@ -303,10 +304,12 @@ function addProductInBasketSecond(evt) {
 
         params.append("quantity", 0);
         apiUpdateProductList(params);
+        // console.log(params.toString());
+
         productItem.remove();
 
         // Обновить страницу
-        location.reload();
+        // location.reload();
 
         return;
     }
