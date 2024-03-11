@@ -33,7 +33,7 @@
 
                             <div class="product-item__counter">
                                 <div class="product-item__counter-number-wrapper">
-                                    <input class="product-item__counter-input" type="hidden" name="productId" value="<?= $productsData[$productId]; ?>">
+                                    <input class="product-item__counter-input" type="hidden" name="productId" value="<?= $productsData[$tableName][$productId]; ?>">
                                     <span class="product-item__counter-action product-item__counter-action--minus">
                                         –
                                     </span>

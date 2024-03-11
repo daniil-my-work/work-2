@@ -47,7 +47,7 @@ function validate_length($value, $min, $max)
 // Проверяет наличие компонента
 function validate_component($con, $componentType, $value)
 {
-    $sql = get_query_componentNames();
+    $sql = get_query_component_types();
     $res = mysqli_query($con, $sql);
 
     if (!$res) {
@@ -66,7 +66,7 @@ function validate_component($con, $componentType, $value)
 
     if (is_array($value)) {
         foreach ($value as $id) {
-            $sql = get_query_checkComponent($id, $componentType);
+            $sql = get_query_check_component($id, $componentType);
             $result = mysqli_query($con, $sql);
 
             if (mysqli_num_rows($result) == 0) {
@@ -76,7 +76,7 @@ function validate_component($con, $componentType, $value)
 
         return null;
     } else {
-        $sql = get_query_checkComponent($value, $componentType);
+        $sql = get_query_check_component($value, $componentType);
         $result = mysqli_query($con, $sql);
 
         if (mysqli_num_rows($result) == 0) {

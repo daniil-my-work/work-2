@@ -268,7 +268,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                     }
 
                     foreach ($createdPokeItem as $value) {
-                        $sql = get_query_componentName($value);
+                        $sql = get_query_component_names($value);
                         $result = mysqli_query($con, $sql);
                         $description = get_arrow($result);
                         $pokeDescription .= $description['title'] . " - ";
@@ -277,13 +277,13 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 }
 
                 foreach ($createdPokeItem as $value) {
-                    $sql = get_query_componentName($value);
+                    $sql = get_query_component_names($value);
                     $result = mysqli_query($con, $sql);
                     $description = get_arrow($result);
                     $pokeDescription .= $description['title'] . " - ";
                 }
             } else {
-                $sql = get_query_componentName($createdPokeItem);
+                $sql = get_query_component_names($createdPokeItem);
                 $result = mysqli_query($con, $sql);
                 $description = get_arrow($result);
 
@@ -309,7 +309,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $poke['cooking_time'] = 40;
 
         // Получает айди категории для авторского поке
-        $sql = get_query_selectedCategory('constructor-poke');
+        $sql = get_query_selected_category('constructor-poke');
         $result = mysqli_query($con, $sql);
         $categoryInfo = get_arrow($result);
         $poke['category_id'] = (int) $categoryInfo['id'];

@@ -9,5 +9,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $productId = isset($_POST['productId']) ? $_POST['productId'] : null;
     $quantity = isset($_POST['quantity']) ? $_POST['quantity'] : null;
 
-    addProductInSession($tableName, $productId, $quantity);
+    addProductInSession($con, $tableName, $productId, $quantity);
 }

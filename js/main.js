@@ -151,7 +151,7 @@ function addProductInBasket(evt) {
             // console.log(params.toString());
 
             // Получает значение из Корзины
-            // getProductInBasket();
+            getProductInBasket();
 
             hideCounter(productCounterButton, productCounterWrapper);
             return;
@@ -163,7 +163,7 @@ function addProductInBasket(evt) {
         // console.log(params.toString());
 
         // Получает значение из Корзины
-        // getProductInBasket();
+        getProductInBasket();
 
         productCounterInput.value = newValue;
         productCounterNumber.textContent = newValue;
@@ -185,7 +185,7 @@ function addProductInBasket(evt) {
         // console.log(params.toString());
 
         // Получает значение из Корзины
-        // getProductInBasket();
+        getProductInBasket();
 
         productCounterInput.value = newValue;
         productCounterNumber.textContent = newValue;
@@ -211,7 +211,7 @@ function addProductInBasket(evt) {
     apiUpdateProductList(params);
 
     // Получает значение из Корзины
-    // getProductInBasket();
+    getProductInBasket();
 }
 
 // Обработчик для страницы Главная и Меню
@@ -262,7 +262,7 @@ function addProductInBasketSecond(evt) {
         // Обновляет данные в сессии
         params.append("quantity", newValue);
         apiUpdateProductList(params);
-        // console.log(params.toString());
+        console.log(params.toString());
 
         productCounterInput.value = newValue;
         productCounterNumber.textContent = newValue;

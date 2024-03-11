@@ -13,7 +13,7 @@ if (!$isAuth) {
 }
 
 $userEmail = $_SESSION['user_email'];
-$sql = get_query_userInfo($userEmail);
+$sql = get_query_user_info($userEmail);
 $result = mysqli_query($con, $sql);
 $userInfo = get_arrow($result);
 

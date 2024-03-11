@@ -93,7 +93,7 @@ function checkUniquenessValue($con, $order_id, $table, $value)
 
 
 // Добавляет данные о выбранном продукте в сессию
-function addProductInSession($tableName, $productId, $quantity)
+function addProductInSession($con, $tableName, $productId, $quantity)
 {
     // Инициализируйте или обновите данные корзины в сессии
     if (!isset($_SESSION['order'][$tableName])) {
@@ -104,6 +104,20 @@ function addProductInSession($tableName, $productId, $quantity)
     if (isset($_SESSION['order'][$tableName][$productId])) {
         // Удаление конкретного элемента из сессии
         if ($quantity <= 0) {
+            $pokeId = $_SESSION['order'][$tableName][$productId];
+            $sql = get_query_poke_unique_Id($pokeId);
+            $result = mysqli_query($con, $sql);
+
+            if ($result) {
+                $pokeUniqueId = get_arrow($result);
+
+                $sql = get_query_delete_poke($pokeId);
+                $result = mysqli_query($con, $sql);
+
+                $sql = get_query_delete_poke_consists($pokeUniqueId);
+                $result = mysqli_query($con, $sql);
+            }
+
             unset($_SESSION['order'][$tableName][$productId]);
             return;
         }

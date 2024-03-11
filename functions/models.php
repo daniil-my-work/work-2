@@ -14,7 +14,7 @@ function get_query_create_user()
  * Формирует SQL-запрос для показа спика
  * @return string SQL-запрос
  */
-function get_query_userInfo($user_email)
+function get_query_user_info($user_email)
 {
     return "SELECT * FROM user WHERE user.user_email = '$user_email'";
 };
@@ -23,7 +23,7 @@ function get_query_userInfo($user_email)
  * Формирует SQL-запрос для показа спика
  * @return string SQL-запрос
  */
-function get_query_userAuth($user_email)
+function get_query_user_auth($user_email)
 {
     return "SELECT user.id, user.user_name, user.user_email, user.user_password FROM user WHERE user.user_email = '$user_email'";
 };
@@ -34,7 +34,7 @@ function get_query_userAuth($user_email)
  * @param int $productId Идентификатор продукта
  * @return string SQL-запрос
  */
-function get_query_productItem(int $productId)
+function get_query_product_item(int $productId)
 {
     return "SELECT * FROM menu WHERE menu.id = $productId";
 }
@@ -44,7 +44,7 @@ function get_query_productItem(int $productId)
  * @param int $productId Идентификатор продукта
  * @return string SQL-запрос
  */
-function get_query_productItemPoke(int $productId)
+function get_query_product_item_poke(int $productId)
 {
     return "SELECT * FROM poke WHERE poke.id = $productId";
 }
@@ -63,7 +63,7 @@ function get_query_products()
  * Формирует SQL-запрос для показа списка продуктов 
  * @return string SQL-запрос
  */
-function get_query_selectedProducts($activeCategory)
+function get_query_selected_products($activeCategory)
 {
     return "SELECT menu.id, menu.title, menu.img, menu.description, menu.price, category_menu.category_name, category_menu.category_title FROM menu LEFT JOIN category_menu ON menu.category_id = category_menu.id WHERE category_menu.category_title = '$activeCategory'";
 }
@@ -82,7 +82,7 @@ function get_query_categories()
  * Формирует SQL-запрос для показа активной категории
  * @return string SQL-запрос
  */
-function get_query_selectedCategory($activeCategory)
+function get_query_selected_category($activeCategory)
 {
     return "SELECT * FROM category_menu WHERE category_menu.category_title = '$activeCategory'";
 }
@@ -102,7 +102,7 @@ function get_query_create_order()
  * Формирует SQL-запрос для добавления записи в таблицу order_items
  * @return string SQL-запрос
  */
-function get_query_create_orderItem()
+function get_query_create_order_item()
 {
     return "INSERT INTO order_items (product_id, quantity, unit_price, tableName, order_id) 
     VALUES (?, ?, ?, ?, ?)";
@@ -122,7 +122,7 @@ function get_query_components()
  * Формирует SQL-запрос для получения названия компонента Поке
  * @return string SQL-запрос
  */
-function get_query_componentName($componentId)
+function get_query_component_names($componentId)
 {
     return "SELECT components.title FROM components WHERE components.id = '$componentId'";
 }
@@ -132,7 +132,7 @@ function get_query_componentName($componentId)
  * Формирует SQL-запрос для проверки наличия компонента в Поке
  * @return string SQL-запрос
  */
-function get_query_checkComponent($componentId, $componentType)
+function get_query_check_component($componentId, $componentType)
 {
     return "SELECT * FROM components WHERE components.id = '$componentId' AND components.component_type = '$componentType'";
 }
@@ -142,19 +142,19 @@ function get_query_checkComponent($componentId, $componentType)
  * Формирует SQL-запрос для получения Названия компонентов
  * @return string SQL-запрос
  */
-function get_query_componentNames()
+function get_query_component_types()
 {
     return "SELECT DISTINCT component_type, component_name FROM components";
 }
 
-/**
- * Формирует SQL-запрос для получения Заголовка компонента
- * @return string SQL-запрос
- */
-function get_query_componentTitle($componentId)
-{
-    return "SELECT title, component_name FROM components WHERE id = '$componentId'";
-}
+// /**
+//  * Формирует SQL-запрос для получения Заголовка компонента
+//  * @return string SQL-запрос
+//  */
+// function get_query_componentTitle($componentId)
+// {
+//     return "SELECT title, component_name FROM components WHERE id = '$componentId'";
+// }
 
 
 /**
@@ -188,6 +188,34 @@ function get_query_create_poke_contains()
     ) VALUES (?, ?, ?)";
 }
 
+
+/**
+ * Формирует SQL-запрос для получения уникального айди Поке
+ * @return string SQL-запрос
+ */
+function get_query_poke_unique_Id($pokeId)
+{
+    return "SELECT poke_id FROM poke WHERE poke.id = '$pokeId'";
+}
+
+
+/**
+ * Формирует SQL-запрос для удаления Поке из таблицы
+ * @return string SQL-запрос
+ */
+function get_query_delete_poke($pokeId)
+{
+    return "DELETE FROM poke WHERE poke.id = '$pokeId'";
+}
+
+/**
+ * Формирует SQL-запрос для удаления составляющих Поке из таблицы
+ * @return string SQL-запрос
+ */
+function get_query_delete_poke_consists($pokeUniqueId)
+{
+    return "DELETE FROM poke_consists WHERE poke_consists.poke_id = '$pokeUniqueId'";
+}
 
 
 // /**

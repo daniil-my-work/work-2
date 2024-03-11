@@ -26,8 +26,6 @@ if ($categories && mysqli_num_rows($categories) > 0) {
 
 // Получение данных из сессии
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
-
-// unset($_SESSION['order']);
 print_r($productsData);
 
 
@@ -39,7 +37,7 @@ function getProductList($con, $productsData)
     foreach ($productsData as $key => $productByCategory) {
         if ($key == 'menu') {
             foreach ($productByCategory as $key => $value) {
-                $sql = get_query_productItem($key);
+                $sql = get_query_product_item($key);
                 $products = mysqli_query($con, $sql);
                 $productItem = get_arrow($products);
 
@@ -51,7 +49,7 @@ function getProductList($con, $productsData)
             }
         } else {
             foreach ($productByCategory as $key => $value) {
-                $sql = get_query_productItemPoke($key);
+                $sql = get_query_product_item_poke($key);
                 $products = mysqli_query($con, $sql);
                 $productItem = get_arrow($products);
 
@@ -70,8 +68,6 @@ function getProductList($con, $productsData)
 // Получает список продуктов 
 $productList = getProductList($con, $productsData);
 $productLength = count($productList);
-
-// print_r($productList);
 
 
 // Цена товаров в корзине
@@ -115,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $res = mysqli_stmt_execute($stmt);
 
     // SQL код для добавление записи в базу с состовляющими заказа 
-    $createNewOrderItem = get_query_create_orderItem();
+    $createNewOrderItem = get_query_create_order_item();
 
     // Записывает в базу товары лежащие в корзине
     foreach ($productList as $product) {
@@ -138,20 +134,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "Запись успешно добавлена в базу данных.";
 
         // Удаляет данные из сессии и перенапрвляет на страницу аккаунт
-        unset($_SESSION['order']);
+        // unset($_SESSION['order']);
 
-        // Получает ID последнего вставленного заказа
-        $order_num = mysqli_insert_id($con);
-        $sql = "SELECT orders.order_id FROM orders WHERE orders.customer_id = '$userId' AND orders.id = '$order_num'";
-        $res = mysqli_query($con, $sql);
-        $order_id = get_arrow($res)['order_id'];
+        // // Получает ID последнего вставленного заказа
+        // $order_num = mysqli_insert_id($con);
+        // $sql = "SELECT orders.order_id FROM orders WHERE orders.customer_id = '$userId' AND orders.id = '$order_num'";
+        // $res = mysqli_query($con, $sql);
+        // $order_id = get_arrow($res)['order_id'];
 
-        print_r($order_id);
-        if (!$res) {
-            return;
-        }
+        // print_r($order_id);
+        // if (!$res) {
+        //     return;
+        // }
 
-        header("Location: ./order.php?orderId=$order_id");
+        // header("Location: ./order.php?orderId=$order_id");
     } else {
         echo "Ошибка при выполнении запроса: " . mysqli_error($con);
         echo "Номер ошибки: " . mysqli_errno($con);
@@ -177,6 +173,7 @@ $page_header = include_template(
 $page_body = include_template(
     'basket.php',
     [
+        'productsData' => $productsData,
         'products' => $productList,
         'productLength' => $productLength,
         'fullPrice' => $fullPrice,
