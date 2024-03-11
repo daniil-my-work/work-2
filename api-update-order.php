@@ -12,10 +12,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $productId = isset($_POST['productId']) ? $_POST['productId'] : null;
     $quantity = isset($_POST['quantity']) ? $_POST['quantity'] : null;
 
-    // Проверка наличия необходимых данных
-    // if ($tableName && $productId && $quantity) {
-    //     // Добавление продукта в сессию
-    // }
-
     addProductInSession($con, $tableName, $productId, $quantity);
 }

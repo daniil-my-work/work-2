@@ -1,34 +1,3 @@
-// Кнопка корзина
-const actionBasket = document.querySelector('.action__basket');
-if (actionBasket) {
-    actionBasket.classList.add('hidden');
-}
-
-
-// Получает значение из Корзины
-function getProductInBasket() {
-    const basketUrl = 'get-session-data.php';
-
-    fetch(basketUrl, {
-        method: "GET",
-        credentials: 'same-origin'
-    })
-        .then(response => response.json())
-        .then(data => {
-            const dataLength = Object.keys(data).length === 0;
-
-            if (!dataLength) {
-                actionBasket.classList.remove('hidden');
-            } else {
-                actionBasket.classList.add('hidden');
-            }
-        })
-        .catch(error => {
-            console.log("Ошибка при получении данных из сессии:" + error);
-        });
-}
-
-
 // Закрывает меню при клике вне области Меню
 function closeMenu(evt) {
     const burger = document.querySelector(".header__burger");
@@ -79,34 +48,68 @@ function hideCounter(button, counter) {
     counter.classList.add("hidden");
 }
 
-// Отправляет данные на сервак для сохранения в Сессию
-function apiUpdateProductList(params) {
-    // Отправка Fetch-запроса на сервер
-    fetch("api-update-order.php", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: params.toString(),
-    })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            return response.text();
-        })
-        .then((data) => {
-            console.log(data);
-            // Обработка ответа (если необходимо)
-            // location.reload();
-        })
-        .catch((error) => {
-            console.error(
-                "There has been a problem with your fetch operation:",
-                error
-            );
+
+
+// Кнопка корзина
+const actionBasket = document.querySelector('.action__basket');
+
+// Получает значение из корзины
+async function getProductInBasket() {
+    const basketUrl = 'get-session-data.php';
+
+    try {
+        const response = await fetch(basketUrl, {
+            method: "GET",
+            credentials: 'same-origin'
         });
+
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        const length = data['totalLength'];
+
+        console.log("Длина полученных данных из корзины:", length);
+
+        if (length > 0) {
+            actionBasket.classList.remove('hidden');
+        } else {
+            actionBasket.classList.add('hidden');
+        }
+    } catch (error) {
+        console.error("Ошибка при получении данных из сессии:", error);
+    }
 }
+
+// Отправляет данные на сервер для сохранения в сессии
+async function apiUpdateProductList(params) {
+    try {
+        const response = await fetch("api-update-order.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: params.toString(),
+        });
+
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+
+        console.log("Данные успешно обновлены в сессии");
+    } catch (error) {
+        console.error("There has been a problem with your fetch operation:", error);
+    }
+}
+
+// Вызываем функции поочередно
+async function updateSessionAndBasket(params) {
+    await apiUpdateProductList(params); // Ожидаем выполнения запроса apiUpdateProductList
+    await getProductInBasket(); // Ожидаем выполнения запроса getProductInBasket
+}
+
+
 
 // Изменяет кол-во продуктов на странице Главная и Меню
 function addProductInBasket(evt) {
@@ -148,11 +151,9 @@ function addProductInBasket(evt) {
 
             // Обновляет данные в сессии
             params.append("quantity", 0);
-            apiUpdateProductList(params);
-            // console.log(params.toString());
 
-            // Получает значение из Корзины
-            getProductInBasket();
+            // Обновляет данные в сессии
+            updateSessionAndBasket(params);
 
             hideCounter(productCounterButton, productCounterWrapper);
             return;
@@ -160,11 +161,9 @@ function addProductInBasket(evt) {
 
         // Обновляет данные в сессии
         params.append("quantity", newValue);
-        apiUpdateProductList(params);
-        // console.log(params.toString());
 
-        // Получает значение из Корзины
-        getProductInBasket();
+        // Обновляет данные в сессии
+        updateSessionAndBasket(params);
 
         productCounterInput.value = newValue;
         productCounterNumber.textContent = newValue;
@@ -182,11 +181,9 @@ function addProductInBasket(evt) {
 
         // Обновляет данные в сессии
         params.append("quantity", newValue);
-        apiUpdateProductList(params);
-        // console.log(params.toString());
 
-        // Получает значение из Корзины
-        getProductInBasket();
+        // Обновляет данные в сессии
+        updateSessionAndBasket(params);
 
         productCounterInput.value = newValue;
         productCounterNumber.textContent = newValue;
@@ -209,10 +206,9 @@ function addProductInBasket(evt) {
 
     // Обновляет данные в сессии
     params.append("quantity", startValue);
-    apiUpdateProductList(params);
 
-    // Получает значение из Корзины
-    getProductInBasket();
+    // Обновляет данные в сессии
+    updateSessionAndBasket(params);
 }
 
 // Обработчик для страницы Главная и Меню
@@ -221,6 +217,9 @@ if (mainList) {
     console.log("Главная / Меню");
 
     mainList.addEventListener("click", addProductInBasket);
+
+    // Показывает кнопку быстрого перехода в Корзину
+    getProductInBasket();
 }
 
 
@@ -268,9 +267,6 @@ function addProductInBasketSecond(evt) {
         productCounterInput.value = newValue;
         productCounterNumber.textContent = newValue;
 
-        // Обновить страницу
-        // location.reload();
-
         return;
     }
 
@@ -290,9 +286,6 @@ function addProductInBasketSecond(evt) {
         productCounterInput.value = newValue;
         productCounterNumber.textContent = newValue;
 
-        // Обновить страницу
-        // location.reload();
-
         return;
     }
 
@@ -307,9 +300,6 @@ function addProductInBasketSecond(evt) {
         // console.log(params.toString());
 
         productItem.remove();
-
-        // Обновить страницу
-        // location.reload();
 
         return;
     }
