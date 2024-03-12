@@ -51,7 +51,7 @@ if (isset($_SESSION['orderTime']) && isset($_SESSION['orderTime']['start']) && i
 }
 
 
-var_dump($sql);
+// var_dump($sql);
 
 
 // Получает данные о заказах пользователя за промежуток времени
