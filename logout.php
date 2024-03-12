@@ -7,6 +7,7 @@ require_once('./functions/init.php');
 
 // Очищает сессию
 $_SESSION = [];
+
 // Пользователь не авторизован
 // $isAuth = false;
 

@@ -7,12 +7,14 @@ require_once('./functions/db.php');
 
 
 // unset($_SESSION['order']);
-print_r($_SESSION['order']);
 
 // Получение данных из сессии
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
-$productsDataMenu = $productsData['menu'];
-$productsDataLength = count($productsDataMenu);
+
+$productsDataMenu = array();
+if (isset($productsData['menu'])) {
+    $productsDataMenu = $productsData['menu'];
+}
 
 
 // Получает список продуктов
@@ -55,7 +57,6 @@ $page_body = include_template(
     'main.php',
     [
         'productsData' => $productsDataMenu,
-        'productsDataLength' => $productsDataLength,
         'products' => $productList,
     ]
 );

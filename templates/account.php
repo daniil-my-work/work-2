@@ -95,7 +95,7 @@
                                         <?= $groupedItemFirst['order_date']; ?>
                                     </th>
                                     <td>
-                                        <a href="./order.php?orderId=<?= $groupedItemFirst['order_id']; ?>">
+                                        <a href="./order.php?orderId=<?= $groupedItemFirst['order_id']; ?>&prevLink=account">
                                             <?= $groupedItemFirst['order_id']; ?>
                                         </a>
                                     </td>
@@ -115,7 +115,7 @@
                                         <?= $groupedItemFirst['order_date']; ?>
                                     </th>
                                     <td>
-                                        <a href="./order.php?orderId=<?= $groupedItemFirst['order_id']; ?>">
+                                        <a href="./order.php?orderId=<?= $groupedItemFirst['order_id']; ?>&prevLink=account">
                                             <?= $groupedItemFirst['order_id']; ?>
                                         </a>
                                     </td>

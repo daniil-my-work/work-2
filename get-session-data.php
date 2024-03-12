@@ -2,10 +2,13 @@
 
 require_once('./functions/init.php');
 
-$sessionData = $_SESSION['order'];
+// Получает данные о блюдах добавленных в сессию
+$sessionData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
+$menuArr = isset($sessionData['menu']) ? $sessionData['menu'] : array();
+$pokeArr = isset($sessionData['poke']) ? $sessionData['poke'] : array();
 
 // Объединение двух подмассивов
-$combinedArray = array_merge($sessionData['menu'], $sessionData['poke']);
+$combinedArray = array_merge($menuArr, $pokeArr);
 
 // Получение общей длины объединенного массива
 $totalLength = count($combinedArray);

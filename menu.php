@@ -9,7 +9,11 @@ require_once('./functions/formatter.php');
 
 // Получение данных из сессии
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
-$productsDataMenu = $productsData['menu'];
+
+$productsDataMenu = array();
+if (isset($productsData['menu'])) {
+    $productsDataMenu = $productsData['menu'];
+}
 
 
 // Получает список категорий меню 

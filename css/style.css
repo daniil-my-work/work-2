@@ -829,8 +829,19 @@ textarea {
     margin-bottom: 40px;
 }
 
+.basket__item-wrapper {
+    display: flex;
+    align-items: center;
+}
+
 .basket__item {
     margin-bottom: 30px;
+}
+
+.basket__item--second {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .basket__item:last-child {
@@ -850,8 +861,9 @@ textarea {
     padding-right: 10px;
 }
 
-/* .basket__item-info {
-} */
+.basket__item-info--second {
+    padding-right: 10px;
+}
 
 .basket__item-img {
     width: 50px;

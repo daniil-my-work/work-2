@@ -12,10 +12,21 @@ define("PAGINATION_LENGTH", 3);
 
 
 // Проверка на авторизацию
-if (!$isAuth) {
+if (!$isAuth || $_SESSION['user_role'] != 'client') {
     header("Location: ./auth.php");
     exit;
 }
+
+// Получает список категорий меню 
+$getСategories = get_query_categories();
+$categories = mysqli_query($con, $getСategories);
+
+if ($categories && mysqli_num_rows($categories) > 0) {
+    $categoryList = get_arrow($categories);
+} else {
+    $categoryList = NULL;
+}
+
 
 // Получает данные о пользователе
 $userEmail = $_SESSION['user_email'];
@@ -38,6 +49,9 @@ if (isset($_SESSION['orderTime']) && isset($_SESSION['orderTime']['start']) && i
 } else {
     $sql = "SELECT orders.*, order_items.product_id, order_items.quantity, menu.title FROM orders LEFT JOIN order_items ON orders.order_id = order_items.order_id LEFT JOIN menu ON order_items.product_id = menu.id WHERE orders.customer_id = '$userId' ORDER BY orders.id DESC;";
 }
+
+
+var_dump($sql);
 
 
 // Получает данные о заказах пользователя за промежуток времени
@@ -180,7 +194,9 @@ $page_body = include_template(
 
 $page_footer = include_template(
     'footer.php',
-    []
+    [
+        'categoryList' => $categoryList,
+    ]
 );
 
 $layout_content = include_template(

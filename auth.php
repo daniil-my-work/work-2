@@ -12,6 +12,8 @@ $page_body = include_template(
     []
 );
 
+print_r($_SESSION);
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Обязательные поля для заполненения 
@@ -91,6 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['user_id'] = $userInfo['id'];
                 $_SESSION['user_name'] = $userInfo['user_name'];
                 $_SESSION['user_email'] = $userInfo['user_email'];
+                $_SESSION['user_role'] = $userInfo['user_role'];
 
                 header("Location: /index.php");
                 exit;
@@ -98,11 +101,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
-
-// print_r($errors);
-// print_r($user);
-
-
 
 
 $page_head = include_template(
