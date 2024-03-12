@@ -42,6 +42,8 @@ $result = mysqli_query($con, $sql);
 $orderInfo = null;
 if ($result && mysqli_num_rows($result) > 0) {
     $orderInfo = get_arrow($result);
+} else {
+    header("Location: ./index.php");
 }
 
 
