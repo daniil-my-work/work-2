@@ -70,7 +70,7 @@ async function getProductInBasket() {
         const data = await response.json();
         const length = data['totalLength'];
 
-        console.log("Длина полученных данных из корзины:", length);
+        // console.log("Длина полученных данных из корзины:", length);
 
         if (length > 0) {
             actionBasket.classList.remove('hidden');
@@ -97,7 +97,7 @@ async function apiUpdateProductList(params) {
             throw new Error("Network response was not ok");
         }
 
-        console.log("Данные успешно обновлены в сессии");
+        // console.log("Данные успешно обновлены в сессии");
     } catch (error) {
         console.error("There has been a problem with your fetch operation:", error);
     }
