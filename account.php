@@ -4,6 +4,7 @@ require_once('./functions/helpers.php');
 require_once('./functions/init.php');
 require_once('./functions/models.php');
 require_once('./functions/db.php');
+require_once('./data/data.php');
 
 
 // Максимальное кол-во строк
@@ -12,10 +13,19 @@ define("PAGINATION_LENGTH", 3);
 
 
 // Проверка на авторизацию
-if (!$isAuth || $_SESSION['user_role'] != 'client') {
+if (!$isAuth || $_SESSION['user_role'] != $userRole['client']) {
     header("Location: ./auth.php");
     exit;
-}
+} 
+
+// else if ($isAuth && $_SESSION['user_role'] == $userRole['admin']) {
+//     header("Location: ./admin.php");
+//     exit;
+// } else if ($isAuth && $_SESSION['user_role'] == $userRole['owner']) {
+//     header("Location: ./owner.php");
+//     exit;
+// }
+
 
 // Получает список категорий меню 
 $getСategories = get_query_categories();
@@ -176,6 +186,7 @@ $page_header = include_template(
     'header.php',
     [
         'isAuth' => $isAuth,
+        'userRole' => $userRole,
     ]
 );
 

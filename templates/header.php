@@ -36,7 +36,17 @@
                 </li>
 
                 <li class="header__nav-item">
-                    <a class="header__nav-item-link" href="./account.php">
+                    <?php $accountLink = './account.php'; ?>
+                    
+                    <?php if ($_SESSION && $_SESSION['user_role']) : ?>
+                        <?php if ($_SESSION['user_role'] == $userRole['owner']) : ?>
+                            <?php $accountLink = './owner.php'; ?>
+                        <?php elseif ($_SESSION['user_role'] == $userRole['admin']) : ?>
+                            <?php $accountLink = './admin.php'; ?>
+                        <?php endif; ?>
+                    <?php endif; ?>
+
+                    <a class="header__nav-item-link" href="<?= $accountLink; ?>">
                         Личный кабинет
                     </a>
                 </li>

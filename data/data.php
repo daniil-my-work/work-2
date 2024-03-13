@@ -11,6 +11,12 @@ $ownerTelephone = [
     '+79807057005',
 ];
 
+$userRole = [
+    'client' => 'CLIENT',
+    'admin' => 'ADMIN',
+    'owner' => 'OWNER',
+];  
+
 // Описание полей для проверки Логин/Авторизация
 $fieldDescriptions = [
     'user_name' => 'Имя',
@@ -18,20 +24,4 @@ $fieldDescriptions = [
     'phone' => 'Телефон',
     'user_password' => 'Пароль',
 ];
-
-// Описание полей для проверки Логин/Авторизация
-// $fieldDescriptions = [
-//     'protein' => 'протеин',
-//     'base' => 'основа',
-//     'shema' => 'схема',
-//     'filler' => 'наполнитель',
-//     'topping' => 'топпинг',
-//     'sauce' => 'соус',
-//     'crunch' => 'хруст',
-//     'proteinAdd' => 'протеин',
-//     'fillerAdd' => 'наполнитель',
-//     'toppingAdd' => 'топпинг',
-//     'sauceAdd' => 'соус',
-//     'crunchAdd' => 'хруст'
-// ];
 

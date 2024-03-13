@@ -5,9 +5,10 @@ require_once('./functions/init.php');
 require_once('./functions/models.php');
 require_once('./functions/db.php');
 require_once('./functions/validators.php');
+require_once('./data/data.php');
 
 
-print_r($_SESSION['order']);
+// print_r($_SESSION['order']);
 
 
 // Получает список категорий меню 
@@ -81,6 +82,7 @@ $page_header = include_template(
     'header.php',
     [
         'isAuth' => $isAuth,
+        'userRole' => $userRole,
     ]
 );
 

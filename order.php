@@ -4,6 +4,7 @@ require_once('./functions/helpers.php');
 require_once('./functions/init.php');
 require_once('./functions/db.php');
 require_once('./functions/models.php');
+require_once('./data/data.php');
 
 
 // Получает список категорий меню 
@@ -129,6 +130,7 @@ $page_header = include_template(
     'header.php',
     [
         'isAuth' => $isAuth,
+        'userRole' => $userRole,
     ]
 );
 

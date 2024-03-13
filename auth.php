@@ -5,6 +5,7 @@ require_once('./functions/helpers.php');
 require_once('./functions/init.php');
 require_once('./functions/models.php');
 require_once('./functions/validators.php');
+require_once('./data/data.php');
 
 
 $page_body = include_template(
@@ -12,7 +13,7 @@ $page_body = include_template(
     []
 );
 
-print_r($_SESSION);
+// print_r($_SESSION);
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -114,6 +115,7 @@ $page_header = include_template(
     'header.php',
     [
         'isAuth' => $isAuth,
+        'userRole' => $userRole,
     ]
 );
 

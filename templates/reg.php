@@ -53,9 +53,9 @@
 
             <div class="reg__form-input-wrapper">
                 <label for="user_telephone">Номер телефона:</label>
-                <input class="reg__form-input reg__form-input--tel" type="tel" id="user_telephone" name="user_telephone" placeholder="+7(980) 705 70 02" value="<?= isset($_POST['user_telephone']) ? $_POST['user_telephone'] : ''; ?>">
+                <input class="reg__form-input reg__form-input--tel" type="tel" id="user_phone" name="user_phone" placeholder="+7(980) 705 70 02" value="<?= isset($_POST['user_phone']) ? $_POST['user_phone'] : ''; ?>">
 
-                <?php $classHidden = isset($errors['user_telephone']) ? '' : 'hidden'; ?>
+                <?php $classHidden = isset($errors['user_phone']) ? '' : 'hidden'; ?>
                 <span class="reg__form-input-wrapper-error <?= $classHidden; ?>">
                     <?= $errors['user_phone']; ?>
                 </span>

@@ -4,9 +4,12 @@ require_once('./functions/helpers.php');
 require_once('./functions/init.php');
 require_once('./functions/models.php');
 require_once('./functions/db.php');
+require_once('./data/data.php');
 
 
 // unset($_SESSION['order']);
+// print_r($_SESSION);
+
 
 // Получение данных из сессии
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
@@ -50,6 +53,7 @@ $page_header = include_template(
     'header.php',
     [
         'isAuth' => $isAuth,
+        'userRole' => $userRole,
     ]
 );
 

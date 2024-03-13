@@ -5,6 +5,7 @@ require_once('./functions/helpers.php');
 require_once('./functions/init.php');
 require_once('./functions/models.php');
 require_once('./functions/validators.php');
+require_once('./data/data.php');
 
 
 $page_body = include_template('reg.php');
@@ -48,6 +49,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+
+    print_r($user);
+    var_dump($user['user_phone']);
+    print_r($errors);
+    
+
     $errors = array_filter($errors);
 
     // Проверяет на наличие ошибок
@@ -74,18 +81,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Устанавливает роль: Админ
         if (in_array($user['user_phone'], $adminTelephone)) {
-            $user['user_role'] = 'admin';
+            $user['user_role'] = $userRole['admin'];
         }
 
         // Устанавливает роль: Собственник
         if (in_array($user['user_phone'], $ownerTelephone)) {
-            $user['user_role'] = 'owner';
+            $user['user_role'] = $userRole['owner'];
         }
 
         // Хеширует пароль
         $user['user_password'] = password_hash($user['user_password'], PASSWORD_BCRYPT);
 
-        var_dump($user);
+        // var_dump($user);
 
         $stmt = db_get_prepare_stmt($con, $sql, $user);
         $res = mysqli_stmt_execute($stmt);
@@ -118,6 +125,7 @@ $page_header = include_template(
     'header.php',
     [
         'isAuth' => $isAuth,
+        'userRole' => $userRole,
     ]
 );
 
