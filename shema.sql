@@ -58,7 +58,8 @@ CREATE TABLE `orders` (
     `order_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `customer_id` INT,
     `total_amount` INT,
-    `order_id` CHAR(13) UNIQUE
+    `order_id` CHAR(13) UNIQUE,
+    `order_address` INT,
 );
 
 CREATE TABLE `order_items` (
@@ -118,6 +119,12 @@ CREATE TABLE `user_address` (
     `user_id` INT
 );
 
+CREATE TABLE `order_address` (
+    `id` INT PRIMARY KEY AUTO_INCREMENT,
+    `city` VARCHAR(255),
+    `address_name` VARCHAR(255),
+);
+
 ALTER TABLE
     `menu`
 ADD
@@ -152,3 +159,8 @@ ALTER TABLE
     `user_address`
 ADD
     FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+
+ALTER TABLE
+    `orders`
+ADD
+    FOREIGN KEY (`order_address`) REFERENCES `order_address` (`id`);

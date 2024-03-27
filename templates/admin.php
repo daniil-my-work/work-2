@@ -70,6 +70,9 @@
                         <thead>
                             <tr>
                                 <th scope="col">
+                                    Id заказа
+                                </th>
+                                <th scope="col">
                                     Время заказа
                                 </th>
                                 <th scope="col">
@@ -93,10 +96,12 @@
                                 <td>Otto</td>
                                 <td>Otto</td>
                                 <td>Otto</td>
+                                <td>Otto</td>
                             </tr>
                             <tr>
                                 <th scope="row">2</th>
                                 <td>Mark</td>
+                                <td>Otto</td>
                                 <td>Otto</td>
                                 <td>Otto</td>
                                 <td>Otto</td>
