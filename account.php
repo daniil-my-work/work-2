@@ -18,14 +18,6 @@ if (!$isAuth || $_SESSION['user_role'] != $userRole['client']) {
     exit;
 } 
 
-// else if ($isAuth && $_SESSION['user_role'] == $userRole['admin']) {
-//     header("Location: ./admin.php");
-//     exit;
-// } else if ($isAuth && $_SESSION['user_role'] == $userRole['owner']) {
-//     header("Location: ./owner.php");
-//     exit;
-// }
-
 
 // Получает список категорий меню 
 $getСategories = get_query_categories();
@@ -59,9 +51,6 @@ if (isset($_SESSION['orderTime']) && isset($_SESSION['orderTime']['start']) && i
 } else {
     $sql = "SELECT orders.*, order_items.product_id, order_items.quantity, menu.title FROM orders LEFT JOIN order_items ON orders.order_id = order_items.order_id LEFT JOIN menu ON order_items.product_id = menu.id WHERE orders.customer_id = '$userId' ORDER BY orders.id DESC;";
 }
-
-
-// var_dump($sql);
 
 
 // Получает данные о заказах пользователя за промежуток времени
@@ -100,7 +89,6 @@ if ($result === false) {
         } else {
             // Если результат запроса пуст
             $groupedItems = array();
-            // $keys = array();
         }
     } elseif (mysqli_num_rows($result) == 1) {
         $orderInfo = get_arrow($result);
@@ -111,17 +99,13 @@ if ($result === false) {
 
             $orderId = $orderInfo['order_id'];
             $groupedItems[$orderId][] = $orderInfo;
-
-            // $keys = array_keys($groupedItems);
         } else {
             // Если результат запроса пуст
             $groupedItems = array();
-            // $keys = array();
         }
     } else {
         // Если результат запроса пуст
         $groupedItems = array();
-        // $keys = array();
     }
 }
 
@@ -138,16 +122,16 @@ if ($groupedItemLength == 0) {
 }
 
 
-// Соберает все даты в отдельный массив
-$allDates = [];
-foreach ($groupedItems as $order) {
-    foreach ($order as $item) {
-        $allDates[] = $item['order_date'];
-    }
-}
+// // Соберает все даты в отдельный массив
+// $allDates = [];
+// foreach ($groupedItems as $order) {
+//     foreach ($order as $item) {
+//         $allDates[] = $item['order_date'];
+//     }
+// }
 
-// Cортирует массив дат по убыванию
-rsort($allDates);
+// // Cортирует массив дат по убыванию
+// rsort($allDates);
 
 // Создает фильтрованный массив
 $filteredList = [];

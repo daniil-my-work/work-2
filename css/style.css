@@ -628,9 +628,8 @@ textarea {
 
 .account__orders-time {
     display: flex;
-    align-items: center;
-    padding: 0 10px;
-    margin-bottom: 30px;
+    /* padding: 0 10px; */
+    /* margin-bottom: 30px; */
 }
 
 .account__orders-time .sub-title {
@@ -698,6 +697,11 @@ textarea {
 
 .account__orders--active {
     margin-bottom: 40px;
+    overflow-y: scroll !important;
+}
+
+.account__orders--complete {
+    overflow-y: scroll !important;
 }
 
 .account__orders-title {
@@ -710,7 +714,6 @@ textarea {
 
 .account__orders-table {
     max-height: 400px;
-    overflow-y: scroll !important;
 }
 
 .account__orders-nav {
@@ -761,6 +764,27 @@ textarea {
     padding: 0 10px;
 }
 
+
+
+.account__orders-col--big {
+    min-width: 200px;
+}
+
+.account__orders-col--middle {
+    min-width: 120px;
+}
+
+
+.account__orders-check {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.account__orders-checkbox {
+    margin: 0;
+    width: 20px;
+    height: 20px;
+}
 
 
 /* Страница Меню */
@@ -1024,6 +1048,10 @@ textarea {
     padding: 0 10px;
     margin-bottom: 20px;
     box-sizing: border-box;
+}
+
+.account__orders-calendar--second {
+    display: block;
 }
 
 .account__orders-calendar .input__date-wrapper {

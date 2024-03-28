@@ -59,7 +59,8 @@ CREATE TABLE `orders` (
     `customer_id` INT,
     `total_amount` INT,
     `order_id` CHAR(13) UNIQUE,
-    `order_address` INT,
+    `order_address` INT NULL,
+    `date_end` TIMESTAMP NULL,
 );
 
 CREATE TABLE `order_items` (
