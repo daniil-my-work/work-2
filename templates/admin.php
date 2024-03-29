@@ -57,13 +57,13 @@
             <!-- Поиск -->
             <?php $isHiddenSearch = $statisticGroup != 'search' ? 'hidden' : ''; ?>
             <div class="account__orders-order <?= $isHiddenSearch; ?>">
-                <form class="account__orders-calendar account__orders-calendar--second" action="./admin.php" method="POST">
+                <form class="account__orders-calendar account__orders-calendar--second" action="./admin.php?group=search" method="POST">
                     <h3 class="sub-title">
                         Поиск заказа:
                     </h3>
 
                     <div class="account__orders-time account__orders-time--order">
-                        <input class="mb-0" type="text" id="order-id" name="order-id" placeholder="Айди заказа" value="<?= is_null($dateSecond) ? '' : $dateSecond; ?>">
+                        <input class="mb-0" type="text" id="order-id" name="order-id" placeholder="Айди заказа" value="<?= $searchValue ? $searchValue : ''; ?>">
 
                         <button class="button--basic">
                             Поиск
@@ -75,7 +75,7 @@
                 <!-- Таблица с данными -->
                 <div class="account__orders">
                     <div class="account__orders-wrapper">
-                        <table class="table table-striped table-hover account__orders-table " id="account__orders-table--active">
+                        <table class="table table-striped table-hover account__orders-table">
                             <thead>
                                 <tr>
                                     <th scope="col">
@@ -100,10 +100,10 @@
                             </thead>
                             <tbody>
                                 <!-- Проходится по массиву заказов -->
-                                <?php if (count($orderListActive) != 0) : ?>
-                                    <?php foreach ($keysActive as $key) : ?>
-                                        <?php if (count($orderListActive[$key]) == 1) : ?>
-                                            <?php $groupedItemFirst = $orderListActive[$key][0]; ?>
+                                <?php if ($orderListSearch && count($orderListSearch) != 0) : ?>
+                                    <?php foreach ($keysSearch as $key) : ?>
+                                        <?php if (count($orderListSearch[$key]) == 1) : ?>
+                                            <?php $groupedItemFirst = $orderListSearch[$key][0]; ?>
                                             <tr>
                                                 <th scope="row" class="align-middle">
                                                     <?= $groupedItemFirst['order_date']; ?>
@@ -127,11 +127,11 @@
                                                     <?= $groupedItemFirst['order_address']; ?>
                                                 </td>
                                                 <td class="account__orders-check align-middle">
-                                                    <?= $groupedItemFirst['order_address']; ?>
+                                                    <?= $groupedItemFirst['user_name']; ?>
                                                 </td>
                                             </tr>
                                         <?php else : ?>
-                                            <?php $groupedItemFirst = $orderListActive[$key][0]; ?>
+                                            <?php $groupedItemFirst = $orderListSearch[$key][0]; ?>
                                             <tr>
                                                 <th scope="row" class="align-middle">
                                                     <?= $groupedItemFirst['order_date']; ?>
@@ -144,7 +144,7 @@
                                                     </a>
                                                 </td>
                                                 <td class="account__orders-col--big align-middle">
-                                                    <?php foreach ($orderListActive[$key] as $groupedSubItem) : ?>
+                                                    <?php foreach ($orderListSearch[$key] as $groupedSubItem) : ?>
                                                         <?= $groupedSubItem['title']; ?>
                                                         *
                                                         <?= $groupedSubItem['quantity']; ?>
@@ -157,7 +157,7 @@
                                                     <?= $groupedItemFirst['order_address']; ?>
                                                 </td>
                                                 <td class="account__orders-check align-middle">
-                                                    <?= $groupedItemFirst['order_address']; ?>
+                                                    <?= $groupedItemFirst['user_name']; ?>
                                                 </td>
                                             </tr>
                                         <?php endif; ?>
@@ -169,15 +169,15 @@
 
 
                     <!-- Активные заказы -->
-                    <?php $prevPageNumberActive = $currentPageActive - 1; ?>
-                    <?php $nextPageNumberActive = $currentPageActive + 1; ?>
+                    <?php $prevPageNumberSearch = $currentPageSearch - 1; ?>
+                    <?php $nextPageNumberSearch = $currentPageSearch + 1; ?>
 
                     <!-- Навигация для таблицы заказов -->
-                    <?php if ($paginationActive && count($paginationActive) > 1) : ?>
+                    <?php if ($paginationSearch && count($paginationSearch) > 1) : ?>
                         <nav class="menu__nav account__orders-nav">
 
-                            <?php if ($currentPageActive > 1) : ?>
-                                <a href="./admin.php?pageActive=<?= $prevPageNumberActive; ?>&pageСomplete=<?= $currentPageСomplete; ?>" class="menu__nav-button menu__nav-button--prev">
+                            <?php if ($currentPageSearch > 1) : ?>
+                                <a href="./admin.php?group=search&pageSearch=<?= $prevPageNumberSearch; ?>" class="menu__nav-button menu__nav-button--prev">
                                     <svg class="menu__nav-button-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
                                         <path stroke="currentColor" stroke-width="2px" stroke-linecap="square" d="m26.1 46-2-2 11.8-11.7-11.8-11.7 2-2 13.8 13.7L26.1 46" />
                                     </svg>
@@ -185,37 +185,37 @@
                             <?php endif; ?>
 
                             <ul class="menu__nav-list">
-                                <?php if ($currentPageActive == count($paginationActive) && $prevPageNumberActive != 1) : ?>
-                                    <a href="./admin.php?pageActive=<?= $prevPageNumberActive - 1; ?>&pageСomplete=<?= $currentPageСomplete; ?>" class="menu__nav-item">
-                                        <?= $prevPageNumberActive - 1; ?>
+                                <?php if ($currentPageSearch == count($paginationSearch) && $prevPageNumberSearch != 1) : ?>
+                                    <a href="./admin.php?group=search&pageSearch=<?= $prevPageNumberSearch - 1; ?>" class="menu__nav-item">
+                                        <?= $prevPageNumberSearch - 1; ?>
                                     </a>
                                 <?php endif; ?>
 
-                                <?php if ($prevPageNumberActive != 0) : ?>
-                                    <a href="./admin.php?pageActive=<?= $prevPageNumberActive; ?>&pageСomplete=<?= $currentPageСomplete; ?>" class="menu__nav-item">
-                                        <?= $prevPageNumberActive; ?>
+                                <?php if ($prevPageNumberSearch != 0) : ?>
+                                    <a href="./admin.php?group=search&pageSearch=<?= $prevPageNumberSearch; ?>" class="menu__nav-item">
+                                        <?= $prevPageNumberSearch; ?>
                                     </a>
                                 <?php endif; ?>
 
                                 <p class="menu__nav-item menu__nav-item--current">
-                                    <?= $currentPageActive; ?>
+                                    <?= $currentPageSearch; ?>
                                 </p>
 
-                                <?php if ($currentPageActive != count($paginationActive)) : ?>
-                                    <a href="./admin.php?pageActive=<?= $nextPageNumberActive; ?>&pageСomplete=<?= $currentPageСomplete; ?>" class="menu__nav-item">
-                                        <?= $nextPageNumberActive; ?>
+                                <?php if ($currentPageSearch != count($paginationSearch)) : ?>
+                                    <a href="./admin.php?group=search&pageSearch=<?= $nextPageNumberSearch; ?>" class="menu__nav-item">
+                                        <?= $nextPageNumberSearch; ?>
                                     </a>
                                 <?php endif; ?>
 
-                                <?php if ($prevPageNumberActive == 0 && $nextPageNumberActive != count($paginationActive)) : ?>
-                                    <a href="./admin.php?pageActive=<?= $nextPageNumberActive + 1; ?>&pageСomplete=<?= $currentPageСomplete; ?>" class="menu__nav-item">
-                                        <?= $nextPageNumberActive + 1; ?>
+                                <?php if ($prevPageNumberSearch == 0 && $nextPageNumberSearch != count($paginationSearch)) : ?>
+                                    <a href="./admin.php?group=search&pageSearch=<?= $nextPageNumberSearch + 1; ?>" class="menu__nav-item">
+                                        <?= $nextPageNumberSearch + 1; ?>
                                     </a>
                                 <?php endif; ?>
                             </ul>
 
-                            <?php if ($currentPageActive != count($paginationActive)) : ?>
-                                <a href="./admin.php?pageActive=<?= $nextPageNumberActive; ?>&pageСomplete=<?= $currentPageСomplete; ?>" class="menu__nav-button menu__nav-button--next">
+                            <?php if ($currentPageSearch != count($paginationSearch)) : ?>
+                                <a href="./admin.php?group=search&pageSearch=<?= $nextPageNumberSearch; ?>" class="menu__nav-button menu__nav-button--next">
                                     <svg class="menu__nav-button-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
                                         <path stroke="currentColor" stroke-width="2px" stroke-linecap="square" d="m26.1 46-2-2 11.8-11.7-11.8-11.7 2-2 13.8 13.7L26.1 46" />
                                     </svg>
@@ -229,7 +229,7 @@
             <!-- Заказы -->
             <?php $isHiddenOrders = $statisticGroup != 'orders' ? 'hidden' : ''; ?>
             <div class="account__orders-order <?= $isHiddenOrders; ?>">
-                <form class="account__orders-calendar account__orders-calendar--second" action="./admin.php" method="POST">
+                <form class="account__orders-calendar account__orders-calendar--second" action="./admin.php?group=orders" method="POST">
                     <h3 class="sub-title">
                         Статистика:
                     </h3>
@@ -286,7 +286,7 @@
                             </thead>
                             <tbody>
                                 <!-- Проходится по массиву заказов -->
-                                <?php if (count($orderListActive) != 0) : ?>
+                                <?php if ($orderListActive && count($orderListActive) != 0) : ?>
                                     <?php foreach ($keysActive as $key) : ?>
                                         <?php if (count($orderListActive[$key]) == 1) : ?>
                                             <?php $groupedItemFirst = $orderListActive[$key][0]; ?>
@@ -443,7 +443,7 @@
                             </thead>
                             <tbody>
                                 <!-- Проходится по массиву заказов -->
-                                <?php if (count($orderListСomplete) != 0) : ?>
+                                <?php if ($orderListСomplete && count($orderListСomplete) != 0) : ?>
                                     <?php foreach ($keysСomplete as $key) : ?>
                                         <?php if (count($orderListСomplete[$key]) == 1) : ?>
                                             <?php $groupedItemFirst = $orderListСomplete[$key][0]; ?>
@@ -572,18 +572,20 @@
             <!-- Клиенты -->
             <?php $isHiddenClients = $statisticGroup != 'clients' ? 'hidden' : ''; ?>
             <div class="account__orders-client <?= $isHiddenClients; ?>">
-                <!-- Календарь -->
-                <div class="account__orders-time account__orders-calendar">
+                <form class="account__orders-calendar account__orders-calendar--second" action="./admin.php?group=clients" method="POST">
                     <h3 class="sub-title">
-                        Поиск:
+                        Поиск клиента:
                     </h3>
 
-                    <input class="account__orders-input me-3" type="text" name="" id="">
+                    <div class="account__orders-time account__orders-time--order">
+                        <input class="mb-0" type="text" id="user-phone" name="user-phone" placeholder="Введите номер телефона +7.." value="<?= $phoneValue ? $phoneValue : ''; ?>">
 
-                    <button class="button--basic">
-                        Загрузить
-                    </button>
-                </div>
+                        <button class="button--basic">
+                            Поиск
+                        </button>
+                    </div>
+                </form>
+
 
                 <!-- Таблица с данными -->
                 <div class="account__orders">
@@ -591,48 +593,138 @@
                         Список клиентов:
                     </h3>
 
-                    <table class="table table-striped table-hover account__orders-table ">
-                        <thead>
-                            <tr>
-                                <th scope="col">
-                                    id пользователя
-                                </th>
-                                <th scope="col">
-                                    Имя
-                                </th>
-                                <th scope="col">
-                                    Контакты
-                                </th>
-                                <th scope="col">
-                                    Адрес
-                                </th>
-                                <th scope="col">
-                                    Рейтинг клиента
-                                </th>
-                                <th scope="col">
-                                    Ср. чек
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>Otto</td>
-                                <td>Otto</td>
-                                <td>Otto</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>Otto</td>
-                                <td>Otto</td>
-                                <td>Otto</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="account__orders-wrapper">
+                        <table class="table table-striped table-hover account__orders-table ">
+                            <thead>
+                                <tr>
+                                    <th scope="col">
+                                        id пользователя
+                                    </th>
+                                    <th scope="col">
+                                        Имя
+                                    </th>
+                                    <th scope="col">
+                                        Контакты
+                                    </th>
+                                    <th scope="col">
+                                        Адрес
+                                    </th>
+                                    <th scope="col">
+                                        Рейтинг клиента
+                                    </th>
+                                    <th scope="col">
+                                        Ср. чек
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Проходится по массиву заказов -->
+                                <?php if ($userListFormatted && $userListLength != 0) : ?>
+                                    <?php if ($userListLength == 1) : ?>
+                                        <tr>
+                                            <th scope="row" class="align-middle">
+                                                <?= $userListFormatted['id']; ?>
+                                            </th>
+                                            <td class="text-center align-middle">
+                                                <?= $userListFormatted['user_name']; ?>
+                                            </td>
+                                            <td class=" align-middle">
+                                                <?= $userListFormatted['user_telephone']; ?>
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <?= $userListFormatted['user_address']; ?>
+                                            </td>
+                                            <td class="align-middle">
+                                                <?= $userListFormatted['user_rating']; ?>
+                                            </td>
+                                            <td class="align-middle">
+                                                <?= $userListFormatted['average_order_amount']; ?>
+                                            </td>
+                                        </tr>
+                                    <?php else : ?>
+                                        <?php foreach ($userListFormatted as $userItem) : ?>
+                                            <tr>
+                                                <th scope="row" class="align-middle">
+                                                    <?= $userItem['id']; ?>
+                                                </th>
+                                                <td class="text-center align-middle">
+                                                    <?= $userItem['user_name']; ?>
+                                                </td>
+                                                <td class=" align-middle">
+                                                    <?= $userItem['user_telephone']; ?>
+                                                </td>
+                                                <td class="text-center align-middle">
+                                                    <?= $userItem['user_address']; ?>
+                                                </td>
+                                                <td class="align-middle">
+                                                    <?= $userItem['user_rating']; ?>
+                                                </td>
+                                                <td class="align-middle">
+                                                    <?= $userItem['average_order_amount']; ?>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Активные заказы -->
+                    <?php $prevPageNumberUser = $currentPageUser - 1; ?>
+                    <?php $nextPageNumberUser = $currentPageUser + 1; ?>
+
+                    <!-- Навигация для таблицы заказов -->
+                    <?php if ($paginationUser && count($paginationUser) > 1) : ?>
+                        <nav class="menu__nav account__orders-nav">
+
+                            <?php if ($currentPageUser > 1) : ?>
+                                <a href="./admin.php?group=clients&pageUser=<?= $prevPageNumberUser; ?>" class="menu__nav-button menu__nav-button--prev">
+                                    <svg class="menu__nav-button-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+                                        <path stroke="currentColor" stroke-width="2px" stroke-linecap="square" d="m26.1 46-2-2 11.8-11.7-11.8-11.7 2-2 13.8 13.7L26.1 46" />
+                                    </svg>
+                                </a>
+                            <?php endif; ?>
+
+                            <ul class="menu__nav-list">
+                                <?php if ($currentPageUser == count($paginationUser) && $prevPageNumberUser != 1) : ?>
+                                    <a href="./admin.php?group=clients&pageUser=<?= $prevPageNumberUser - 1; ?>" class="menu__nav-item">
+                                        <?= $prevPageNumberUser - 1; ?>
+                                    </a>
+                                <?php endif; ?>
+
+                                <?php if ($prevPageNumberUser != 0) : ?>
+                                    <a href="./admin.php?group=clients&pageUser=<?= $prevPageNumberUser; ?>" class="menu__nav-item">
+                                        <?= $prevPageNumberUser; ?>
+                                    </a>
+                                <?php endif; ?>
+
+                                <p class="menu__nav-item menu__nav-item--current">
+                                    <?= $currentPageUser; ?>
+                                </p>
+
+                                <?php if ($currentPageUser != count($paginationUser)) : ?>
+                                    <a href="./admin.php?group=clients&pageUser=<?= $nextPageNumberUser; ?>" class="menu__nav-item">
+                                        <?= $nextPageNumberUser; ?>
+                                    </a>
+                                <?php endif; ?>
+
+                                <?php if ($prevPageNumberUser == 0 && $nextPageNumberUser != count($paginationUser)) : ?>
+                                    <a href="./admin.php?group=clients&pageUser=<?= $nextPageNumberUser + 1; ?>" class="menu__nav-item">
+                                        <?= $nextPageNumberUser + 1; ?>
+                                    </a>
+                                <?php endif; ?>
+                            </ul>
+
+                            <?php if ($currentPageUser != count($paginationUser)) : ?>
+                                <a href="./admin.php?group=clients&pageUser=<?= $nextPageNumberUser; ?>" class="menu__nav-button menu__nav-button--next">
+                                    <svg class="menu__nav-button-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+                                        <path stroke="currentColor" stroke-width="2px" stroke-linecap="square" d="m26.1 46-2-2 11.8-11.7-11.8-11.7 2-2 13.8 13.7L26.1 46" />
+                                    </svg>
+                                </a>
+                            <?php endif; ?>
+                        </nav>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

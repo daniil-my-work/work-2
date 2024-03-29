@@ -719,8 +719,6 @@ async function apiUpdateOrderStatus(params) {
     }
 }
 
-const activeTable = document.querySelector('#account__orders-table--active');
-const completeTable = document.querySelector('#account__orders-table--complete');
 
 async function changeOrderStatus(evt) {
     const target = evt.target;
@@ -742,6 +740,7 @@ async function changeOrderStatus(evt) {
     params.append("orderId", orderId);
 
     const parentTable = target.closest('table');
+    console.log(parentTable);
     if (parentTable.id === 'account__orders-table--active') {
         params.append("status", true);
     } else {
@@ -755,9 +754,13 @@ async function changeOrderStatus(evt) {
         location.reload();
         // console.log('Поменял статус заказа');
     } catch (err) {
-        console.error('Ошибка при обновлении статуса заказа:', error);
+        console.error('Ошибка при обновлении статуса заказа:', err);
     }
 }
+
+
+const activeTable = document.querySelector('#account__orders-table--active');
+const completeTable = document.querySelector('#account__orders-table--complete');
 
 if (activeTable) {
     activeTable.addEventListener('click', changeOrderStatus);

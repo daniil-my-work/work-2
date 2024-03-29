@@ -141,7 +141,7 @@ function addProductInSession($con, $tableName, $productId, $quantity)
 // Обновляет данные о статусе заказа
 function updateOrderStatus($con, $orderId, $status)
 {
-    if ($status) {
+    if ($status === 'true') {
         $date_end = date("Y-m-d H:i:s");
         $sql = "UPDATE orders SET orders.date_end = '$date_end' WHERE orders.order_id = '$orderId'";
     } else {

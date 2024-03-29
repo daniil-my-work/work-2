@@ -8,7 +8,7 @@ require_once('./functions/db.php');
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Получите данные из запроса
     $orderId = isset($_POST['orderId']) ? $_POST['orderId'] : null;
-    $status = isset($_POST['status']) ? filter_var($_POST['status'], FILTER_VALIDATE_BOOLEAN) : null;
+    $status = isset($_POST['status']) ? $_POST['status'] : null;
     
     updateOrderStatus($con, $orderId, $status);
 }

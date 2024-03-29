@@ -121,18 +121,6 @@ if ($groupedItemLength == 0) {
     $pagination = range(1, $paginationLength);
 }
 
-
-// // Соберает все даты в отдельный массив
-// $allDates = [];
-// foreach ($groupedItems as $order) {
-//     foreach ($order as $item) {
-//         $allDates[] = $item['order_date'];
-//     }
-// }
-
-// // Cортирует массив дат по убыванию
-// rsort($allDates);
-
 // Создает фильтрованный массив
 $filteredList = [];
 
