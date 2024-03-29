@@ -145,7 +145,6 @@ foreach ($groupedItems as $orderId => $orderItems) {
 }
 
 
-
 // Определяет длину пагинации
 function getPaginationLength($arr)
 {
@@ -181,6 +180,13 @@ $orderListСomplete = array_slice($filteredListСomplete, $startIndexСomplete, 
 
 $keysActive = array_keys($orderListActive);
 $keysСomplete = array_keys($orderListСomplete);
+
+
+// print_r($paginationСomplete);
+// print_r($currentPageСomplete);
+// print_r($startIndexСomplete);
+// print_r($orderListActive);
+// print_r($orderListСomplete);
 
 
 

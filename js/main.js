@@ -696,3 +696,74 @@ if (constructorPokeForm) {
 //     apiUpdateProductList(params);
 // });
 
+
+
+// Отправляет данные на сервер для сохранения в сессии
+async function apiUpdateOrderStatus(params) {
+    try {
+        const response = await fetch("api-update-order-status.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: params.toString(),
+        });
+
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+
+        // console.log("Данные успешно обновлены в сессии");
+    } catch (error) {
+        console.error("There has been a problem with your fetch operation:", error);
+    }
+}
+
+const activeTable = document.querySelector('#account__orders-table--active');
+const completeTable = document.querySelector('#account__orders-table--complete');
+
+async function changeOrderStatus(evt) {
+    const target = evt.target;
+    if (!target.classList.contains('account__orders-checkbox')) {
+        return;
+    }
+
+    // Доступ к родительскому tr элементу
+    const parentTr = target.closest('tr');
+
+    // Найти input элемент внутри tr
+    const input = parentTr.querySelector('input[name="order-id"]');
+
+    // Получить значение атрибута value
+    const orderId = input.value;
+
+    // Формирование строки параметров
+    const params = new URLSearchParams();
+    params.append("orderId", orderId);
+
+    const parentTable = target.closest('table');
+    if (parentTable.id === 'account__orders-table--active') {
+        params.append("status", true);
+    } else {
+        params.append("status", false);
+    }
+
+    try {
+        // Обновляет данные о статусе заказа
+        await apiUpdateOrderStatus(params);
+
+        location.reload();
+        // console.log('Поменял статус заказа');
+    } catch (err) {
+        console.error('Ошибка при обновлении статуса заказа:', error);
+    }
+}
+
+if (activeTable) {
+    activeTable.addEventListener('click', changeOrderStatus);
+}
+
+if (completeTable) {
+    completeTable.addEventListener('click', changeOrderStatus);
+}
+

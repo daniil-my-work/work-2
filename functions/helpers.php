@@ -136,3 +136,23 @@ function addProductInSession($con, $tableName, $productId, $quantity)
         $_SESSION['order'][$tableName][$productId] = 1;
     }
 }
+
+
+// Обновляет данные о статусе заказа
+function updateOrderStatus($con, $orderId, $status)
+{
+    if ($status) {
+        $date_end = date("Y-m-d H:i:s");
+        $sql = "UPDATE orders SET orders.date_end = '$date_end' WHERE orders.order_id = '$orderId'";
+    } else {
+        $sql = "UPDATE orders SET orders.date_end = null WHERE orders.order_id = '$orderId'";
+    }
+
+    $result = mysqli_query($con, $sql);
+
+    if ($result) {
+        echo "Статус заказа успешно обновлен.";
+    } else {
+        echo "Ошибка при обновлении статуса заказа: " . mysqli_error($con);
+    }
+}

@@ -628,6 +628,7 @@ textarea {
 
 .account__orders-time {
     display: flex;
+    align-items: center;
     /* padding: 0 10px; */
     /* margin-bottom: 30px; */
 }
@@ -697,10 +698,10 @@ textarea {
 
 .account__orders--active {
     margin-bottom: 40px;
-    overflow-y: scroll !important;
+    /* overflow-y: scroll !important; */
 }
 
-.account__orders--complete {
+.account__orders-wrapper {
     overflow-y: scroll !important;
 }
 
