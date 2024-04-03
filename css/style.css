@@ -1399,3 +1399,26 @@ textarea {
     text-align: center;
     color: red;
 }
+
+
+
+/* Модальное окно */
+.alert-modal {
+    position: fixed;
+    bottom: 4px;
+    right: 2px;
+}
+
+.alert-modal .toast:not(.showing):not(.show) {
+    z-index: -10;
+}
+
+.toast-body {
+    background-color: #FFF5E1;
+}
+
+
+/* 
+.alert-modal .toast {
+    opacity: 1;
+} */

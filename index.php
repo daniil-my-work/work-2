@@ -42,6 +42,49 @@ if ($categories && mysqli_num_rows($categories) > 0) {
 }
 
 
+// $modalList = [
+//     [
+//         'title' => 'Заголовок тестовый',
+//         'error' => 'dsds',
+//     ],
+//     [
+//         'title' => 'Заголовок тестовый',
+//         'button' => [
+//             ['text' => 'Ярославль', 'class' => 'btn btn-primary btn-sm'],
+//             ['text' => 'Рыбинск', 'class' => 'btn btn-secondary btn-sm']
+//         ],
+//     ],
+// 'category' => 'error';
+// ];
+
+// print_r($_SESSION['city']);
+
+// Модальное окно: Контент для вставки
+$modalList = [
+    [
+        'title' => 'Выберите ваш город',
+        'button' => [
+            ['text' => 'Ярославль', 'class' => 'btn btn-primary btn-sm'],
+            ['text' => 'Рыбинск', 'class' => 'btn btn-secondary btn-sm']
+        ],
+        'category' => 'city',
+    ],
+    [
+        'title' => 'Заголовок ошибки',
+        'error' => 'Текст ошибки',
+        'category' => 'error',
+    ],
+];
+
+
+$page_modal = include_template(
+    'modal.php',
+    [
+        'modalList' => $modalList,
+    ]
+);
+
+
 $page_head = include_template(
     'head.php',
     [
@@ -76,6 +119,7 @@ $layout_content = include_template(
     'layout.php',
     [
         'head' => $page_head,
+        'modal' => $page_modal,
         'header' => $page_header,
         'main' => $page_body,
         'footer' => $page_footer,

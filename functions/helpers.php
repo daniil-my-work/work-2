@@ -156,3 +156,4 @@ function updateOrderStatus($con, $orderId, $status)
         echo "Ошибка при обновлении статуса заказа: " . mysqli_error($con);
     }
 }
+
