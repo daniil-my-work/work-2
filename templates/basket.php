@@ -15,6 +15,79 @@
     <!-- Форма заказа: Корзина -->
     <form class="page__basket-form" method="post" action="basket.php">
         <?php if ($productLength != 0) : ?>
+            <div class="basket__selects">
+                <!-- Селект: способ доставки -->
+                <select class="form-select" id="delivery-type" aria-label="способ доставки">
+                    <option value="default" selected>Выберите способ доставки</option>
+                    <option value="pickup">Самовывоз</option>
+                    <option value="delivery">Доставка</option>
+                </select>
+
+                <!-- Доставка -->
+                <!-- hidden -->
+                <div class="basket__delivery ">
+                    <div class="basket__cafe">
+                        <span class="basket__delivery-name">
+                            Адресс:
+                        </span>
+
+                        <div class="basket__delivery-wrapper w-100">
+                            <input type="text" id="user_address" name="user_address" class="input mb-0" placeholder="Введите адрес" value="" required="">
+
+                            <!-- Список адресов -->
+                            <ul class="basket__delivery-list">
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="basket__cafe">
+                        <span class="basket__delivery-name">
+                            Подъезд:
+                        </span>
+
+                        <input type="text" id="user_address" name="user_address" class="input mb-0" placeholder="Введите адрес" value="" required="">
+                    </div>
+
+                    <div class="basket__cafe">
+                        <span class="basket__delivery-name">
+                            Номер квартиры:
+                        </span>
+
+                        <input type="text" id="user_address" name="user_address" class="input mb-0" placeholder="Введите адрес" value="" required="">
+                    </div>
+
+                    <div class="basket__cafe mb-3">
+                        <span class="basket__delivery-name">
+                            Этаж:
+                        </span>
+
+                        <input type="text" id="user_address" name="user_address" class="input mb-0" placeholder="Введите адрес" value="" required="">
+                    </div>
+
+                    <div class="form-floating">
+                        <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+                        <label for="floatingTextarea2">Комметарий</label>
+                    </div>
+                </div>
+
+                <!-- Самовывоз -->
+                <div class="basket__cafe hidden">
+                    Адресс:
+
+                    <select class="form-select basket__cafe-select" aria-label="ресторан получения">
+                        <option value="default" selected>Выберите ресторан получения</option>
+
+                        <?php foreach ($cafeList as $cafe) : ?>
+                            <option value="<?= $cafe['id']; ?>">
+                                <?= $cafe['address_name']; ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+
+
+            <!-- Список товаров -->
             <ul class="basket__list">
                 <?php foreach ($products as $product) : ?>
                     <?php $productItem = $product['item']; ?>

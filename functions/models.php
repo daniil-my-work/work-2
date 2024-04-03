@@ -218,6 +218,16 @@ function get_query_delete_poke_consists($pokeUniqueId)
 }
 
 
+/**
+ * Формирует SQL-запрос для показа списка адрессов кафе 
+ * @return string SQL-запрос
+ */
+function get_query_cafe_address()
+{
+    return "SELECT * FROM cafe_address";
+}
+
+
 // /**
 //  * Формирует SQL-запрос для добавления записи в таблицу orders
 //  * @return string SQL-запрос
@@ -237,6 +247,8 @@ function get_query_delete_poke_consists($pokeUniqueId)
 //     return "INSERT INTO order_items (product_id, quantity, unit_price, tableName, order_id) 
 //     VALUES (?, ?, ?, ?, ?)";
 // }
+
+
 
 
 

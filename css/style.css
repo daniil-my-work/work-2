@@ -850,6 +850,50 @@ textarea {
     margin-bottom: 0;
 }
 
+.basket__selects {
+    margin-bottom: 44px;
+}
+
+.basket__delivery-name {
+    margin-right: 10px;
+}
+
+.basket__delivery {
+    margin-top: 20px;
+}
+
+.basket__delivery-wrapper {
+    position: relative;
+}
+
+.basket__delivery-list {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    transform: translateY(100%);
+    z-index: 10;
+}
+
+.basket__delivery-item {
+    padding: 8px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 4px;
+}
+
+.basket__cafe {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.basket__cafe-select {
+    margin-left: 10px;
+}
+
 .basket__list {
     margin-bottom: 40px;
 }
@@ -1405,8 +1449,9 @@ textarea {
 /* Модальное окно */
 .alert-modal {
     position: fixed;
-    bottom: 4px;
+    bottom: 80px;
     right: 2px;
+    z-index: 10;
 }
 
 .alert-modal .toast:not(.showing):not(.show) {

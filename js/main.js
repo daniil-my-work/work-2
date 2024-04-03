@@ -305,12 +305,85 @@ function addProductInBasketSecond(evt) {
     }
 }
 
+
+// Селект: способ доставки корзина
+const deliveryType = document.querySelector('#delivery-type');
+const cafeList = document.querySelector('.basket__cafe');
+const addressList = document.querySelector('.basket__delivery');
+const basketDeliveryList = document.querySelector('.basket__delivery-list');
+
+
+function getFullAddress(value) {
+    const url = "http://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address";
+    const token = "dedcff8224572325aafcec43188c29827f93a657"; // Апи ключ
+
+    const options = {
+        method: "POST",
+        mode: "cors",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization": "Token " + token
+        },
+        body: JSON.stringify({
+            query: value,
+            count: 5,
+            language: 'ru',
+        })
+    }
+
+    fetch(url, options)
+        .then(response => response.json())
+        .then(
+            result => {
+                basketDeliveryList.innerHTML = '';
+                const addressResult = result.suggestions;
+
+                addressResult.forEach((el) => {
+                    const item = `<li class="basket__delivery-item">${el.value}</li>`;
+
+                    basketDeliveryList.innerHTML += item;
+                });
+            }
+        )
+        .catch(error => console.log("error", error));
+}
+
+
+const userAddress = document.querySelector('#user_address');
+
+userAddress.addEventListener('input', (evt) => {
+    const value = evt.target.value;
+
+    getFullAddress(value);
+});
+
+
+
+
+function setDeliveryType(evt) {
+    const target = evt.target;
+
+    if (target.value === 'default') {
+        return;
+    }
+
+    if (target.value === 'pickup') {
+        cafeList.classList.remove('hidden');
+    } else {
+        addressList.classList.remove('hidden');
+    }
+}
+
+
 // Прибавляет или убавляет кол-во блюд в заказе на странице Корзина
 const basketList = document.querySelector(".basket__list");
 if (basketList) {
     console.log("Корзина");
 
     basketList.addEventListener("click", addProductInBasketSecond);
+
+    deliveryType.addEventListener('change', setDeliveryType);
 }
 
 
@@ -795,6 +868,7 @@ async function apiUpdateModalCity(params) {
 }
 
 
+// Функция для установки значения города в сессии
 async function getModalInfo(evt) {
     const target = evt.target;
     const toast = target.closest('.toast'); // Тост
@@ -835,13 +909,12 @@ async function getModalInfo(evt) {
             }
         }
     }
-
-
 }
-
 
 // Обертка над Модальным окном
 const modalWrapper = document.querySelector('#alert-modal');
 
 // Добавляем обработчик события клика
-modalWrapper.addEventListener('click', getModalInfo);
+if (modalWrapper) {
+    modalWrapper.addEventListener('click', getModalInfo);
+}

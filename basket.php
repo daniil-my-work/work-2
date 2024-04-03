@@ -18,6 +18,17 @@ if ($categories && mysqli_num_rows($categories) > 0) {
     $categoryList = NULL;
 }
 
+
+// Получает список категорий меню 
+$getCafeAddress = get_query_cafe_address();
+$cafeAddress = mysqli_query($con, $getCafeAddress);
+
+if ($cafeAddress && mysqli_num_rows($cafeAddress) > 0) {
+    $cafeList = get_arrow($cafeAddress);
+} else {
+    $cafeList = NULL;
+}
+
 // Получение данных из сессии
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
 
@@ -180,6 +191,7 @@ $page_body = include_template(
         'products' => $productList,
         'productLength' => $productLength,
         'fullPrice' => $fullPrice,
+        'cafeList' => $cafeList,
     ]
 );
 

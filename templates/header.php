@@ -38,7 +38,7 @@
                 <li class="header__nav-item">
                     <?php $accountLink = './account.php'; ?>
                     
-                    <?php if ($_SESSION && $_SESSION['user_role']) : ?>
+                    <?php if ($_SESSION && isset($_SESSION['user_role'])) : ?>
                         <?php if ($_SESSION['user_role'] == $userRole['owner']) : ?>
                             <?php $accountLink = './owner.php'; ?>
                         <?php elseif ($_SESSION['user_role'] == $userRole['admin']) : ?>

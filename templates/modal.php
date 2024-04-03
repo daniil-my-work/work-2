@@ -9,21 +9,25 @@
                 <?php endif; ?>
 
 
-                <?php if (isset($modalItem['category']) && $modalItem['category'] === 'error') : ?>
+                <?php if (isset($modalItem['category']) && $modalItem['category'] === 'error' || $modalItem['category'] === 'link') : ?>
                     <button type="button" class="btn-close me-0 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                 <?php endif; ?>
             </div>
 
             <div class="toast-body">
                 <div class="mt-0 pt-0">
-                    <?php if (isset($modalItem['error'])) : ?>
-                        <?= $modalItem['error']; ?>
-                    <?php endif; ?>
-
-                    <?php if (isset($modalItem['button'])) : ?>
+                    <?php $categoryName = $modalItem['category']; ?>
+                    <?php if ($categoryName === 'city') : ?>
                         <?php foreach ($modalItem['button'] as $modalButtonItem) : ?>
                             <button type="button" class="<?= $modalButtonItem['class']; ?> me-2"><?= $modalButtonItem['text']; ?></button>
                         <?php endforeach; ?>
+                    <?php elseif ($categoryName === 'error') : ?>
+                        <?= $modalItem['error']; ?>
+                    <?php elseif ($categoryName === 'link') : ?>
+                        <?php $linkInfo = $modalItem['link']; ?>
+                        <a href="<?= $linkInfo['address']; ?>">
+                            <?= $linkInfo['linkTitle']; ?>
+                        </a>
                     <?php endif; ?>
                 </div>
             </div>
