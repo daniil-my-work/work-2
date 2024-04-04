@@ -17,7 +17,7 @@
         <?php if ($productLength != 0) : ?>
             <div class="basket__selects">
                 <!-- Селект: способ доставки -->
-                <select class="form-select" id="delivery-type" aria-label="способ доставки">
+                <select class="form-select" id="delivery-type" name="delivery-type" aria-label="способ доставки">
                     <option value="default" selected>Выберите способ доставки</option>
                     <option value="pickup">Самовывоз</option>
                     <option value="delivery">Доставка</option>
@@ -32,7 +32,7 @@
                         </span>
 
                         <div class="basket__delivery-wrapper w-100">
-                            <input type="text" id="user_address" name="user_address" class="input mb-0" placeholder="Введите адрес" value="" required="" autocomplete="off">
+                            <input type="text" id="user_address" name="user_address" class="input basket__input mb-0" placeholder="Введите адрес" value="" autocomplete="off">
 
                             <!-- Список адресов -->
                             <ul class="basket__delivery-list">
@@ -45,7 +45,7 @@
                             Подъезд:
                         </span>
 
-                        <input type="number" id="entrance" name="entrance" class="input basket__cafe-input mb-0" placeholder="4" value="" required="">
+                        <input type="number" id="entrance" name="entrance" class="input basket__input basket__cafe-input mb-0" placeholder="4" value="">
                     </div>
 
                     <div class="basket__cafe basket__cafe--second">
@@ -53,7 +53,7 @@
                             Номер квартиры:
                         </span>
 
-                        <input type="number" id="apartment" name="apartment" class="input basket__cafe-input mb-0" placeholder="100" value="" required="">
+                        <input type="number" id="apartment" name="apartment" class="input basket__input basket__cafe-input mb-0" placeholder="100" value="">
                     </div>
 
                     <div class="basket__cafe basket__cafe--second mb-3">
@@ -61,7 +61,7 @@
                             Этаж:
                         </span>
 
-                        <input type="number" id="floor" name="floor" class="input basket__cafe-input mb-0" placeholder="6" value="" required="">
+                        <input type="number" id="floor" name="floor" class="input basket__input basket__cafe-input mb-0" placeholder="6" value="">
                     </div>
 
                     <div class="form-floating">
@@ -72,11 +72,11 @@
 
 
                 <!-- Самовывоз -->
-                <div class=" hidden" id="basket-cafe-list">
+                <div class="basket__pickup hidden" id="basket-cafe-list">
                     <div class="basket__cafe mb-3">
                         Адресс:
 
-                        <select class="form-select basket__cafe-select" aria-label="ресторан получения">
+                        <select class="form-select basket__cafe-select" name="user_address" aria-label="ресторан получения">
                             <option value="default" selected>Выберите ресторан получения</option>
 
                             <?php foreach ($cafeList as $cafe) : ?>

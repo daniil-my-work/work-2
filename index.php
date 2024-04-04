@@ -93,6 +93,8 @@ $modalList = [
     ],
 ];
 
+$modalList = null;
+
 
 $page_modal = include_template(
     'modal.php',

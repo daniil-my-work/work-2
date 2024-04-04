@@ -94,8 +94,8 @@ function get_query_selected_category($activeCategory)
  */
 function get_query_create_order()
 {
-    return "INSERT INTO orders (order_date, customer_id, total_amount, order_id) 
-    VALUES (NOW(), ?, ?, ?)";
+    return "INSERT INTO orders (order_date, customer_id, total_amount, order_id, order_address) 
+    VALUES (NOW(), ?, ?, ?, ?)";
 }
 
 /**

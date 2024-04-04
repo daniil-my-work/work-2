@@ -90,6 +90,18 @@ if (count($productList) > 0) {
 }
 
 
+$page_body = include_template(
+    'basket.php',
+    [
+        'productsData' => $productsData,
+        'products' => $productList,
+        'productLength' => $productLength,
+        'fullPrice' => $fullPrice,
+        'cafeList' => $cafeList,
+    ]
+);
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Генерируем уникальный идентификатор
     do {
@@ -107,63 +119,144 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $userId = get_arrow($result)['id'];
     }
 
-
     // Формирует объект заказа
     $order['customer_id'] = $userId;
     $order['total_amount'] = $fullPrice;
     $order['order_id'] = $order_id;
 
-    // Добавляет уникальный айди последнего выполненного заказа в сесиию
-    $_SESSION['last_order_id'] = $order_id;
 
+    // Адресс заказа
+    if ($_POST['delivery-type'] === 'delivery') {
+        // Обязательные поля для заполненения 
+        $required = ['user_address', 'entrance', 'apartment', 'floor'];
 
-    // Добавляет запись в базу с заказами 
-    $createNewOrder = get_query_create_order();
-    $stmt = db_get_prepare_stmt($con, $createNewOrder, $order);
-    $res = mysqli_stmt_execute($stmt);
+        // Получает данные из формы
+        $address = filter_input_array(INPUT_POST, ['delivery-type' => FILTER_DEFAULT, 'user_address' => FILTER_DEFAULT, 'entrance' => FILTER_DEFAULT, 'apartment' => FILTER_DEFAULT, 'floor' => FILTER_DEFAULT], true);
+    } else {
+        // Обязательные поля для заполненения 
+        $required = ['user_address'];
 
-    // Получает ID последнего вставленного заказа
-    $order_num = mysqli_insert_id($con);
-
-
-    // SQL код для добавление записи в базу с состовляющими заказа 
-    $createNewOrderItem = get_query_create_order_item();
-
-    // Записывает в базу товары лежащие в корзине
-    foreach ($productList as $product) {
-        $productItem = $product['item']; // Получаем ID продукта
-
-        // Формирует объект для отправки
-        $data = array(
-            "product_id" => $productItem['id'],
-            "quantity" => $product['quantity'],
-            "unit_price" => $productItem['price'],
-            "tableName" => $product['table'],
-            "order_id" => $order_id,
-        );
-
-        $stmt = db_get_prepare_stmt($con, $createNewOrderItem, $data);
-        $res = mysqli_stmt_execute($stmt);
+        // Получает данные из формы
+        $address = filter_input_array(INPUT_POST, ['delivery-type' => FILTER_DEFAULT, 'user_address' => FILTER_DEFAULT], true);
     }
 
-    if ($res) {
-        echo "Запись успешно добавлена в базу данных.";
 
-        // Удаляет данные из сессии и перенапрвляет на страницу аккаунт
-        unset($_SESSION['order']);
+    // Ошибки
+    $errors = [];
 
-        $sql = "SELECT orders.order_id FROM orders WHERE orders.id = '$order_num'";
-        $res = mysqli_query($con, $sql);
-        $order_id = get_arrow($res)['order_id'];
+    // Валидация полей
+    $rules = [
+        'is_number' => function ($value) {
+            return is_numeric($value) ? '' : 'Укажите число';
+        },
+        'is_text' => function ($value) {
+            return is_string($value) ? '' : 'Укажите число';
+        },
+        'delivery-type' => function ($value) {
+            return is_string($value) && $value === 'pickup' || $value === 'delivery' ? '' : 'Неверный тип доставки';
+        },
+    ];
 
-        if (!$res) {
-            return;
+    // Заполняет массив с ошибками
+    foreach ($address as $key => $value) {
+        // Проверка на незаполненное поле
+        if (in_array($key, $required) && empty($value)) {
+            $field = $fieldDescriptions[$key] ?? '';
+
+            $errors[$key] = 'Поле ' . $field . ' должно быть заполнено.';
         }
 
-        header("Location: ./order.php?orderId=$order_id&prevLink=basket");
+        if ($key == 'user_address') {
+            $rule = $rules['is_text'];
+            $errors['user_address'] = $rule($value);
+            continue;
+        }
+
+        if ($key == 'entrance' || $key == 'apartment' || $key == 'floor') {
+            $rule = $rules['is_number'];
+            $errors[$key] = $rule($value);
+            continue;
+        }
+    }
+
+    $errors = array_filter($errors);
+    print_r($address);
+
+
+    if (!empty($errors)) {
+        $page_body = include_template(
+            'basket.php',
+            [
+                'productsData' => $productsData,
+                'products' => $productList,
+                'productLength' => $productLength,
+                'fullPrice' => $fullPrice,
+                'cafeList' => $cafeList,
+                'address' => $address,
+                'errors' => $errors,
+            ]
+        );
     } else {
-        echo "Ошибка при выполнении запроса: " . mysqli_error($con);
-        echo "Номер ошибки: " . mysqli_errno($con);
+        // Адресс заказа
+        if ($address['delivery-type'] === 'delivery') {
+            $order['order_address'] = $address['user_address'] . ", кв. " . $address['apartment'] . ", подъезд " . $address['entrance'] . ", этаж " . $address['floor'];
+        } else {
+            $sql = "SELECT address_name FROM cafe_address WHERE cafe_address.id = '{$address['user_address']}'";
+            $result = mysqli_query($con, $sql);
+            $address_name = get_arrow($result)['address_name'];
+
+            $order['order_address'] = $address_name;
+        }
+
+
+        // Добавляет запись в базу с заказами 
+        $createNewOrder = get_query_create_order();
+        $stmt = db_get_prepare_stmt($con, $createNewOrder, $order);
+        $res = mysqli_stmt_execute($stmt);
+
+        // Получает ID последнего вставленного заказа
+        $order_num = mysqli_insert_id($con);
+
+
+        // SQL код для добавление записи в базу с состовляющими заказа 
+        $createNewOrderItem = get_query_create_order_item();
+
+        // Записывает в базу товары лежащие в корзине
+        foreach ($productList as $product) {
+            $productItem = $product['item']; // Получаем ID продукта
+
+            // Формирует объект для отправки
+            $data = array(
+                "product_id" => $productItem['id'],
+                "quantity" => $product['quantity'],
+                "unit_price" => $productItem['price'],
+                "tableName" => $product['table'],
+                "order_id" => $order_id,
+            );
+
+            $stmt = db_get_prepare_stmt($con, $createNewOrderItem, $data);
+            $res = mysqli_stmt_execute($stmt);
+        }
+
+        if ($res) {
+            echo "Запись успешно добавлена в базу данных.";
+
+            // Удаляет данные из сессии и перенапрвляет на страницу аккаунт
+            unset($_SESSION['order']);
+
+            $sql = "SELECT orders.order_id FROM orders WHERE orders.id = '$order_num'";
+            $res = mysqli_query($con, $sql);
+            $order_id = get_arrow($res)['order_id'];
+
+            if (!$res) {
+                return;
+            }
+
+            header("Location: ./order.php?orderId=$order_id&prevLink=basket");
+        } else {
+            echo "Ошибка при выполнении запроса: " . mysqli_error($con);
+            echo "Номер ошибки: " . mysqli_errno($con);
+        }
     }
 }
 
@@ -181,17 +274,6 @@ $page_header = include_template(
     [
         'isAuth' => $isAuth,
         'userRole' => $userRole,
-    ]
-);
-
-$page_body = include_template(
-    'basket.php',
-    [
-        'productsData' => $productsData,
-        'products' => $productList,
-        'productLength' => $productLength,
-        'fullPrice' => $fullPrice,
-        'cafeList' => $cafeList,
     ]
 );
 

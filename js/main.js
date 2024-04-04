@@ -423,7 +423,7 @@ if (basketList) {
 }
 
 
-localStorage.clear();
+// localStorage.clear();
 
 const basketSum = document.querySelector('.basket__order-number');
 const basketSumInput = document.querySelector('#total-price');
@@ -436,6 +436,7 @@ const sumOfPoke = {
     'sauce': 0,
     'crunch': 0,
 };
+
 
 // Преобразуем объект в строку JSON и сохраняем в localStorage
 localStorage.setItem('constructorPokeSum', JSON.stringify(sumOfPoke));

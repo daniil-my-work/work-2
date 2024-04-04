@@ -50,9 +50,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
 
-    print_r($user);
-    var_dump($user['user_phone']);
-    print_r($errors);
+    // print_r($user);
+    // var_dump($user['user_phone']);
+    // print_r($errors);
     
 
     $errors = array_filter($errors);
@@ -91,8 +91,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Хеширует пароль
         $user['user_password'] = password_hash($user['user_password'], PASSWORD_BCRYPT);
-
-        // var_dump($user);
 
         $stmt = db_get_prepare_stmt($con, $sql, $user);
         $res = mysqli_stmt_execute($stmt);
