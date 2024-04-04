@@ -308,14 +308,15 @@ function addProductInBasketSecond(evt) {
 
 // Селект: способ доставки корзина
 const deliveryType = document.querySelector('#delivery-type');
-const cafeList = document.querySelector('.basket__cafe');
-const addressList = document.querySelector('.basket__delivery');
+const basketCafe = document.querySelector('#basket-cafe-list');
+const addressList = document.querySelector('#basket-delivery-list');
 const basketDeliveryList = document.querySelector('.basket__delivery-list');
 
 
 function getFullAddress(value) {
     const url = "http://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address";
     const token = "dedcff8224572325aafcec43188c29827f93a657"; // Апи ключ
+    const targetValue = "г Ярославль " + value;
 
     const options = {
         method: "POST",
@@ -326,7 +327,7 @@ function getFullAddress(value) {
             "Authorization": "Token " + token
         },
         body: JSON.stringify({
-            query: value,
+            query: targetValue,
             count: 5,
             language: 'ru',
         })
@@ -347,6 +348,15 @@ function getFullAddress(value) {
             }
         )
         .catch(error => console.log("error", error));
+
+
+    // Подставляет полученное значение из списка адресов в инпут
+    basketDeliveryList.addEventListener('click', (evt) => {
+        const target = evt.target.textContent;
+
+        userAddress.value = target;
+        basketDeliveryList.remove();
+    });
 }
 
 
@@ -355,10 +365,31 @@ const userAddress = document.querySelector('#user_address');
 userAddress.addEventListener('input', (evt) => {
     const value = evt.target.value;
 
+    // Запрос для получения полного адреса
     getFullAddress(value);
 });
 
 
+
+
+
+// ====== TODO: Сделать сохранение в localStorage ======
+const deliveryMethod = localStorage.getItem('deliveryMethod');
+
+// Проверяем, сохранено ли значение deliveryMethod
+if (deliveryMethod !== null) {
+    // Применяем сохраненное значение к элементу <select>
+    deliveryType.value = deliveryMethod;
+
+    // В зависимости от значения deliveryMethod скрываем или показываем элементы
+    if (deliveryMethod === 'delivery') {
+        addressList.classList.remove('hidden');
+        basketCafe.classList.add('hidden');
+    } else {
+        basketCafe.classList.remove('hidden');
+        addressList.classList.add('hidden');
+    }
+}
 
 
 function setDeliveryType(evt) {
@@ -368,10 +399,15 @@ function setDeliveryType(evt) {
         return;
     }
 
-    if (target.value === 'pickup') {
-        cafeList.classList.remove('hidden');
-    } else {
+    // Сохраняем выбранный способ доставки в localStorage
+    localStorage.setItem('deliveryMethod', target.value);
+
+    if (target.value === 'delivery') {
         addressList.classList.remove('hidden');
+        basketCafe.classList.add('hidden');
+    } else {
+        basketCafe.classList.remove('hidden');
+        addressList.classList.add('hidden');
     }
 }
 
@@ -411,7 +447,7 @@ function updatePokeSum(pokeObj) {
 
 function updatePokeBasketSum() {
     const storedSumOfPoke = JSON.parse(localStorage.getItem('constructorPokeSum'));
-    console.log(storedSumOfPoke); // Выведет сохраненный объект
+    // console.log(storedSumOfPoke); // Выведет сохраненный объект
 
     let result = 0;
     for (const key in storedSumOfPoke) {

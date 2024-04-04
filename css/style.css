@@ -890,8 +890,26 @@ textarea {
     font-size: 16px;
 }
 
+.basket__cafe--second {
+    display: grid;
+    grid-template-columns: 1fr 100px;
+    margin-top: 10px;
+}
+
 .basket__cafe-select {
     margin-left: 10px;
+}
+
+.basket__cafe-input {
+    text-align: center;
+}
+
+.basket__cafe-input::placeholder {
+    text-align: center;
+}
+
+.basket__cafe-textArea {
+    min-height: 120px !important;
 }
 
 .basket__list {
@@ -1449,7 +1467,8 @@ textarea {
 /* Модальное окно */
 .alert-modal {
     position: fixed;
-    bottom: 80px;
+    /* bottom: 80px; */
+    top: 2px;
     right: 2px;
     z-index: 10;
 }

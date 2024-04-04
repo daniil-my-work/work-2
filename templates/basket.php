@@ -23,16 +23,16 @@
                     <option value="delivery">Доставка</option>
                 </select>
 
+
                 <!-- Доставка -->
-                <!-- hidden -->
-                <div class="basket__delivery ">
+                <div class="basket__delivery hidden" id="basket-delivery-list">
                     <div class="basket__cafe">
                         <span class="basket__delivery-name">
                             Адресс:
                         </span>
 
                         <div class="basket__delivery-wrapper w-100">
-                            <input type="text" id="user_address" name="user_address" class="input mb-0" placeholder="Введите адрес" value="" required="">
+                            <input type="text" id="user_address" name="user_address" class="input mb-0" placeholder="Введите адрес" value="" required="" autocomplete="off">
 
                             <!-- Список адресов -->
                             <ul class="basket__delivery-list">
@@ -40,49 +40,57 @@
                         </div>
                     </div>
 
-                    <div class="basket__cafe">
+                    <div class="basket__cafe basket__cafe--second">
                         <span class="basket__delivery-name">
                             Подъезд:
                         </span>
 
-                        <input type="text" id="user_address" name="user_address" class="input mb-0" placeholder="Введите адрес" value="" required="">
+                        <input type="number" id="entrance" name="entrance" class="input basket__cafe-input mb-0" placeholder="4" value="" required="">
                     </div>
 
-                    <div class="basket__cafe">
+                    <div class="basket__cafe basket__cafe--second">
                         <span class="basket__delivery-name">
                             Номер квартиры:
                         </span>
 
-                        <input type="text" id="user_address" name="user_address" class="input mb-0" placeholder="Введите адрес" value="" required="">
+                        <input type="number" id="apartment" name="apartment" class="input basket__cafe-input mb-0" placeholder="100" value="" required="">
                     </div>
 
-                    <div class="basket__cafe mb-3">
+                    <div class="basket__cafe basket__cafe--second mb-3">
                         <span class="basket__delivery-name">
                             Этаж:
                         </span>
 
-                        <input type="text" id="user_address" name="user_address" class="input mb-0" placeholder="Введите адрес" value="" required="">
+                        <input type="number" id="floor" name="floor" class="input basket__cafe-input mb-0" placeholder="6" value="" required="">
                     </div>
 
                     <div class="form-floating">
-                        <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
-                        <label for="floatingTextarea2">Комметарий</label>
+                        <textarea class="form-control basket__cafe-textArea" placeholder="Комметарий" id="basket__cafe-textArea"></textarea>
+                        <label for="basket__cafe-textArea">Комметарий</label>
                     </div>
                 </div>
 
+
                 <!-- Самовывоз -->
-                <div class="basket__cafe hidden">
-                    Адресс:
+                <div class=" hidden" id="basket-cafe-list">
+                    <div class="basket__cafe mb-3">
+                        Адресс:
 
-                    <select class="form-select basket__cafe-select" aria-label="ресторан получения">
-                        <option value="default" selected>Выберите ресторан получения</option>
+                        <select class="form-select basket__cafe-select" aria-label="ресторан получения">
+                            <option value="default" selected>Выберите ресторан получения</option>
 
-                        <?php foreach ($cafeList as $cafe) : ?>
-                            <option value="<?= $cafe['id']; ?>">
-                                <?= $cafe['address_name']; ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+                            <?php foreach ($cafeList as $cafe) : ?>
+                                <option value="<?= $cafe['id']; ?>">
+                                    <?= $cafe['address_name']; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <div class="form-floating">
+                        <textarea class="form-control basket__cafe-textArea" placeholder="Комметарий" id="basket__cafe-textArea"></textarea>
+                        <label for="basket__cafe-textArea">Комметарий</label>
+                    </div>
                 </div>
             </div>
 
