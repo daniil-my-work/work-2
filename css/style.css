@@ -1294,7 +1294,7 @@ textarea {
     margin-bottom: 20px;
 }
 
-.constructor-poke-list--second .constructor-poke-item-checkbox + label {
+.constructor-poke-list--second .constructor-poke-item-checkbox+label {
     min-height: 40px;
     margin: 0;
 }
@@ -1489,10 +1489,65 @@ textarea {
 
 
 
-.page__load {
-
-}
+.page__load {}
 
 .load {
-    padding: 15px;
+    /* background-color: #F6F6F6; */
+    padding: 60px 15px;
+    padding-top: 40px;
+}
+
+.load__title {
+    text-align: center;
+}
+
+.load__current-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #999;
+    border-radius: 5px;
+    margin-bottom: 40px;
+}
+
+.load__current-text {
+    margin: 0;
+}
+
+.load__current-button {
+    padding: 8px 20px;
+}
+
+
+
+.load__update-content {
+    position: relative;
+    width: 100%;
+    border: 1px solid #999;
+    border-radius: 5px;
+}
+
+.load__update-input {
+    position: relative;
+    opacity: 0;
+    width: 100%;
+    min-height: 100px;
+    margin: 0;
+    padding: 0;
+    z-index: 2;
+}
+
+.load__update-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    text-align: center;
+    color: #333;
+}
+
+.load__update-button {
+    margin-top: 20px;
 }

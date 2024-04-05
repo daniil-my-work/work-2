@@ -30,6 +30,88 @@ if ($categories && mysqli_num_rows($categories) > 0) {
 
 $page_modal = null;
 
+$page_body = include_template('load-menu.php');
+
+
+// Названия столбцов
+$columnName = [
+    'title' => 'Название',
+    'img' => 'Фото (ссылка)',
+    'description' => 'Описание',
+    'price' => 'Цена',
+    'cooking_time' => 'Время приготовления',
+    'category_id' => 'Айди категории (поке – 1, роллы – 2, супы – 3, горячее – 4, вок – 5, закуски – 6, сэндвичи – 7, десерты – 8, напитки – 9, соус – 10, авторский поке – 11)'
+];
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $errors = [];
+
+    // Проверка, что файл был загружен
+    if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
+        // Получаем расширение файла
+        $fileExtension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+
+        // Проверяем, что расширение файла соответствует ожидаемому формату (csv)
+        if ($fileExtension === 'csv') {
+            // Путь для сохранения файла
+            $uploadDir = './uploads/';
+            // Имя файла
+            $fileName = basename($_FILES['file']['name']);
+            // Полный путь к файлу на сервере
+            $uploadFile = $uploadDir . $fileName;
+
+            // Перемещаем загруженный файл в указанную директорию
+            if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
+                // Файл успешно загружен, обрабатываем его содержимое
+                $csvData = array_map('str_getcsv', file($uploadFile));
+
+                // Пример обработки данных
+                foreach ($csvData as $row) {
+                    // Обработка
+
+
+
+                }
+
+                // Удалить файл после обработки, если это необходимо
+                unlink($uploadFile);
+
+                // Вывести сообщение об успешной загрузке и обработке файла
+                echo 'Файл успешно загружен и обработан.';
+            } else {
+                $errors['file'] = 'Ошибка при загрузке файла.';
+
+                $page_body = include_template(
+                    'load-menu.php',
+                    [
+                        'errors' => $errors,
+                    ]
+                );
+            }
+        } else {
+            $errors['file'] = 'Загружен файл другого формата. Загрузить в формате CSV.';
+
+            $page_body = include_template(
+                'load-menu.php',
+                [
+                    'errors' => $errors,
+                ]
+            );
+        }
+    } else {
+        $errors['file'] = 'Файл не был загружен.';
+
+        $page_body = include_template(
+            'load-menu.php',
+            [
+                'errors' => $errors,
+            ]
+        );
+    }
+
+    print_r($errors);
+}
 
 
 
@@ -48,14 +130,6 @@ $page_header = include_template(
     [
         'isAuth' => $isAuth,
         'userRole' => $userRole,
-    ]
-);
-
-$page_body = include_template(
-    'load-menu.php',
-    [
-        // 'productsData' => $productsDataMenu,
-        // 'products' => $productList,
     ]
 );
 

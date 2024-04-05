@@ -4,33 +4,73 @@
     <!-- Загрузка меню -->
     <div class="load">
         <h2 class="title load__title">
-            Загрузить меню
+            Редактировать меню
         </h2>
-
-        <p class="text about__text">
-            Вы можете редактировать меню. Нажмите кнопку скачать, чтобы получить текущее значение меню в виде таблицы. Чтобы обновить меню прикрепите новый файл 
-        </p>
 
         <!-- Текущее значение меню -->
         <div class="load__current">
-            <p class="text load__current-text">
-                Меню
+            <p class="text about__text mb-3">
+                Вы имеете возможность редактировать меню. Для получения текущих значений меню в виде таблицы, нажмите кнопку "Скачать".
             </p>
 
-            <button class="load__current-button">
-                Скачать
-            </button>
+            <div class="load__current-content">
+                <p class="text load__current-text">
+                    Таблица меню
+                </p>
+
+                <button class="button--basic button--second load__current-button">
+                    Скачать
+                </button>
+            </div>
         </div>
+
+
 
         <!-- Обновленное значение меню -->
         <div class="load__update">
-            <input class="input load__update-input" type="file" name="file" id="file">
+            <div class="account__orders-group load__update-tab">
+                <a class="button--basic account__orders-group-link " href="./load-menu.php?tab=menu">
+                    Меню
+                </a>
 
-            <p class="text load__update-text">
-                вставить файл
-                <br>
-                +
-            </p>
+                <a class="button--basic account__orders-group-link account__orders-group-link--active" href="./load-menu.php?tab=poke">
+                    Поке
+                </a>
+            </div>
+
+
+            <div class="load__update-description">
+                <p class="text about__text mb-2 hidden" id="load-description-menu">
+                    Чтобы обновить меню, прикрепите файл в формате csv, полученный в виде шаблона.
+                </p>
+
+                <p class="text about__text mb-2" id="load-description-poke">
+                    Чтобы обновить конструктор поке, прикрепите файл в формате csv, полученный в виде шаблона.
+                </p>
+            </div>
+
+            <!-- Инпут -->
+            <form action="./load-menu.php" class="load__form" enctype="multipart/form-data" method="post">
+                <div class="load__update-content">
+                    <input class="input load__update-input" type="file" name="file" id="file" required>
+
+                    <p class="text load__update-text">
+                        вставить файл
+                        <br>
+                        +
+                    </p>
+                </div>
+
+                <?php $classHidden = isset($errors['file']) ? '' : 'hidden'; ?>
+                <span class="reg__form-input-wrapper-error <?= $classHidden; ?>">
+                    <?= $errors['file']; ?>
+                </span>
+
+                <!-- hidden -->
+                <button class="button--basic button--second load__update-button" type="submit">
+                    Загрузить
+                </button>
+            </form>
         </div>
     </div>
 </div>
