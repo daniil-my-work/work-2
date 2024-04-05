@@ -28,9 +28,16 @@ if ($categories && mysqli_num_rows($categories) > 0) {
 }
 
 
+// Определяет вкладку
+$tabGroup = isset($_GET['tab']) ? $_GET['tab'] : 'menu';
+
+
+
 $page_modal = null;
 
-$page_body = include_template('load-menu.php');
+$page_body = include_template('load-menu.php', [
+    'tabGroup' => $tabGroup,
+]);
 
 
 // Названия столбцов
@@ -81,39 +88,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 echo 'Файл успешно загружен и обработан.';
             } else {
                 $errors['file'] = 'Ошибка при загрузке файла.';
-
-                $page_body = include_template(
-                    'load-menu.php',
-                    [
-                        'errors' => $errors,
-                    ]
-                );
             }
         } else {
             $errors['file'] = 'Загружен файл другого формата. Загрузить в формате CSV.';
-
-            $page_body = include_template(
-                'load-menu.php',
-                [
-                    'errors' => $errors,
-                ]
-            );
         }
     } else {
         $errors['file'] = 'Файл не был загружен.';
-
-        $page_body = include_template(
-            'load-menu.php',
-            [
-                'errors' => $errors,
-            ]
-        );
     }
+    
 
-    print_r($errors);
+    $page_body = include_template(
+        'load-menu.php',
+        [
+            'errors' => $errors,
+        ]
+    );
 }
 
 
+// print_r($errors);
 
 
 

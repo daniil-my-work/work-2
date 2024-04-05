@@ -29,24 +29,28 @@
         <!-- Обновленное значение меню -->
         <div class="load__update">
             <div class="account__orders-group load__update-tab">
-                <a class="button--basic account__orders-group-link " href="./load-menu.php?tab=menu">
+                <?php $activeLinkMenu = isset($tabGroup) && $tabGroup === 'menu' ? 'account__orders-group-link--active' : ''; ?>
+                <a class="button--basic account__orders-group-link <?= $activeLinkMenu; ?>" href="./load-menu.php?tab=menu">
                     Меню
                 </a>
 
-                <a class="button--basic account__orders-group-link account__orders-group-link--active" href="./load-menu.php?tab=poke">
+                <?php $activeLinkPoke = isset($tabGroup) && $tabGroup === 'poke' ? 'account__orders-group-link--active' : ''; ?>
+                <a class="button--basic account__orders-group-link <?= $activeLinkPoke; ?>" href="./load-menu.php?tab=poke">
                     Поке
                 </a>
             </div>
 
 
             <div class="load__update-description">
-                <p class="text about__text mb-2 hidden" id="load-description-menu">
-                    Чтобы обновить меню, прикрепите файл в формате csv, полученный в виде шаблона.
-                </p>
-
-                <p class="text about__text mb-2" id="load-description-poke">
-                    Чтобы обновить конструктор поке, прикрепите файл в формате csv, полученный в виде шаблона.
-                </p>
+                <?php if (isset($tabGroup) && $tabGroup === 'menu') : ?>
+                    <p class="text about__text mb-2" id="load-description-menu">
+                        Чтобы обновить меню, прикрепите файл в формате csv, полученный в виде шаблона.
+                    </p>
+                <?php else : ?>
+                    <p class="text about__text mb-2" id="load-description-poke">
+                        Чтобы обновить конструктор поке, прикрепите файл в формате csv, полученный в виде шаблона.
+                    </p>
+                <?php endif; ?>
             </div>
 
             <!-- Инпут -->
