@@ -3,9 +3,29 @@
 
     <!-- Загрузка меню -->
     <div class="load">
+        <?php if (isset($tabGroup)) : ?>
+            <?php $activeGroup = $tabGroup === 'menu' ? 'меню' : 'поке'; ?>
+            <?php $activeTab = $tabGroup; ?>
+        <?php else : ?>
+            <?php $activeGroup = 'меню'; ?>
+        <?php endif; ?>
+
         <h2 class="title load__title">
-            Редактировать меню
+            Редактировать <?= $activeGroup; ?>
         </h2>
+
+        <div class="account__orders-group load__update-tab">
+            <?php $activeLinkMenu = isset($tabGroup) && $tabGroup === 'menu' ? 'account__orders-group-link--active' : ''; ?>
+            <a class="button--basic account__orders-group-link <?= $activeLinkMenu; ?>" href="./load-menu.php?tab=menu">
+                Меню
+            </a>
+
+            <?php $activeLinkPoke = isset($tabGroup) && $tabGroup === 'poke' ? 'account__orders-group-link--active' : ''; ?>
+            <a class="button--basic account__orders-group-link <?= $activeLinkPoke; ?>" href="./load-menu.php?tab=poke">
+                Поке
+            </a>
+        </div>
+
 
         <!-- Текущее значение меню -->
         <div class="load__current">
@@ -25,22 +45,8 @@
         </div>
 
 
-
         <!-- Обновленное значение меню -->
         <div class="load__update">
-            <div class="account__orders-group load__update-tab">
-                <?php $activeLinkMenu = isset($tabGroup) && $tabGroup === 'menu' ? 'account__orders-group-link--active' : ''; ?>
-                <a class="button--basic account__orders-group-link <?= $activeLinkMenu; ?>" href="./load-menu.php?tab=menu">
-                    Меню
-                </a>
-
-                <?php $activeLinkPoke = isset($tabGroup) && $tabGroup === 'poke' ? 'account__orders-group-link--active' : ''; ?>
-                <a class="button--basic account__orders-group-link <?= $activeLinkPoke; ?>" href="./load-menu.php?tab=poke">
-                    Поке
-                </a>
-            </div>
-
-
             <div class="load__update-description">
                 <?php if (isset($tabGroup) && $tabGroup === 'menu') : ?>
                     <p class="text about__text mb-2" id="load-description-menu">
@@ -54,7 +60,7 @@
             </div>
 
             <!-- Инпут -->
-            <form action="./load-menu.php" class="load__form" enctype="multipart/form-data" method="post">
+            <form action="./load-menu.php?tab=<?= $tabGroup; ?>" class="load__form" enctype="multipart/form-data" method="post">
                 <div class="load__update-content">
                     <input class="input load__update-input" type="file" name="file" id="file" required>
 

@@ -32,7 +32,6 @@ if ($categories && mysqli_num_rows($categories) > 0) {
 $tabGroup = isset($_GET['tab']) ? $_GET['tab'] : 'menu';
 
 
-
 $page_modal = null;
 
 $page_body = include_template('load-menu.php', [
@@ -47,7 +46,7 @@ $columnNameMenu = [
     'description' => 'Описание',
     'price' => 'Цена',
     'cooking_time' => 'Время приготовления',
-    'category_id' => '"Айди категории: (поке – 1; роллы – 2; супы – 3; горячее – 4; вок – 5; закуски – 6; сэндвичи – 7; десерты – 8; напитки – 9; соус – 10; авторский поке – 11)"'
+    'category_id' => 'Айди категории: (поке – 1; роллы – 2; супы – 3; горячее – 4; вок – 5; закуски – 6; сэндвичи – 7; десерты – 8; напитки – 9; соус – 10; авторский поке – 11)'
 ];
 
 // Названия столбцов Поке
@@ -69,10 +68,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Получаем расширение файла
         $fileExtension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
 
+        // Получаем временное имя файла
+        $tempFilePath = $_FILES['file']['tmp_name'];
+
         // Проверяем, что расширение файла соответствует ожидаемому формату (csv)
         if ($fileExtension === 'csv') {
             // Путь для сохранения файла
             $uploadDir = './uploads/';
+
             // Имя файла
             $fileName = basename($_FILES['file']['name']);
 
@@ -82,46 +85,74 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Перемещаем загруженный файл в указанную директорию
             if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
-                // Файл успешно загружен, обрабатываем его содержимое
-                $csvData = array_map('str_getcsv', file($uploadFile));
+                // Открываем файл CSV для чтения
+                $file = fopen($uploadFile, 'r');
 
+                // Получаем первую строку (заголовки столбцов)
+                $headers = fgetcsv($file)[0];
+                $headers = trim($headers, "\xEF\xBB\xBF");
+
+                // Преобразуем строку в массив, используя разделитель ";"
+                $headersArray = str_getcsv($headers, ';');
+
+                // Конвертируем массив заголовков в обычную строку
+                $headersString = implode(',', $headersArray);
+
+
+                // Получаем из массива строку с наименованием колонок
                 if ($tabGroup === 'menu') {
-                    // Проверяем, что первая строка CSV содержит ожидаемые названия столбцов
-                    $expectedColumns = array_values($columnNameMenu);
-
-                    print_r($expectedColumns);
-
-                    if ($expectedColumns != $firstColumns) {
-                        $errors['file'] = 'Названия столбцов в файле не соответствуют ожидаемым.';
-                    } else {
-                        // Пример обработки данных
-                        foreach ($csvData as $row) {
-                            // Обработка
-
-
-                        }
-
-                        // Вывести сообщение об успешной загрузке и обработке файла
-                        echo 'Файл успешно загружен и обработан.';
-                    }
+                    // Конвертируем массив заголовков в обычную строку
+                    $columnNames = implode(',', array_values($columnNameMenu));
                 } else {
-                    // Проверяем, что первая строка CSV содержит ожидаемые названия столбцов
-                    $expectedColumns = array_keys($columnNamePoke);
-
-                    if ($expectedColumns != $csvColumns) {
-                        $errors['file'] = 'Названия столбцов в файле не соответствуют ожидаемым.';
-                    } else {
-                        // Пример обработки данных
-                        foreach ($csvData as $row) {
-                            // Обработка
-
-
-                        }
-
-                        // Вывести сообщение об успешной загрузке и обработке файла
-                        echo 'Файл успешно загружен и обработан.';
-                    }
+                    // Конвертируем массив заголовков в обычную строку
+                    $columnNames = implode(',', array_values($columnNamePoke));
                 }
+
+                if ($columnNames != $headersString) {
+                    $errors['file'] = 'Названия столбцов в файле не соответствуют ожидаемым. Скачайте';
+                } else {
+                    if ($tabGroup === 'menu') {
+                        $sqlClear = "DELETE FROM menu";
+                    } else {
+                        $sqlClear = "DELETE FROM components";
+                    }
+
+                    // Очищает таблицу
+                    mysqli_query($con, $sqlClear);
+
+
+                    // Считываем и обрабатываем каждую строку CSV-файла
+                    while (($row = fgetcsv($file, 0, ";")) !== false) {
+                        if (count($row) == 6) {
+                            // Экранируем и обрабатываем каждое значение для предотвращения SQL инъекций
+                            $title = mysqli_real_escape_string($con, $row[0]);
+                            $img = mysqli_real_escape_string($con, $row[1]);
+                            $description = mysqli_real_escape_string($con, $row[2]);
+                            $price = mysqli_real_escape_string($con, $row[3]);
+                            $cooking_time = mysqli_real_escape_string($con, $row[4]);
+                            $category_id = mysqli_real_escape_string($con, $row[5]);
+
+                            // Формируем SQL запрос с явным указанием столбцов
+                            $sql = "INSERT INTO menu (`title`, `img`, `description`, `price`, `cooking_time`, `category_id`) 
+                                    VALUES ('$title', '$img', '$description', '$price', '$cooking_time', '$category_id')";
+
+                            // Выполняем запрос
+                            mysqli_query($con, $sql);
+                        } else {
+                            // Обработка случая, если количество элементов в строке не соответствует количеству столбцов
+                            echo "Ошибка: количество элементов в строке не соответствует количеству столбцов в таблице.";
+                        }
+                    }
+
+                    // Вывести сообщение об успешной загрузке и обработке файла
+                    // echo 'Файл успешно загружен и обработан.';
+                }
+
+                // Закрываем файл CSV
+                fclose($file);
+
+                // Удаляет загруженный файл
+                unlink($uploadFile);
             } else {
                 $errors['file'] = 'Ошибка при загрузке файла.';
             }
@@ -137,12 +168,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'load-menu.php',
         [
             'errors' => $errors,
+            'tabGroup' => $tabGroup,
         ]
     );
 }
-
-
-// print_r($errors);
 
 
 
