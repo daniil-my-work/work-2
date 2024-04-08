@@ -40,15 +40,25 @@ $page_body = include_template('load-menu.php', [
 ]);
 
 
-// Названия столбцов
-$columnName = [
+// Названия столбцов Меню
+$columnNameMenu = [
     'title' => 'Название',
     'img' => 'Фото (ссылка)',
     'description' => 'Описание',
     'price' => 'Цена',
     'cooking_time' => 'Время приготовления',
-    'category_id' => 'Айди категории (поке – 1, роллы – 2, супы – 3, горячее – 4, вок – 5, закуски – 6, сэндвичи – 7, десерты – 8, напитки – 9, соус – 10, авторский поке – 11)'
+    'category_id' => '"Айди категории: (поке – 1; роллы – 2; супы – 3; горячее – 4; вок – 5; закуски – 6; сэндвичи – 7; десерты – 8; напитки – 9; соус – 10; авторский поке – 11)"'
 ];
+
+// Названия столбцов Поке
+$columnNamePoke = [
+    'title' => 'Название',
+    'img' => 'Фото (ссылка)',
+    'price' => 'Цена',
+    'component_type' => 'Тип компонента: protein, protein-add, base, filler, topping, sauce, crunch',
+    'component_name' => 'Название компонента: протеин, протеин-добавка, основа, наполнитель, топпинг, соус, хруст',
+];
+
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -65,27 +75,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $uploadDir = './uploads/';
             // Имя файла
             $fileName = basename($_FILES['file']['name']);
+
             // Полный путь к файлу на сервере
             $uploadFile = $uploadDir . $fileName;
+
 
             // Перемещаем загруженный файл в указанную директорию
             if (move_uploaded_file($_FILES['file']['tmp_name'], $uploadFile)) {
                 // Файл успешно загружен, обрабатываем его содержимое
                 $csvData = array_map('str_getcsv', file($uploadFile));
 
-                // Пример обработки данных
-                foreach ($csvData as $row) {
-                    // Обработка
+                if ($tabGroup === 'menu') {
+                    // Проверяем, что первая строка CSV содержит ожидаемые названия столбцов
+                    $expectedColumns = array_values($columnNameMenu);
+
+                    print_r($expectedColumns);
+
+                    if ($expectedColumns != $firstColumns) {
+                        $errors['file'] = 'Названия столбцов в файле не соответствуют ожидаемым.';
+                    } else {
+                        // Пример обработки данных
+                        foreach ($csvData as $row) {
+                            // Обработка
 
 
+                        }
 
+                        // Вывести сообщение об успешной загрузке и обработке файла
+                        echo 'Файл успешно загружен и обработан.';
+                    }
+                } else {
+                    // Проверяем, что первая строка CSV содержит ожидаемые названия столбцов
+                    $expectedColumns = array_keys($columnNamePoke);
+
+                    if ($expectedColumns != $csvColumns) {
+                        $errors['file'] = 'Названия столбцов в файле не соответствуют ожидаемым.';
+                    } else {
+                        // Пример обработки данных
+                        foreach ($csvData as $row) {
+                            // Обработка
+
+
+                        }
+
+                        // Вывести сообщение об успешной загрузке и обработке файла
+                        echo 'Файл успешно загружен и обработан.';
+                    }
                 }
-
-                // Удалить файл после обработки, если это необходимо
-                unlink($uploadFile);
-
-                // Вывести сообщение об успешной загрузке и обработке файла
-                echo 'Файл успешно загружен и обработан.';
             } else {
                 $errors['file'] = 'Ошибка при загрузке файла.';
             }
@@ -95,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $errors['file'] = 'Файл не был загружен.';
     }
-    
+
 
     $page_body = include_template(
         'load-menu.php',

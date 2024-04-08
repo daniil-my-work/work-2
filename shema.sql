@@ -61,6 +61,8 @@ CREATE TABLE `orders` (
     `order_id` CHAR(13) UNIQUE,
     `order_address` INT NULL,
     `date_end` TIMESTAMP NULL,
+    `order_address` TEXT,
+    `order_comment` TEXT,
 );
 
 CREATE TABLE `order_items` (
