@@ -7,10 +7,6 @@ require_once('./functions/db.php');
 require_once('./data/data.php');
 
 
-// unset($_SESSION['order']);
-// print_r($_SESSION);
-
-
 // Получение данных из сессии
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
 
@@ -22,24 +18,19 @@ if (isset($productsData['menu'])) {
 
 // Получает список продуктов
 $sql = get_query_products();
-$result = mysqli_query($con, $sql);
+$products = mysqli_query($con, $sql);
 
-if ($result && mysqli_num_rows($result) > 0) {
-    $productList = get_arrow($result);
-} else {
-    $productList = NULL;
-}
+// Список продуктов
+$productList = mysqli_num_rows($products) > 0 ? get_arrow($products) : null;
 
 
 // Получает список категорий меню 
 $getСategories = get_query_categories();
 $categories = mysqli_query($con, $getСategories);
 
-if ($categories && mysqli_num_rows($categories) > 0) {
-    $categoryList = get_arrow($categories);
-} else {
-    $categoryList = NULL;
-}
+// Список категорий меню 
+$categoryList = mysqli_num_rows($categories) > 0 ? get_arrow($categories) : null;
+
 
 
 // Пример модальных окон
@@ -66,6 +57,8 @@ if ($categories && mysqli_num_rows($categories) > 0) {
 //         'category' => 'link',
 //     ],
 // ];
+
+// $categoryList = null;
 
 
 // Модальное окно: Контент для вставки
@@ -96,6 +89,7 @@ $modalList = [
 $modalList = null;
 
 
+// ==== ШАБЛОНЫ ====
 $page_modal = include_template(
     'modal.php',
     [

@@ -22,11 +22,8 @@ if (!$isAuth || $_SESSION['user_role'] != $userRole['admin']) {
 $getСategories = get_query_categories();
 $categories = mysqli_query($con, $getСategories);
 
-if ($categories && mysqli_num_rows($categories) > 0) {
-    $categoryList = get_arrow($categories);
-} else {
-    $categoryList = NULL;
-}
+// Список категорий меню 
+$categoryList = mysqli_num_rows($categories) > 0 ? get_arrow($categories) : null;
 
 
 // Получает данные о пользователе
@@ -68,11 +65,55 @@ $keysActive = null;
 $keysСomplete = null;
 
 
-if ($statisticGroup === 'search') {
-    // Формирует запрос с учетом указанного промежутка времени
-    if (isset($_SESSION['searchValue'])) {
-        $searchValue = $_SESSION['searchValue'];
+
+
+
+// Функция для формирования SQL-запроса
+function generateSearchQuery($searchValue)
+{
+    $sql = "SELECT orders.*, order_items.product_id, order_items.quantity, menu.title, user.user_name FROM orders 
+           LEFT JOIN order_items ON orders.order_id = order_items.order_id 
+           LEFT JOIN menu ON order_items.product_id = menu.id 
+           LEFT JOIN user ON orders.customer_id = user.id
+           WHERE orders.order_id LIKE '%$searchValue%'";
+
+    return $sql;
+}
+
+
+// Функция для выполнения SQL-запроса и обработки результата
+function executeSearchQuery($con, $sql)
+{
+    $result = mysqli_query($con, $sql);
+    if ($result === false) {
+        // Обработка ошибки выполнения запроса
+        echo "Ошибка выполнения запроса: " . mysqli_error($con);
+        return [];
+    } else {
+        $groupedItems = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $orderId = $row['order_id'];
+            $groupedItems[$orderId][] = $row;
+        }
+        return $groupedItems;
     }
+}
+
+
+// Функция для создания пагинации
+function generatePagination($groupedItems)
+{
+    $groupedItemLength = count($groupedItems);
+    $paginationLength = ceil($groupedItemLength / MAX_ROW);
+
+    // Создаем массив чисел от 1 до $paginationLength
+    return $paginationLength > 0 ? range(1, $paginationLength) : [0];
+}
+
+
+
+if ($statisticGroup === 'search') {
+
 
     // Получает данные: айди заказа для поиска в базе
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -80,7 +121,36 @@ if ($statisticGroup === 'search') {
 
         // Присвоение данных сессии
         $_SESSION['searchValue'] = $searchValue;
+    } elseif (isset($_SESSION['searchValue'])) {
+        $searchValue = $_SESSION['searchValue'];
+    } else {
+        $searchValue = null;
     }
+
+    // Формирование SQL-запроса
+    $sql = generateSearchQuery($searchValue);
+
+    // Выполнение запроса и обработка результата
+    $groupedItems = executeSearchQuery($con, $sql);
+
+    // Создание пагинации
+    $paginationSearch = generatePagination($groupedItems);
+
+
+
+    // // Формирует запрос с учетом указанного промежутка времени
+    // if (isset($_SESSION['searchValue'])) {
+    //     $searchValue = $_SESSION['searchValue'];
+    // }
+
+    // // Получает данные: айди заказа для поиска в базе
+    // if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    //     $searchValue = isset($_POST['order-id']) ? $_POST['order-id'] : null;
+
+    //     // Присвоение данных сессии
+    //     $_SESSION['searchValue'] = $searchValue;
+    // }
+
 
     // SQL код для получения заказа
     $sql = "SELECT orders.*, order_items.product_id, order_items.quantity, menu.title, user.user_name FROM orders 
@@ -232,7 +302,6 @@ if ($statisticGroup === 'search') {
     // Получает список заказов пользователя для отрисовки
     $userListFormatted = array_slice($userList, $startIndexUser, MAX_ROW);
 } else {
-
     // Формирует запрос с учетом указанного промежутка времени
     if (isset($_SESSION['orderTime']) && isset($_SESSION['orderTime']['start']) && isset($_SESSION['orderTime']['end'])) {
         $dateFirst = $_SESSION['orderTime']['start'];
@@ -347,15 +416,8 @@ if ($statisticGroup === 'search') {
     $keysСomplete = array_keys($orderListСomplete);
 }
 
-// print_r($paginationСomplete);
-// print_r($currentPageСomplete);
-// print_r($startIndexСomplete);
-// print_r($orderListActive);
-// print_r($orderListСomplete);
 
-
-
-
+// ==== ШАБЛОНЫ ====
 $page_head = include_template(
     'head.php',
     [
