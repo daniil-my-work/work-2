@@ -15,6 +15,10 @@
         </h2>
 
         <div class="account__orders-group load__update-tab">
+            <span style="opacity: 0; width: 0; height: 0" id="tab-group">
+                <?= $tabGroup; ?>
+            </span>
+
             <?php $activeLinkMenu = isset($tabGroup) && $tabGroup === 'menu' ? 'account__orders-group-link--active' : ''; ?>
             <a class="button--basic account__orders-group-link <?= $activeLinkMenu; ?>" href="./load-menu.php?tab=menu">
                 Меню

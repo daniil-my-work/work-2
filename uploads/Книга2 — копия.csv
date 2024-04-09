@@ -1,0 +1,15 @@
+﻿Название;Фото (ссылка);Цена;"Тип компонента: (protein; protein-add; base; filler; topping; sauce; crunch)";"Название компонента: (протеин; протеин-добавка; основа; наполнитель; топпинг; соус; хруст)"
+рис;./img/poke-2.png;410;protein-add;протеин
+кукуруза;./img/roll-2.png;490;protein-add;протеин
+овес;./img/roll-3.png;350;protein-add;протеин
+лес;./img/soup-2.png;330;protein-add;протеин
+пес;./img/soup-3.png;330;protein-add;протеин
+сыр;./img/soup-4.png;320;filler;топпинг
+мыр;./img/appetizers-4.png;360;filler;топпинг
+гыр;./img/sandwiches-1.png;330;filler;топпинг
+груда;./img/sandwiches-2.png;330;base;наполнитель
+булыжник;./img/desserts-3.png;220;base;наполнитель
+топлес;./img/beverages-1.png;100;base;наполнитель
+компот;./img/beverages-2.png;100;base;наполнитель
+вермут;./img/sauce-1.png;10;crunch;соус
+дерево;./img/sauce-2.png;50;crunch;соус

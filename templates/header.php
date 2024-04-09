@@ -37,7 +37,7 @@
 
                 <li class="header__nav-item">
                     <?php $accountLink = './account.php'; ?>
-                    
+
                     <?php if ($_SESSION && isset($_SESSION['user_role'])) : ?>
                         <?php if ($_SESSION['user_role'] == $userRole['owner']) : ?>
                             <?php $accountLink = './owner.php'; ?>
@@ -51,17 +51,31 @@
                     </a>
                 </li>
 
-                <li class="header__nav-item">
-                    <a class="header__nav-item-link" href="./basket.php">
-                        Корзина
-                    </a>
-                </li>
+                <?php if ($_SESSION && isset($_SESSION['user_role'])) : ?>
+                    <?php if ($_SESSION['user_role'] == $userRole['client']) : ?>
+                        <li class="header__nav-item">
+                            <a class="header__nav-item-link" href="./basket.php">
+                                Корзина
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                <?php endif; ?>
 
                 <li class="header__nav-item">
                     <a class="header__nav-item-link" href="./menu.php">
                         Меню
                     </a>
                 </li>
+
+                <?php if ($_SESSION && isset($_SESSION['user_role'])) : ?>
+                    <?php if ($_SESSION['user_role'] == $userRole['owner'] || $_SESSION['user_role'] == $userRole['admin']) : ?>
+                        <li class="header__nav-item">
+                            <a class="header__nav-item-link" href="./load-menu.php">
+                                Редактировать меню
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                <?php endif; ?>
             </ul>
         </nav>
     </div>

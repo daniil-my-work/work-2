@@ -362,34 +362,17 @@ function getFullAddress(value) {
 
 const userAddress = document.querySelector('#user_address');
 
-userAddress.addEventListener('input', (evt) => {
-    const value = evt.target.value;
+if (userAddress) {
+    userAddress.addEventListener('input', (evt) => {
+        const value = evt.target.value;
 
-    // Запрос для получения полного адреса
-    getFullAddress(value);
-});
-
-
-
-
-
-// ====== TODO: Сделать сохранение в localStorage ======
-const deliveryMethod = localStorage.getItem('deliveryMethod');
-
-// Проверяем, сохранено ли значение deliveryMethod
-if (deliveryMethod !== null) {
-    // Применяем сохраненное значение к элементу <select>
-    deliveryType.value = deliveryMethod;
-
-    // В зависимости от значения deliveryMethod скрываем или показываем элементы
-    if (deliveryMethod === 'delivery') {
-        addressList.classList.remove('hidden');
-        basketCafe.classList.add('hidden');
-    } else {
-        basketCafe.classList.remove('hidden');
-        addressList.classList.add('hidden');
-    }
+        // Запрос для получения полного адреса
+        getFullAddress(value);
+    });
 }
+
+
+
 
 
 function setDeliveryType(evt) {
@@ -420,6 +403,24 @@ if (basketList) {
     basketList.addEventListener("click", addProductInBasketSecond);
 
     deliveryType.addEventListener('change', setDeliveryType);
+
+    // ====== TODO: Сделать сохранение в localStorage ======
+    const deliveryMethod = localStorage.getItem('deliveryMethod');
+
+    // Проверяем, сохранено ли значение deliveryMethod
+    if (deliveryMethod !== null) {
+        // Применяем сохраненное значение к элементу <select>
+        deliveryType.value = deliveryMethod;
+
+        // В зависимости от значения deliveryMethod скрываем или показываем элементы
+        if (deliveryMethod === 'delivery') {
+            addressList.classList.remove('hidden');
+            basketCafe.classList.add('hidden');
+        } else {
+            basketCafe.classList.remove('hidden');
+            addressList.classList.add('hidden');
+        }
+    }
 }
 
 
@@ -791,22 +792,6 @@ if (constructorPokeForm) {
 }
 
 
-// Добавляет Поке в корзину
-// const constructorPokeButton = document.querySelector('#constructor-poke-button');
-// constructorPokeButton.addEventListener('click', () => {
-//     // Айди продукта
-//     const productDataId = productItem.dataset.productId;
-
-//     // Формирование строки параметров
-//     const params = new URLSearchParams();
-//     params.append("productId", productDataId);
-
-
-//     params.append("quantity", 0);
-//     apiUpdateProductList(params);
-// });
-
-
 
 // Отправляет данные на сервер для сохранения в сессии
 async function apiUpdateOrderStatus(params) {
@@ -955,3 +940,57 @@ const modalWrapper = document.querySelector('#alert-modal');
 if (modalWrapper) {
     modalWrapper.addEventListener('click', getModalInfo);
 }
+
+
+// const tabGroup = document.querySelector('.load__update-tab');
+// tabGroup.addEventListener('click', )
+
+
+
+
+// Функция для скачивания таблицы csv
+async function apiGetInfoFromMenu(tabGroup) {
+    try {
+        const response = await fetch(`fetch-data-from-db.php?tabGroup=${tabGroup}`);
+
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+
+        // Конвертируем ответ сервера в текст
+        const csvData = await response.text();
+
+        // Создаем объект Blob для данных CSV
+        const blob = new Blob([csvData], { type: 'text/csv' });
+
+        // Создаем ссылку для скачивания файла
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = 'data.csv';
+
+        // Эмулируем щелчок по ссылке для скачивания
+        link.click();
+
+        // console.log("Данные успешно обновлены в сессии");
+    } catch (error) {
+        console.error("There has been a problem with your fetch operation:", error);
+    }
+}
+
+
+// Функция для обработки клика на кнопку
+async function getInfoFromMenu() {
+    const tabGroup = document.querySelector('#tab-group').textContent;
+
+    try {
+        // Вызываем функцию для скачивания файла
+        await apiGetInfoFromMenu(tabGroup);
+
+        console.log('Скачал файл');
+    } catch (err) {
+        console.error('Ошибка при обновлении статуса заказа:', err);
+    }
+}
+
+const loadDataButton = document.querySelector('.load__current-button');
+loadDataButton.addEventListener('click', getInfoFromMenu);
