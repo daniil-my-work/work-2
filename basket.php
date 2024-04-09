@@ -180,7 +180,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $errors = array_filter($errors);
-    print_r($address);
 
 
     if (!empty($errors)) {
@@ -197,7 +196,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]
         );
     } else {
-        // Адресс заказа
+        // Формирует адресс заказа
         if ($address['delivery-type'] === 'delivery') {
             $order['order_address'] = $address['user_address'] . ", кв. " . $address['apartment'] . ", подъезд " . $address['entrance'] . ", этаж " . $address['floor'];
         } else {
@@ -207,6 +206,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $order['order_address'] = $address_name;
         }
+
+        // Добавляет комментарий в объект для записи в БД
+        $orderComment = isset($_POST['order_comment']) ? $_POST['order_comment'] : null;
+        $order['order_comment'] = $orderComment;
 
 
         // Добавляет запись в базу с заказами 

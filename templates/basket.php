@@ -65,7 +65,7 @@
                     </div>
 
                     <div class="form-floating">
-                        <textarea class="form-control basket__cafe-textArea" placeholder="Комметарий" id="basket__cafe-textArea"></textarea>
+                        <textarea class="form-control basket__cafe-textArea" placeholder="Комметарий" id="basket__cafe-textArea" name="order_comment"></textarea>
                         <label for="basket__cafe-textArea">Комметарий</label>
                     </div>
                 </div>
@@ -88,7 +88,7 @@
                     </div>
 
                     <div class="form-floating">
-                        <textarea class="form-control basket__cafe-textArea" placeholder="Комметарий" id="basket__cafe-textArea"></textarea>
+                        <textarea class="form-control basket__cafe-textArea" placeholder="Комметарий" id="basket__cafe-textArea" name="order_comment"></textarea>
                         <label for="basket__cafe-textArea">Комметарий</label>
                     </div>
                 </div>
