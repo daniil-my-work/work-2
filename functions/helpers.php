@@ -229,6 +229,20 @@ function generatePagination($groupedItems)
 }
 
 
+// Функция для получения списка блюд
+function getProductList($con, $category = null) {
+    if (is_null($category)) {
+        $sql = get_query_products();
+    } else {
+        $sql = get_query_selected_category($category);
+    }
+
+    $products = mysqli_query($con, $sql);
+
+    return mysqli_num_rows($products) > 0 ? get_arrow($products) : null;
+}
+
+
 // Возвращает данные о пользователе
 // function getSafeValue($value)
 // {

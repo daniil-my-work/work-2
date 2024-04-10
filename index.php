@@ -7,30 +7,17 @@ require_once('./functions/db.php');
 require_once('./data/data.php');
 
 
-// Получение данных из сессии
-$productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
 
-$productsDataMenu = array();
-if (isset($productsData['menu'])) {
-    $productsDataMenu = $productsData['menu'];
-}
+// Получение данных из сессии о добавленных в корзину блюд
+$productsDataMenu = $_SESSION['order']['menu'] ?? [];
 
 
-// Получает список продуктов
-$sql = get_query_products();
-$products = mysqli_query($con, $sql);
-
-// Список продуктов
-$productList = mysqli_num_rows($products) > 0 ? get_arrow($products) : null;
+// Получает список блюд
+$productList = getProductList($con);
 
 
-// Получает список категорий меню 
-$getСategories = get_query_categories();
-$categories = mysqli_query($con, $getСategories);
-
-// Список категорий меню 
-$categoryList = mysqli_num_rows($categories) > 0 ? get_arrow($categories) : null;
-
+// Список категорий меню
+$categoryList = getCategories($con);
 
 
 // Пример модальных окон
@@ -62,29 +49,29 @@ $categoryList = mysqli_num_rows($categories) > 0 ? get_arrow($categories) : null
 
 
 // Модальное окно: Контент для вставки
-$modalList = [
-    [
-        'title' => 'Выберите ваш город',
-        'button' => [
-            ['text' => 'Ярославль', 'class' => 'btn btn-primary btn-sm'],
-            ['text' => 'Рыбинск', 'class' => 'btn btn-secondary btn-sm']
-        ],
-        'category' => 'city',
-    ],
-    [
-        'title' => 'Заголовок ошибки',
-        'error' => 'Текст ошибки',
-        'category' => 'error',
-    ],
-    [
-        'title' => 'Зарегистрируетесь, чтобы получить бонусы',
-        'link' => [
-            'linkTitle' => 'Создать личный кабинет',
-            'address' => './dsdsds',
-        ],
-        'category' => 'link',
-    ],
-];
+// $modalList = [
+    // [
+    //     'title' => 'Выберите ваш город',
+    //     'button' => [
+    //         ['text' => 'Ярославль', 'class' => 'btn btn-primary btn-sm'],
+    //         ['text' => 'Рыбинск', 'class' => 'btn btn-secondary btn-sm']
+    //     ],
+    //     'category' => 'city',
+    // ],
+    // [
+    //     'title' => 'Заголовок ошибки',
+    //     'error' => 'Текст ошибки',
+    //     'category' => 'error',
+    // ],
+    // [
+    //     'title' => 'Зарегистрируетесь, чтобы получить бонусы',
+    //     'link' => [
+    //         'linkTitle' => 'Создать личный кабинет',
+    //         'address' => './dsdsds',
+    //     ],
+    //     'category' => 'link',
+    // ],
+// ];
 
 $modalList = null;
 

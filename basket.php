@@ -34,7 +34,7 @@ $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
 
 
 // Получает список продуктов для отрисовки в корзине
-function getProductList($con, $productsData)
+function getProductListInBasket($con, $productsData)
 {
     $productList = array();
 
@@ -70,7 +70,7 @@ function getProductList($con, $productsData)
 }
 
 // Получает список продуктов 
-$productList = getProductList($con, $productsData);
+$productList = getProductListInBasket($con, $productsData);
 $productLength = count($productList);
 
 
