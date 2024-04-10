@@ -184,6 +184,51 @@ function getUserInfo($con)
 }
 
 
+// Функция для получения списка заказов
+function getGroupOrderItems($con, $sql)
+{
+    $result = mysqli_query($con, $sql);
+
+    if ($result === false) {
+        // Обработка ошибки выполнения запроса
+        echo "Ошибка выполнения запроса: " . mysqli_error($con);
+        return [];
+    } else {
+        $groupedItems = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $orderId = $row['order_id'];
+            $groupedItems[$orderId][] = $row;
+        }
+        return $groupedItems;
+    }
+}
+
+// Функция для получения списка 
+function fetchResultAsArray($result)
+{
+    $data = [];
+
+    if ($result !== false) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $data[] = $row;
+        }
+    }
+
+    return $data;
+}
+
+
+// Функция для создания пагинации
+function generatePagination($groupedItems)
+{
+    $groupedItemLength = count($groupedItems);
+    $paginationLength = ceil($groupedItemLength / MAX_ROW);
+
+    // Создаем массив чисел от 1 до $paginationLength
+    return $paginationLength > 0 ? range(1, $paginationLength) : [0];
+}
+
+
 // Возвращает данные о пользователе
 // function getSafeValue($value)
 // {

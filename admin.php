@@ -59,49 +59,6 @@ $keysСomplete = null;
 
 
 
-// Функция для получения списка заказов
-function getGroupItems($con, $sql)
-{
-    $result = mysqli_query($con, $sql);
-
-    if ($result === false) {
-        // Обработка ошибки выполнения запроса
-        echo "Ошибка выполнения запроса: " . mysqli_error($con);
-        return [];
-    } else {
-        $groupedItems = [];
-        while ($row = mysqli_fetch_assoc($result)) {
-            $orderId = $row['order_id'];
-            $groupedItems[$orderId][] = $row;
-        }
-        return $groupedItems;
-    }
-}
-
-// Функция для получения списка 
-function getResultAsArray($result)
-{
-    $data = [];
-    if ($result !== false) {
-        while ($row = mysqli_fetch_assoc($result)) {
-            $data[] = $row;
-        }
-    }
-    return $data;
-}
-
-
-// Функция для создания пагинации
-function generatePagination($groupedItems)
-{
-    $groupedItemLength = count($groupedItems);
-    $paginationLength = ceil($groupedItemLength / MAX_ROW);
-
-    // Создаем массив чисел от 1 до $paginationLength
-    return $paginationLength > 0 ? range(1, $paginationLength) : [0];
-}
-
-
 
 if ($statisticGroup === 'search') {
 
@@ -121,7 +78,7 @@ if ($statisticGroup === 'search') {
     $sql = get_query_search_order_by_id($searchValue);
 
     // Выполнение запроса и обработка результата
-    $groupedItems = getGroupItems($con, $sql);
+    $groupedItems = getGroupOrderItems($con, $sql);
 
     // Создание пагинации
     $paginationSearch = generatePagination($groupedItems);
@@ -156,7 +113,7 @@ if ($statisticGroup === 'search') {
     $result = mysqli_query($con, $sql);
 
     // Список юзеров
-    $userList = getResultAsArray($result);
+    $userList = fetchResultAsArray($result);
     $userListLength = count($userList);
 
     // Создание пагинации
@@ -179,7 +136,6 @@ if ($statisticGroup === 'search') {
     $dateFirst = isset($_SESSION['orderTime']['start']) ? $_SESSION['orderTime']['start'] : (isset($_POST['date-first']) ? $_POST['date-first'] : null);
     $dateSecond = isset($_SESSION['orderTime']['end']) ? $_SESSION['orderTime']['end'] : (isset($_POST['date-second']) ? $_POST['date-second'] : null);
 
-
     // Формирование SQL запроса
     $sql = "SELECT orders.*, order_items.product_id, order_items.quantity, menu.title 
         FROM orders 
@@ -193,44 +149,27 @@ if ($statisticGroup === 'search') {
 
     $sql .= " ORDER BY orders.id DESC;";
 
-    // Получает все записи из таблицы Заказы
-    $result = mysqli_query($con, $sql);
+    // Получает все записи из таблицы Состовляющие заказа и группирует их по айди 
+    $groupedItems = getGroupOrderItems($con, $sql);
 
-    // Выполнение запроса и обработка результата
-    $groupedItems = getGroupItems($con, $sql);
+    // Создаем массив для хранения активных и завершенных заказов
+    $filteredList = ['active' => [], 'complete' => []];
 
-
-    // Создает фильтрованный массив
-    $filteredListActive = [];
-    $filteredListСomplete = [];
-
-    // Вставляет в массив отсортированные значения по активным и завершенным заказам
+    // Размещаем заказы в соответствующих разделах массива
     foreach ($groupedItems as $orderId => $orderItems) {
         foreach ($orderItems as $item) {
+            // Проверяем, завершен ли заказ
             if ($item['date_end'] != null) {
-                $filteredListСomplete[$orderId][] = $item;
+                $filteredList['complete'][$orderId][] = $item;
             } else {
-                $filteredListActive[$orderId][] = $item;
+                $filteredList['active'][$orderId][] = $item;
             }
         }
     }
 
-    // Определяет длину пагинации
-    function getPaginationLength($arr)
-    {
-        $groupedItemLength = count($arr);
-        $paginationLength = ceil($groupedItemLength / MAX_ROW);
-
-        // Создаем массив чисел от 1 до $maxNumber
-        if ($groupedItemLength == 0) {
-            return $pagination[] = 0;
-        } else {
-            return $pagination = range(1, $paginationLength);
-        }
-    }
-
-    $paginationActive = getPaginationLength($filteredListActive);
-    $paginationСomplete = getPaginationLength($filteredListСomplete);
+    // Создание пагинации
+    $paginationActive = generatePagination($filteredList['active']);
+    $paginationСomplete = generatePagination($filteredList['complete']);
 
     // Текущая страница для таблиц
     $currentPageActive = isset($_GET['pageActive']) ? $_GET['pageActive'] : 1;
@@ -238,12 +177,13 @@ if ($statisticGroup === 'search') {
 
     // Вычисляем начальный индекс для активных заказов
     $startIndexActive = ($currentPageActive - 1) * MAX_ROW;
+
     // Вычисляем начальный индекс для завершенных заказов
     $startIndexСomplete = ($currentPageСomplete - 1) * MAX_ROW;
 
     // Получает список заказов пользователя для отрисовки
-    $orderListActive = array_slice($filteredListActive, $startIndexActive, MAX_ROW);
-    $orderListСomplete = array_slice($filteredListСomplete, $startIndexСomplete, MAX_ROW);
+    $orderListActive = array_slice($filteredList['active'], $startIndexActive, MAX_ROW);
+    $orderListСomplete = array_slice($filteredList['complete'], $startIndexСomplete, MAX_ROW);
 
     // Формирует список ключей для итерации 
     $keysActive = array_keys($orderListActive);
