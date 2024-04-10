@@ -993,4 +993,6 @@ async function getInfoFromMenu() {
 }
 
 const loadDataButton = document.querySelector('.load__current-button');
-loadDataButton.addEventListener('click', getInfoFromMenu);
+if (loadDataButton) {
+    loadDataButton.addEventListener('click', getInfoFromMenu);
+}

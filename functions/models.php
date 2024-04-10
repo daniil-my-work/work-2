@@ -219,13 +219,60 @@ function get_query_delete_poke_consists($pokeUniqueId)
 
 
 /**
- * Формирует SQL-запрос для показа списка адрессов кафе 
+ * Формирует SQL-запрос для показа списка адресов кафе 
  * @return string SQL-запрос
  */
 function get_query_cafe_address()
 {
     return "SELECT * FROM cafe_address";
 }
+
+
+
+/**
+ * Формирует SQL-запрос для поиска заказа по Айди 
+ * @return string SQL-запрос
+ */
+function get_query_search_order_by_id($searchValue)
+{
+    $sql = "SELECT orders.*, order_items.product_id, order_items.quantity, menu.title, user.user_name FROM orders 
+           LEFT JOIN order_items ON orders.order_id = order_items.order_id 
+           LEFT JOIN menu ON order_items.product_id = menu.id 
+           LEFT JOIN user ON orders.customer_id = user.id
+           WHERE orders.order_id LIKE '%$searchValue%'";
+
+    return $sql;
+}
+
+
+/**
+ * Формирует SQL-запрос для получения списка пользователей
+ * @return string SQL-запрос
+ */
+function get_query_search_clients_by_phone($phoneValue)
+{
+    $sql = "SELECT user.id, user.user_name, user.user_telephone, user.user_address, user.user_rating, SUM(orders.total_amount) AS total_order_amount, COUNT(orders.id) AS total_orders_count, ROUND(AVG(orders.total_amount)) AS average_order_amount
+        FROM 
+            user
+        LEFT JOIN 
+            orders ON user.id = orders.customer_id
+        WHERE 
+            user.user_telephone LIKE '%$phoneValue%'
+        GROUP BY 
+            user.id, 
+            user.user_name,
+            user.user_telephone,
+            user.user_address,
+            user.user_rating;";
+
+    return $sql;
+}
+
+
+
+
+
+
 
 
 // /**

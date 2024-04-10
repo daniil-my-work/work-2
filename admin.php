@@ -18,26 +18,19 @@ if (!$isAuth || $_SESSION['user_role'] != $userRole['admin']) {
     exit;
 }
 
-// Получает список категорий меню 
-$getСategories = get_query_categories();
-$categories = mysqli_query($con, $getСategories);
 
-// Список категорий меню 
-$categoryList = mysqli_num_rows($categories) > 0 ? get_arrow($categories) : null;
-
+// Список категорий меню
+$categoryList = getCategories($con);
 
 // Получает данные о пользователе
-$userEmail = $_SESSION['user_email'];
-$sql = get_query_user_info($userEmail);
-$result = mysqli_query($con, $sql);
-$userInfo = get_arrow($result);
+$userInfo = getUserInfo($con);
 
 
 // Определяет вкладку
 $statisticGroup = isset($_GET['group']) ? $_GET['group'] : 'orders';
 
 
-// Устанавливает значение по умолчанию
+// Значение по умолчанию
 // -- Вкладка: Поиск заказа
 $searchValue = null;
 $paginationSearch = null;
@@ -66,25 +59,11 @@ $keysСomplete = null;
 
 
 
-
-
-// Функция для формирования SQL-запроса
-function generateSearchQuery($searchValue)
-{
-    $sql = "SELECT orders.*, order_items.product_id, order_items.quantity, menu.title, user.user_name FROM orders 
-           LEFT JOIN order_items ON orders.order_id = order_items.order_id 
-           LEFT JOIN menu ON order_items.product_id = menu.id 
-           LEFT JOIN user ON orders.customer_id = user.id
-           WHERE orders.order_id LIKE '%$searchValue%'";
-
-    return $sql;
-}
-
-
-// Функция для выполнения SQL-запроса и обработки результата
-function executeSearchQuery($con, $sql)
+// Функция для получения списка заказов
+function getGroupItems($con, $sql)
 {
     $result = mysqli_query($con, $sql);
+
     if ($result === false) {
         // Обработка ошибки выполнения запроса
         echo "Ошибка выполнения запроса: " . mysqli_error($con);
@@ -97,6 +76,18 @@ function executeSearchQuery($con, $sql)
         }
         return $groupedItems;
     }
+}
+
+// Функция для получения списка 
+function getResultAsArray($result)
+{
+    $data = [];
+    if ($result !== false) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $data[] = $row;
+        }
+    }
+    return $data;
 }
 
 
@@ -114,7 +105,6 @@ function generatePagination($groupedItems)
 
 if ($statisticGroup === 'search') {
 
-
     // Получает данные: айди заказа для поиска в базе
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $searchValue = isset($_POST['order-id']) ? $_POST['order-id'] : null;
@@ -127,244 +117,88 @@ if ($statisticGroup === 'search') {
         $searchValue = null;
     }
 
-    // Формирование SQL-запроса
-    $sql = generateSearchQuery($searchValue);
+    // Формирует SQL-запрос для поиска заказа по Айди 
+    $sql = get_query_search_order_by_id($searchValue);
 
     // Выполнение запроса и обработка результата
-    $groupedItems = executeSearchQuery($con, $sql);
+    $groupedItems = getGroupItems($con, $sql);
 
     // Создание пагинации
     $paginationSearch = generatePagination($groupedItems);
 
-
-
-    // // Формирует запрос с учетом указанного промежутка времени
-    // if (isset($_SESSION['searchValue'])) {
-    //     $searchValue = $_SESSION['searchValue'];
-    // }
-
-    // // Получает данные: айди заказа для поиска в базе
-    // if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    //     $searchValue = isset($_POST['order-id']) ? $_POST['order-id'] : null;
-
-    //     // Присвоение данных сессии
-    //     $_SESSION['searchValue'] = $searchValue;
-    // }
-
-
-    // SQL код для получения заказа
-    $sql = "SELECT orders.*, order_items.product_id, order_items.quantity, menu.title, user.user_name FROM orders 
-        LEFT JOIN order_items ON orders.order_id = order_items.order_id 
-        LEFT JOIN menu ON order_items.product_id = menu.id 
-        LEFT JOIN user ON orders.customer_id = user.id
-        WHERE orders.order_id LIKE '%$searchValue%'";
-
-    $result = mysqli_query($con, $sql);
-
-    if ($result === false) {
-        // Обработка ошибки выполнения запроса
-        echo "Ошибка выполнения запроса: " . mysqli_error($con);
-    } else {
-        if (mysqli_num_rows($result) > 1) {
-            $orderInfo = get_arrow($result);
-
-            if ($orderInfo) {
-                // Массив для объединенных элементов
-                $groupedItems = array();
-
-                // Группирует заказы по айди заказа
-                foreach ($orderInfo as $orderInfoItem) {
-                    $orderId = $orderInfoItem['order_id'];
-                    $groupedItems[$orderId][] = $orderInfoItem;
-                }
-            } else {
-                // Если результат запроса пуст
-                $groupedItems = array();
-            }
-        } elseif (mysqli_num_rows($result) == 1) {
-            $orderInfo = get_arrow($result);
-
-            if ($orderInfo) {
-                // Массив для объединенных элементов
-                $groupedItems = array();
-
-                $orderId = $orderInfo['order_id'];
-                $groupedItems[$orderId][] = $orderInfo;
-            } else {
-                // Если результат запроса пуст
-                $groupedItems = array();
-            }
-        } else {
-            // Если результат запроса пуст
-            $groupedItems = array();
-        }
-    }
-
-    // Создает фильтрованный массив
-    $filteredListSearch = [];
-
-    // Вставляет в массив отсортированные значения по активным и завершенным заказам
-    foreach ($groupedItems as $orderId => $orderItems) {
-        foreach ($orderItems as $item) {
-            $filteredListSearch[$orderId][] = $item;
-        }
-    }
-
-    // Определяет длину пагинации
-    function getPaginationLength($arr)
-    {
-        $groupedItemLength = count($arr);
-        $paginationLength = ceil($groupedItemLength / MAX_ROW);
-
-        // Создаем массив чисел от 1 до $maxNumber
-        if ($groupedItemLength == 0) {
-            return $pagination[] = 0;
-        } else {
-            return $pagination = range(1, $paginationLength);
-        }
-    }
-
-    $paginationSearch = getPaginationLength($filteredListSearch);
-
-    // Текущая страница для таблиц
+    // Определение текущей страницы
     $currentPageSearch = isset($_GET['pageSearch']) ? $_GET['pageSearch'] : 1;
 
-    // Вычисляем начальный индекс для активных заказов
+    // Вычисление начального индекса для пагинации
     $startIndexSearch = ($currentPageSearch - 1) * MAX_ROW;
 
-    // Получает список заказов пользователя для отрисовки
-    $orderListSearch = array_slice($filteredListSearch, $startIndexSearch, MAX_ROW);
+    // Получение списка заказов для отрисовки
+    $orderListSearch = array_slice($groupedItems, $startIndexSearch, MAX_ROW);
 
-    // Формирует список ключей для итерации 
+    // Формирование списка ключей для итерации
     $keysSearch = array_keys($orderListSearch);
 } elseif ($statisticGroup === 'clients') {
-    // Получает данные: айди заказа для поиска в базе
-    // Формирует запрос с учетом указанного промежутка времени
-    if (isset($_SESSION['phoneValue'])) {
-        $searchValue = $_SESSION['phoneValue'];
-    }
 
-    // Получает данные: айди заказа для поиска в базе
+    // Получает данные: номер телефона для поиска в базе
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $phoneValue = isset($_POST['user-phone']) ? $_POST['user-phone'] : null;
 
         // Присвоение данных сессии
         $_SESSION['phoneValue'] = $phoneValue;
+    } elseif (isset($_SESSION['phoneValue'])) {
+        $phoneValue = $_SESSION['phoneValue'];
+    } else {
+        $phoneValue = null;
     }
 
-    // SQL код для получения списка пользователей
-    $sql = "SELECT user.id, user.user_name, user.user_telephone, user.user_address, user.user_rating, SUM(orders.total_amount) AS total_order_amount, COUNT(orders.id) AS total_orders_count, ROUND(AVG(orders.total_amount)) AS average_order_amount
-        FROM 
-            user
-        LEFT JOIN 
-            orders ON user.id = orders.customer_id
-        WHERE 
-            user.user_telephone LIKE '%$phoneValue%'
-        GROUP BY 
-            user.id, 
-            user.user_name,
-            user.user_telephone,
-            user.user_address,
-            user.user_rating;";
-
-
+    // Формирует SQL-запрос для клиента по номеру телефона
+    $sql = get_query_search_clients_by_phone($phoneValue);
     $result = mysqli_query($con, $sql);
 
-    if ($result === false || mysqli_num_rows($result) == 0) {
-        $userList = null;
-    } else {
-        $userList = get_arrow($result);
-        $userListLength = mysqli_num_rows($result);
-    }
+    // Список юзеров
+    $userList = getResultAsArray($result);
+    $userListLength = count($userList);
 
-    // Определяет длину пагинации
-    function getPaginationLength($arr)
-    {
-        $groupedItemLength = count($arr);
-        $paginationLength = ceil($groupedItemLength / MAX_ROW);
+    // Создание пагинации
+    $paginationSearch = generatePagination($userList);
 
-        // Создаем массив чисел от 1 до $maxNumber
-        if ($groupedItemLength == 0) {
-            return $pagination[] = 0;
-        } else {
-            return $pagination = range(1, $paginationLength);
-        }
-    }
+    // Определение текущей страницы
+    $currentPageSearch = isset($_GET['pageSearch']) ? $_GET['pageSearch'] : 1;
 
-    $paginationUser = getPaginationLength($userList);
+    // Вычисление начального индекса для пагинации
+    $startIndexSearch = ($currentPageSearch - 1) * MAX_ROW;
 
-    // Текущая страница для таблиц
-    $currentPageUser = isset($_GET['pageUser']) ? $_GET['pageUser'] : 1;
+    // Получение списка заказов для отрисовки
+    $userListFormatted = array_slice($userList, $startIndexSearch, MAX_ROW);
 
-    // Вычисляем начальный индекс для активных заказов
-    $startIndexUser = ($currentPageUser - 1) * MAX_ROW;
-
-    // Получает список заказов пользователя для отрисовки
-    $userListFormatted = array_slice($userList, $startIndexUser, MAX_ROW);
+    // Формирование списка ключей для итерации
+    $keysSearch = array_keys($userListFormatted);
 } else {
-    // Формирует запрос с учетом указанного промежутка времени
-    if (isset($_SESSION['orderTime']) && isset($_SESSION['orderTime']['start']) && isset($_SESSION['orderTime']['end'])) {
-        $dateFirst = $_SESSION['orderTime']['start'];
-        $dateSecond = $_SESSION['orderTime']['end'];
-        $sql = "SELECT orders.*, order_items.product_id, order_items.quantity, menu.title FROM orders LEFT JOIN order_items ON orders.order_id = order_items.order_id LEFT JOIN menu ON order_items.product_id = menu.id WHERE orders.order_date BETWEEN '$dateFirst 00:00:00' AND '$dateSecond 23:59:59' ORDER BY orders.id DESC;";
-    } else {
-        $sql = "SELECT orders.*, order_items.product_id, order_items.quantity, menu.title FROM orders LEFT JOIN order_items ON orders.order_id = order_items.order_id LEFT JOIN menu ON order_items.product_id = menu.id ORDER BY orders.id DESC;";
+
+    // Определение значений $dateFirst и $dateSecond на основе сессии или POST-запроса
+    $dateFirst = isset($_SESSION['orderTime']['start']) ? $_SESSION['orderTime']['start'] : (isset($_POST['date-first']) ? $_POST['date-first'] : null);
+    $dateSecond = isset($_SESSION['orderTime']['end']) ? $_SESSION['orderTime']['end'] : (isset($_POST['date-second']) ? $_POST['date-second'] : null);
+
+
+    // Формирование SQL запроса
+    $sql = "SELECT orders.*, order_items.product_id, order_items.quantity, menu.title 
+        FROM orders 
+        LEFT JOIN order_items ON orders.order_id = order_items.order_id 
+        LEFT JOIN menu ON order_items.product_id = menu.id";
+
+    // Добавление условия по дате, если она задана
+    if ($dateFirst && $dateSecond) {
+        $sql .= " WHERE orders.order_date BETWEEN '$dateFirst 00:00:00' AND '$dateSecond 23:59:59'";
     }
 
-    // Получает данные о заказах пользователя за промежуток времени
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Получает данные о заказах пользователя за промежуток времени
-        $dateFirst = $_POST['date-first'];
-        $dateSecond = $_POST['date-second'];
-
-        $sql = "SELECT orders.*, order_items.product_id, order_items.quantity, menu.title FROM orders LEFT JOIN order_items ON orders.order_id = order_items.order_id LEFT JOIN menu ON order_items.product_id = menu.id WHERE orders.order_date BETWEEN '$dateFirst 00:00:00' AND '$dateSecond 23:59:59' ORDER BY orders.id DESC;";
-
-        // Присвоение данных сессии
-        $_SESSION['orderTime']['start'] = $dateFirst;
-        $_SESSION['orderTime']['end'] = $dateSecond;
-    }
+    $sql .= " ORDER BY orders.id DESC;";
 
     // Получает все записи из таблицы Заказы
     $result = mysqli_query($con, $sql);
 
-    if ($result === false) {
-        // Обработка ошибки выполнения запроса
-        echo "Ошибка выполнения запроса: " . mysqli_error($con);
-    } else {
-        if (mysqli_num_rows($result) > 1) {
-            $orderInfo = get_arrow($result);
+    // Выполнение запроса и обработка результата
+    $groupedItems = getGroupItems($con, $sql);
 
-            if ($orderInfo) {
-                // Массив для объединенных элементов
-                $groupedItems = array();
-
-                // Группирует заказы по айди заказа
-                foreach ($orderInfo as $orderInfoItem) {
-                    $orderId = $orderInfoItem['order_id'];
-                    $groupedItems[$orderId][] = $orderInfoItem;
-                }
-            } else {
-                // Если результат запроса пуст
-                $groupedItems = array();
-            }
-        } elseif (mysqli_num_rows($result) == 1) {
-            $orderInfo = get_arrow($result);
-
-            if ($orderInfo) {
-                // Массив для объединенных элементов
-                $groupedItems = array();
-
-                $orderId = $orderInfo['order_id'];
-                $groupedItems[$orderId][] = $orderInfo;
-            } else {
-                // Если результат запроса пуст
-                $groupedItems = array();
-            }
-        } else {
-            // Если результат запроса пуст
-            $groupedItems = array();
-        }
-    }
 
     // Создает фильтрованный массив
     $filteredListActive = [];
@@ -417,6 +251,7 @@ if ($statisticGroup === 'search') {
 }
 
 
+
 // ==== ШАБЛОНЫ ====
 $page_head = include_template(
     'head.php',
@@ -464,12 +299,9 @@ $page_body = include_template(
     ]
 );
 
-// $phoneValue = null;
-// $paginationUser = null;
-// $userList = null;
-// $userListFormatted = null;
-// $userListLength = null;
 
+
+// ==== ШАБЛОНЫ ====
 $page_footer = include_template(
     'footer.php',
     [

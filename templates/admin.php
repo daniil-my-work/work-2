@@ -619,52 +619,29 @@
                             </thead>
                             <tbody>
                                 <!-- Проходится по массиву заказов -->
-                                <?php if ($userListFormatted && $userListLength != 0) : ?>
-                                    <?php if ($userListLength == 1) : ?>
+                                <?php if ($userListLength != 0) : ?>
+                                    <?php foreach ($userListFormatted as $userItem) : ?>
                                         <tr>
                                             <th scope="row" class="align-middle">
-                                                <?= $userListFormatted['id']; ?>
+                                                <?= $userItem['id']; ?>
                                             </th>
                                             <td class="text-center align-middle">
-                                                <?= $userListFormatted['user_name']; ?>
+                                                <?= $userItem['user_name']; ?>
                                             </td>
                                             <td class=" align-middle">
-                                                <?= $userListFormatted['user_telephone']; ?>
+                                                <?= $userItem['user_telephone']; ?>
                                             </td>
                                             <td class="text-center align-middle">
-                                                <?= $userListFormatted['user_address']; ?>
+                                                <?= $userItem['user_address']; ?>
                                             </td>
                                             <td class="align-middle">
-                                                <?= $userListFormatted['user_rating']; ?>
+                                                <?= $userItem['user_rating']; ?>
                                             </td>
                                             <td class="align-middle">
-                                                <?= $userListFormatted['average_order_amount']; ?>
+                                                <?= $userItem['average_order_amount']; ?>
                                             </td>
                                         </tr>
-                                    <?php else : ?>
-                                        <?php foreach ($userListFormatted as $userItem) : ?>
-                                            <tr>
-                                                <th scope="row" class="align-middle">
-                                                    <?= $userItem['id']; ?>
-                                                </th>
-                                                <td class="text-center align-middle">
-                                                    <?= $userItem['user_name']; ?>
-                                                </td>
-                                                <td class=" align-middle">
-                                                    <?= $userItem['user_telephone']; ?>
-                                                </td>
-                                                <td class="text-center align-middle">
-                                                    <?= $userItem['user_address']; ?>
-                                                </td>
-                                                <td class="align-middle">
-                                                    <?= $userItem['user_rating']; ?>
-                                                </td>
-                                                <td class="align-middle">
-                                                    <?= $userItem['average_order_amount']; ?>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
+                                    <?php endforeach; ?>
                                 <?php endif; ?>
                             </tbody>
                         </table>

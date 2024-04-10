@@ -157,3 +157,36 @@ function updateOrderStatus($con, $orderId, $status)
     }
 }
 
+
+// Возвращает список категорий меню
+function getCategories($con)
+{
+    // Получает список категорий меню 
+    $sql = get_query_categories();
+    $categories = mysqli_query($con, $sql);
+
+    // Список категорий меню 
+    $categoryList = mysqli_num_rows($categories) > 0 ? get_arrow($categories) : null;
+
+    return $categoryList;
+}
+
+
+// Возвращает данные о пользователе
+function getUserInfo($con)
+{
+    $userEmail = $_SESSION['user_email'];
+    $sql = get_query_user_info($userEmail);
+    $result = mysqli_query($con, $sql);
+    $userInfo = get_arrow($result);
+
+    return $userInfo;
+}
+
+
+// Возвращает данные о пользователе
+// function getSafeValue($value)
+// {
+//     $safevalue = isset($value) ? $value : null;
+//     return $safevalue;
+// }
