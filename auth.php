@@ -13,8 +13,6 @@ $page_body = include_template(
     []
 );
 
-// print_r($_SESSION);
-
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Обязательные поля для заполненения 
@@ -104,6 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 
+// ==== ШАБЛОНЫ ====
 $page_head = include_template(
     'head.php',
     [

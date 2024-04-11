@@ -270,6 +270,16 @@ function get_query_search_clients_by_phone($phoneValue)
 
 
 
+/**
+ * Формирует SQL-запрос для получения заказа 
+ * @return string SQL-запрос
+ */
+function get_query_order_id($orderId)
+{
+    $sql = "SELECT orders.order_id FROM orders WHERE orders.id = '$orderId'";
+
+    return $sql;
+}
 
 
 

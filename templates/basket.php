@@ -65,7 +65,7 @@
                     </div>
 
                     <div class="form-floating">
-                        <textarea class="form-control basket__cafe-textArea" placeholder="Комметарий" id="basket__cafe-textArea" name="order_comment"></textarea>
+                        <textarea class="form-control basket__cafe-textArea" placeholder="Комметарий" id="basket__cafe-textArea" name="order_comment-user"></textarea>
                         <label for="basket__cafe-textArea">Комметарий</label>
                     </div>
                 </div>
@@ -76,7 +76,7 @@
                     <div class="basket__cafe mb-3">
                         Адресс:
 
-                        <select class="form-select basket__cafe-select" name="user_address" aria-label="ресторан получения">
+                        <select class="form-select basket__cafe-select" name="cafe_address" aria-label="ресторан получения">
                             <option value="default" selected>Выберите ресторан получения</option>
 
                             <?php foreach ($cafeList as $cafe) : ?>
@@ -88,7 +88,7 @@
                     </div>
 
                     <div class="form-floating">
-                        <textarea class="form-control basket__cafe-textArea" placeholder="Комметарий" id="basket__cafe-textArea" name="order_comment"></textarea>
+                        <textarea class="form-control basket__cafe-textArea" placeholder="Комметарий" id="basket__cafe-textArea" name="order_comment-cafe"></textarea>
                         <label for="basket__cafe-textArea">Комметарий</label>
                     </div>
                 </div>

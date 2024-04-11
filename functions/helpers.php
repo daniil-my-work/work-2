@@ -172,6 +172,19 @@ function getCategories($con)
 }
 
 
+// Возвращает список адресов кафе
+function getCafeList($con)
+{
+    // Получает список категорий меню 
+    $sql = get_query_cafe_address();
+    $cafeAddress = mysqli_query($con, $sql);
+
+    $cafeList = mysqli_num_rows($cafeAddress) > 0 ? get_arrow($cafeAddress) : null;
+
+    return $cafeList;
+}
+
+
 // Возвращает данные о пользователе
 function getUserInfo($con)
 {
@@ -230,7 +243,8 @@ function generatePagination($groupedItems)
 
 
 // Функция для получения списка блюд
-function getProductList($con, $category = null) {
+function getProductList($con, $category = null)
+{
     if (is_null($category)) {
         $sql = get_query_products();
     } else {
@@ -241,6 +255,55 @@ function getProductList($con, $category = null) {
 
     return mysqli_num_rows($products) > 0 ? get_arrow($products) : null;
 }
+
+
+// Возвращает массив выбранных блюд из таблицы Меню / Поке
+function getProductListInBasket($con, $productsData)
+{
+    $productList = [];
+
+    foreach ($productsData as $category => $items) {
+        $table = ($category == 'menu') ? 'menu' : 'poke';
+
+        foreach ($items as $itemId => $quantity) {
+            $sql = ($table == 'menu') ? get_query_product_item($itemId) : get_query_product_item_poke($itemId);
+
+            $products = mysqli_query($con, $sql);
+            $productItem = get_arrow($products);
+
+            $productList[] = ['item' => $productItem, 'quantity' => $quantity, 'table' => $table];
+        }
+    }
+
+    return $productList;
+}
+
+// записывает новый заказ в таблицу Заказы
+function createNewOrder($con, $order)
+{
+    // Добавляет запись в базу с заказами
+    $createNewOrder = get_query_create_order();
+    $stmt = db_get_prepare_stmt($con, $createNewOrder, $order);
+    mysqli_stmt_execute($stmt);
+
+    // Получает ID последнего вставленного заказа
+    $orderNum = mysqli_insert_id($con);
+
+    return $orderNum;
+}
+
+
+// записывает новый заказ в таблицу Заказы
+function getOrderId($con, $insertOrderId)
+{
+    // Добавляет запись в базу с заказами
+    $sql = get_query_order_id($insertOrderId);
+    $res = mysqli_query($con, $sql);
+    $orderId = ($res) ? get_arrow($res)['order_id'] : null;
+
+    return $orderId;
+}
+
 
 
 // Возвращает данные о пользователе
