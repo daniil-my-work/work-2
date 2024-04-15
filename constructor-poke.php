@@ -8,42 +8,34 @@ require_once('./functions/validators.php');
 require_once('./data/data.php');
 
 
-// print_r($_SESSION['order']);
+
+// Список категорий меню
+$categoryList = getCategories($con);
+
+// Список компонентов Поке
+$componentList = getComponentList($con);
 
 
-// Получает список категорий меню 
-$sql = get_query_components();
-$components = mysqli_query($con, $sql);
-$componentList = get_arrow($components);
+// Извлекаем уникальные значения ключа component_type
+$uniqueComponentTypes = array_unique(array_column($componentList, 'component_type'));
 
 
-// Массив для хранения уникальных ключей component_type
-$uniqueComponentTypes = array();
-
-// Проходим по массиву и извлекаем уникальные значения ключа component_type
-foreach ($componentList as $item) {
-    if (!in_array($item['component_type'], $uniqueComponentTypes)) {
-        $uniqueComponentTypes[] = $item['component_type'];
-    }
-}
-
-
-// Массив для хранения уникальных ключей component_type
-$sortComponentList = array();
-
-// Функция обратного вызова для фильтрации
-function filterByComponentType($item, $uniqueType)
-{
-    return $item['component_type'] === $uniqueType;
-}
-
-foreach ($uniqueComponentTypes as $uniqueType) {
-    // Фильтрация массива
-    $sortComponentList[$uniqueType] = array_filter($componentList, function ($item) use ($uniqueType) {
-        return filterByComponentType($item, $uniqueType);
+// Создаем массив для хранения отфильтрованных компонентов
+$sortComponentList = array_reduce($uniqueComponentTypes, function ($carry, $uniqueType) use ($componentList) {
+    // Фильтруем массив $componentList для текущего уникального типа
+    $filteredComponents = array_filter($componentList, function ($item) use ($uniqueType) {
+        return $item['component_type'] === $uniqueType;
     });
-}
 
+    // Добавляем отфильтрованные компоненты в итоговый массив, используя тип как ключ
+    $carry[$uniqueType] = $filteredComponents;
+
+    return $carry;
+}, []);
+
+
+
+// Списки компонентов
 $proteinList = $sortComponentList['protein'];
 $baseList = $sortComponentList['base'];
 $fillerList = $sortComponentList['filler'];
@@ -52,11 +44,8 @@ $sauceList = $sortComponentList['sauce'];
 $crunchList = $sortComponentList['crunch'];
 $proteinAddList = $sortComponentList['protein-add'];
 
-
-// Получает список категорий меню 
-$sql = get_query_categories();
-$categories = mysqli_query($con, $sql);
-$categoryList = get_arrow($categories);
+// Извлекаем элементы массива $sortComponentList в отдельные переменные
+// extract($sortComponentList);
 
 
 
@@ -71,20 +60,6 @@ foreach ($componentList as $item) {
 }
 
 
-$page_head = include_template(
-    'head.php',
-    [
-        'title' => 'Конструктор «Много рыбы»',
-    ]
-);
-
-$page_header = include_template(
-    'header.php',
-    [
-        'isAuth' => $isAuth,
-        'userRole' => $userRole,
-    ]
-);
 
 $page_body = include_template(
     'constructor-poke.php',
@@ -98,24 +73,6 @@ $page_body = include_template(
         'crunchList' => $crunchList,
     ]
 );
-
-
-$pokeTitle = [
-    '1' => 'c кальмаром',
-    '2' => 'c коктельными креветками',
-    '3' => 'c крабом',
-    '4' => 'c курицей',
-    '5' => 'c лососем',
-    '6' => 'c тофу',
-    '7' => 'c тунцом',
-    '8' => 'c угрем',
-    '9' => 'cо свининой',
-    '10' => 'c морским гребешком',
-    '11' => 'c лососем-тунцом',
-    '12' => 'c креветкой',
-    '13' => 'c морским миксом',
-    '14' => 'c телятиной',
-];
 
 
 
@@ -406,6 +363,21 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
 
 
+// ==== ШАБЛОНЫ ====
+$page_head = include_template(
+    'head.php',
+    [
+        'title' => 'Конструктор «Много рыбы»',
+    ]
+);
+
+$page_header = include_template(
+    'header.php',
+    [
+        'isAuth' => $isAuth,
+        'userRole' => $userRole,
+    ]
+);
 
 $page_footer = include_template(
     'footer.php',

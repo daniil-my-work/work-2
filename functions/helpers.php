@@ -171,6 +171,19 @@ function getCategories($con)
     return $categoryList;
 }
 
+// Возвращает список категорий меню
+function getComponentList($con)
+{
+    // Получает список категорий меню 
+    $sql = get_query_components();
+    $components = mysqli_query($con, $sql);
+
+    // Список категорий меню 
+    $componentList = mysqli_num_rows($components) > 0 ? get_arrow($components) : null;
+
+    return $componentList;
+}
+
 
 // Возвращает список адресов кафе
 function getCafeList($con)
