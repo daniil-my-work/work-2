@@ -178,141 +178,103 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         } while (!checkUniquenessValue($con, $order_id, 'poke', 'poke_id'));
 
 
-        // Формирует описание для Поке
-        $pokeDescription = 'Основа: - ';
-
-        foreach ($createdPoke as $key => $createdPokeItem) {
-            if ($key == 'shema' || $key == 'total-price') {
-                continue;
-            }
-
-            $sql = get_query_component_names(is_array($createdPokeItem) ? $createdPokeItem[0] : $createdPokeItem);
-            $result = mysqli_query($con, $sql);
-            $description = get_arrow($result);
-            $componentTitle = $description['title'];
-
-            if ($key == 'fillerAdd' || $key == 'toppingAdd') {
-                $pokeDescription .= (!strpos($pokeDescription, 'Дополнительно') ? "Дополнительно: " : '') . $componentTitle . " - ";
-            } elseif ($key == 'proteinAdd' || $key == 'sauceAdd' || $key == 'crunchAdd') {
-                $pokeDescription .= (!strpos($pokeDescription, 'Дополнительно') ? "Дополнительно: " : '') . $componentTitle . " - ";
-            } else {
-                $pokeDescription .= $componentTitle . " - ";
-            }
-        }
-
-
         // Получает название Поке
         $pokeTitle = get_poke_title($con, $createdPoke['protein']);
 
-
-        // Формирует объект для записи в таблицу Poke
-        // $poke = [
-        //     'title' => $pokeTitle,
-        //     'img' => './poke-my-1.jpg',
-        //     'description' => $pokeDescription,
-        //     'price' => $createdPoke['total-price'],
-        //     'cooking_time' => 40
-        // ];
-
-
-        // ========= Доделать =========
-
-        // Формирует объект для записи в таблицу Poke
-        $poke['title'] = $pokeTitle;
-        $poke['img'] = './poke-my-1.jpg';
-        $poke['description'] = $pokeDescription;
-        $poke['price'] = $createdPoke['total-price'];
-        $poke['cooking_time'] = 40;
-
-
-        // Получает айди категории для авторского поке
-        $sql = get_query_selected_category('constructor-poke');
-        $result = mysqli_query($con, $sql);
-        $categoryInfo = get_arrow($result);
-        $poke['category_id'] = (int) $categoryInfo['id'];
-        $poke['poke_id'] = $order_id;
-
-
-        // Добавляет запись в таблицу Poke
-        $sql = get_query_create_poke();
-        $stmt = db_get_prepare_stmt($con, $sql, $poke);
-        $addedPoke = mysqli_stmt_execute($stmt);
-        $insertId = mysqli_insert_id($con);
+        // Получает данные из таблицы Категория
+        $categoryInfo = getCategoryInfo($con, 'constructor-poke');
 
         // Словарь для конструктора Поке
         $pokeDictionary = array();
 
+        // Исключаем лишние поля
+        $excludeFields = ['shema', 'fillerAdd', 'toppingAdd', 'proteinAdd', 'sauceAdd', 'crunchAdd', 'total-price'];
+
         // Заполняет словарь данными из каких компонентов собрано Поке 
         foreach ($createdPoke as $key => $value) {
             // Пропускает лишние поля
-            if ($key == 'shema' || $key == 'fillerAdd' || $key == 'toppingAdd' || $key == 'proteinAdd' || $key == 'sauceAdd' || $key == 'crunchAdd' || $key == 'total-price') {
+            if (in_array($key, $excludeFields)) {
                 continue;
             }
 
-            if ($key == 'filler' || $key == 'topping') {
-                $keyAdd = $key . 'Add';
-                if (isset($createdPoke[$keyAdd])) {
-                    $combineArray = array_merge($createdPoke[$key], $createdPoke[$keyAdd]);
-                    $combineArray = array_count_values($combineArray);
-                    $pokeDictionary[$key] = $combineArray;
-                    continue;
-                }
-
-                $pokeDictionary[$key] = array_count_values($value);
-                continue;
-            }
-
-            if ($key == 'protein' || $key == 'sauce' || $key == 'crunch') {
+            if (in_array($key, ['filler', 'topping'])) {
                 $keyAdd = $key . 'Add';
 
-                if (isset($createdPoke[$keyAdd])) {
-                    $createdPokeArr = [$createdPoke[$key]];
-                    $createdPokeAddArr = [$createdPoke[$keyAdd]];
+                // Объединяет массивы со схожим типом filler => fillerAdd
+                $combineArray = isset($createdPoke[$keyAdd]) ? array_merge($createdPoke[$key], $createdPoke[$keyAdd]) : $createdPoke[$key];
 
-                    $combineArray = array_merge($createdPokeArr, $createdPokeAddArr);
-                    $combineArray = array_count_values($combineArray);
-                    $pokeDictionary[$key] = $combineArray;
-                    continue;
-                }
+                // Добавляет данные в словарь
+                $pokeDictionary[$key] = array_count_values($combineArray);
+            } elseif (in_array($key, ['protein', 'sauce', 'crunch'])) {
+                $keyAdd = $key . 'Add';
 
-                $pokeDictionary[$key] = array_count_values([$createdPoke[$key]]);
-                continue;
+                // Объединяет массивы со схожим типом protein => proteinAdd
+                $combineArray = isset($createdPoke[$keyAdd]) ? array_merge([$createdPoke[$key]], [$createdPoke[$keyAdd]]) : [$createdPoke[$key]];
+
+                // Добавляет данные в словарь
+                $pokeDictionary[$key] = array_count_values($combineArray);
+            } else {
+                // Добавляет данные в словарь
+                $pokeDictionary[$key] = array_count_values([$value]);
             }
-
-            $pokeDictionary[$key] = array_count_values([$value]);
         }
 
+        // Формирует начальную часть описания
+        $pokeDescription = "Ваш Поке состоит из: ";
 
-        // Добавляет запись в таблицу Poke contains
+        // Перебираем каждый компонент в словаре
+        foreach ($pokeDictionary as $component => $details) {
+            foreach ($details as $item => $count) {
+                // Получаем название компонента из базы данных
+                $title = getComponentTitle($con, $item);
+
+                // Добавляем детали компонента (название и количество)
+                $pokeDescription .= "$title ($count), ";
+            }
+        }
+
+        // Убираем последнюю запятую и добавляем точку только в конце всего описания
+        $pokeDescription = rtrim($pokeDescription, ", ") . ".";
+
+        // Формирует объект для записи в таблицу Poke
+        $poke = array(
+            'title' => $pokeTitle,
+            'img' => './poke-my-1.jpg',
+            'description' => $pokeDescription,
+            'price' => $createdPoke['total-price'],
+            'cooking_time' => 40,
+            'category_id' => $categoryInfo['id'],
+            'poke_id' => $order_id
+        );
+
+        // Добавляет запись в таблицу Poke и получает id вставленного записи 
+        $insertId = insertPokeInDb($con, $poke);
+
+        // Подготовка запроса для таблицы Poke contains
         $getPokeContains = get_query_create_poke_contains();
-        $pokeContains = [
-            'poke_id' => $order_id,
-            'component_id' => 0,
-            'quantity' => 0,
-        ];
+        $stmt = mysqli_prepare($con, $getPokeContains);
 
+        // Проходим по словарю и добавляем данные в таблицу Poke contains
         foreach ($pokeDictionary as $pokeDictionaryItem) {
-            foreach ($pokeDictionaryItem as $key => $value) {
-                $pokeContains['component_id'] = $key;
-                $pokeContains['quantity'] = $value;
-
-                $stmt = db_get_prepare_stmt($con, $getPokeContains, $pokeContains);
+            foreach ($pokeDictionaryItem as $component_id => $quantity) {
+                // Привязка параметров для подготовленного запроса
+                mysqli_stmt_bind_param($stmt, 'iii', $order_id, $component_id, $quantity);
+                // Выполнение подготовленного запроса
                 $res = mysqli_stmt_execute($stmt);
             }
         }
 
+        // Закрытие подготовленного запроса
+        mysqli_stmt_close($stmt);
 
-        if ($addedPoke) {
+
+        if (!is_null($insertId)) {
             // echo $insertId;
-            echo 'Заказ отправлен в базу';
+            // echo 'Заказ отправлен в базу';
 
             $tableName = 'poke';
-            $productId = $insertId;
             $quantity = 1;
-            addProductInSession($con, $tableName, $productId, $quantity);
-
-            // header("Location: /order.php?orderId=$productId");
-            // die;
+            addProductInSession($con, $tableName, $insertId, $quantity);
         } else {
             echo 'Заказ незавершен в базу';
         }

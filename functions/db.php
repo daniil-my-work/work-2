@@ -177,3 +177,51 @@ function getOrderId($con, $insertOrderId)
 
     return $orderId;
 }
+
+/**
+ * Получает информацию о категории из базы данных.
+ *
+ * @param object $con mysqli Объект подключения к базе данных.
+ * @param string $category Идентификатор категории, для которой требуется получить информацию.
+ *
+ * @return array|null Возвращает информацию о категории в виде массива или null, если данные не найдены.
+ */
+function getCategoryInfo($con, $category)
+{
+    $sql = get_query_selected_category($category);
+    $res = mysqli_query($con, $sql);
+    $categoryInfo = ($res) ? get_arrow($res) : null;
+
+    return $categoryInfo;
+}
+
+
+/**
+ * Добавляет данные о поке в базу данных.
+ *
+ * @param object $con Объект подключения к базе данных.
+ * @param object $poke Данные о поке для добавления в базу данных.
+ * @return number|null Идентификатор вставленной записи или null в случае ошибки.
+ */
+function insertPokeInDb($con, $poke)
+{
+    $sql = get_query_create_poke();
+    $stmt = db_get_prepare_stmt($con, $sql, $poke);
+    $addedPoke = mysqli_stmt_execute($stmt);
+    $insertId = ($addedPoke) ? mysqli_insert_id($con) : null;
+
+    return $insertId;
+}
+
+
+// Функция для получения названия компонента из базы данных
+function getComponentTitle($con, $componentId) {
+    $sql = get_query_component_names($componentId);
+    $result = mysqli_query($con, $sql);
+   
+    if ($row = mysqli_fetch_assoc($result)) {
+        return $row['title'];
+    }
+   
+    return "Неизвестный компонент";
+}
