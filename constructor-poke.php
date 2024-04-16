@@ -274,6 +274,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
             $tableName = 'poke';
             $quantity = 1;
+
+            // Добавляет поке в сессию: показывается в Корзине
             addProductInSession($con, $tableName, $insertId, $quantity);
         } else {
             echo 'Заказ незавершен в базу';

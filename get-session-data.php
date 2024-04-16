@@ -3,9 +3,9 @@
 require_once('./functions/init.php');
 
 // Получает данные о блюдах добавленных в сессию
-$sessionData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
-$menuArr = isset($sessionData['menu']) ? $sessionData['menu'] : array();
-$pokeArr = isset($sessionData['poke']) ? $sessionData['poke'] : array();
+$sessionData = $_SESSION['order'] ?? [];
+$menuArr = $sessionData['menu'] ?? [];
+$pokeArr = $sessionData['poke'] ?? [];
 
 // Объединение двух подмассивов
 $combinedArray = array_merge($menuArr, $pokeArr);
