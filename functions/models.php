@@ -117,6 +117,15 @@ function get_query_components()
  * Формирует SQL-запрос для получения названия компонента Поке
  * @return string SQL-запрос
  */
+function get_query_component_poke_type($componentId)
+{
+    return "SELECT components.component_poke_type FROM components WHERE components.id = $componentId";
+}
+
+/**
+ * Формирует SQL-запрос для получения названия компонента Поке
+ * @return string SQL-запрос
+ */
 function get_query_component_names($componentId)
 {
     return "SELECT components.title FROM components WHERE components.id = '$componentId'";

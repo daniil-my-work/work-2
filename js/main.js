@@ -313,18 +313,19 @@ const addressList = document.querySelector('#basket-delivery-list');
 const basketDeliveryList = document.querySelector('.basket__delivery-list');
 
 
+if (basketDeliveryList) {
+    // Переместить обработчик события click за пределы функции getFullAddress
+    basketDeliveryList.addEventListener('click', (evt) => {
+        const target = evt.target.textContent;
+        userAddress.value = target;
 
-// Переместить обработчик события click за пределы функции getFullAddress
-basketDeliveryList.addEventListener('click', (evt) => {
-    const target = evt.target.textContent;
-    userAddress.value = target;
+        // Присвоить значение value атрибуту value элемента #user_address
+        userAddress.setAttribute('value', target);
 
-    // Присвоить значение value атрибуту value элемента #user_address
-    userAddress.setAttribute('value', target);
-
-    // Удалить список адресов после выбора одного из них
-    basketDeliveryList.innerHTML = '';
-});
+        // Удалить список адресов после выбора одного из них
+        basketDeliveryList.innerHTML = '';
+    });
+}
 
 // Измененный вариант функции getFullAddress
 function getFullAddress(value) {
@@ -515,7 +516,7 @@ function updatePokeSum(pokeObj) {
 
 function updatePokeBasketSum() {
     const storedSumOfPoke = JSON.parse(localStorage.getItem('constructorPokeSum'));
-    // console.log(storedSumOfPoke); // Выведет сохраненный объект
+    console.log(storedSumOfPoke); // Выведет сохраненный объект
 
     let result = 0;
     for (const key in storedSumOfPoke) {

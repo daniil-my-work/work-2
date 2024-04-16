@@ -242,3 +242,24 @@ function getProductListInBasket($con, $productsData)
 
     return $productList;
 }
+
+
+/**
+ * Получает название компонента Поке и формирует заголовок Поке.
+ *
+ * @param string $proteinId ID компонента Поке.
+ * @param mysqli $con Соединение с базой данных.
+ * @return string Заголовок Поке.
+ */
+function get_poke_title($con, $proteinId)
+{
+    $sql = get_query_component_poke_type($proteinId);
+    $result = mysqli_query($con, $sql);
+    $pokeTitle = mysqli_fetch_assoc($result);
+
+    if ($pokeTitle && isset($pokeTitle['component_poke_type'])) {
+        return "Поке " . $pokeTitle['component_poke_type'];
+    } else {
+        return "Поке (название не найдено)";
+    }
+}

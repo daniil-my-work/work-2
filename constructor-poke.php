@@ -44,9 +44,6 @@ $sauceList = $sortComponentList['sauce'];
 $crunchList = $sortComponentList['crunch'];
 $proteinAddList = $sortComponentList['protein-add'];
 
-// Извлекаем элементы массива $sortComponentList в отдельные переменные
-// extract($sortComponentList);
-
 
 // Массив для хранения уникальных компонентов
 $uniqueComponentNames = array_reduce($componentList, function ($carry, $item) {
@@ -56,8 +53,6 @@ $uniqueComponentNames = array_reduce($componentList, function ($carry, $item) {
 
     return $carry;
 }, []);
-
-
 
 
 $page_body = include_template(
@@ -183,60 +178,52 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         } while (!checkUniquenessValue($con, $order_id, 'poke', 'poke_id'));
 
 
+        // Формирует описание для Поке
         $pokeDescription = 'Основа: - ';
-        // Заполняет словарь данными из каких компонентов собрано Поке 
+
         foreach ($createdPoke as $key => $createdPokeItem) {
-            // Пропускает лишние поля
             if ($key == 'shema' || $key == 'total-price') {
                 continue;
             }
 
-            if (is_array($createdPokeItem)) {
-                if ($key == 'fillerAdd' || $key == 'toppingAdd') {
-                    if (!strpos($pokeDescription, 'Дополнительно')) {
-                        $pokeDescription .= "Дополнительно: ";
-                    }
+            $sql = get_query_component_names(is_array($createdPokeItem) ? $createdPokeItem[0] : $createdPokeItem);
+            $result = mysqli_query($con, $sql);
+            $description = get_arrow($result);
+            $componentTitle = $description['title'];
 
-                    foreach ($createdPokeItem as $value) {
-                        $sql = get_query_component_names($value);
-                        $result = mysqli_query($con, $sql);
-                        $description = get_arrow($result);
-                        $pokeDescription .= $description['title'] . " - ";
-                    }
-                    continue;
-                }
-
-                foreach ($createdPokeItem as $value) {
-                    $sql = get_query_component_names($value);
-                    $result = mysqli_query($con, $sql);
-                    $description = get_arrow($result);
-                    $pokeDescription .= $description['title'] . " - ";
-                }
+            if ($key == 'fillerAdd' || $key == 'toppingAdd') {
+                $pokeDescription .= (!strpos($pokeDescription, 'Дополнительно') ? "Дополнительно: " : '') . $componentTitle . " - ";
+            } elseif ($key == 'proteinAdd' || $key == 'sauceAdd' || $key == 'crunchAdd') {
+                $pokeDescription .= (!strpos($pokeDescription, 'Дополнительно') ? "Дополнительно: " : '') . $componentTitle . " - ";
             } else {
-                $sql = get_query_component_names($createdPokeItem);
-                $result = mysqli_query($con, $sql);
-                $description = get_arrow($result);
-
-                if ($key == 'proteinAdd' || $key == 'sauceAdd' || $key == 'crunchAdd') {
-                    if (!strpos($pokeDescription, 'Дополнительно')) {
-                        $pokeDescription .= "Дополнительно: ";
-                    }
-
-                    $pokeDescription .= $description['title'] . " - ";
-                    continue;
-                }
-
-                $pokeDescription .= $description['title'] . " - ";
+                $pokeDescription .= $componentTitle . " - ";
             }
         }
 
 
+        // Получает название Поке
+        $pokeTitle = get_poke_title($con, $createdPoke['protein']);
+
+
         // Формирует объект для записи в таблицу Poke
-        $poke['title'] = "Поке " . $pokeTitle[$createdPoke['protein']];
+        // $poke = [
+        //     'title' => $pokeTitle,
+        //     'img' => './poke-my-1.jpg',
+        //     'description' => $pokeDescription,
+        //     'price' => $createdPoke['total-price'],
+        //     'cooking_time' => 40
+        // ];
+
+
+        // ========= Доделать =========
+
+        // Формирует объект для записи в таблицу Poke
+        $poke['title'] = $pokeTitle;
         $poke['img'] = './poke-my-1.jpg';
         $poke['description'] = $pokeDescription;
         $poke['price'] = $createdPoke['total-price'];
         $poke['cooking_time'] = 40;
+
 
         // Получает айди категории для авторского поке
         $sql = get_query_selected_category('constructor-poke');

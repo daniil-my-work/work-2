@@ -99,7 +99,8 @@ CREATE TABLE `components` (
         'sauce',
         'crunch'
     ) NOT NULL,
-    `component_name` VARCHAR(255)
+    `component_name` VARCHAR(255),
+    `component_poke_type` VARCHAR(255)
 );
 
 CREATE TABLE `poke_consists` (

@@ -56,6 +56,7 @@ $columnNamePoke = [
     'price' => 'Цена',
     'component_type' => 'Тип компонента: (protein; protein-add; base; filler; topping; sauce; crunch)',
     'component_name' => 'Название компонента: (протеин; протеин-добавка; основа; наполнитель; топпинг; соус; хруст)',
+    'component_poke_type' => 'Название поке: например Поке (с курицей)',
 ];
 
 
@@ -152,17 +153,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         // Считываем и обрабатываем каждую строку CSV-файла
                         while (($row = fgetcsv($file, 0, ";")) !== false) {
-                            if (count($row) == 5) {
+                            if (count($row) == 6) {
                                 // Экранируем и обрабатываем каждое значение для предотвращения SQL инъекций
                                 $title = mysqli_real_escape_string($con, $row[0]);
                                 $img = mysqli_real_escape_string($con, $row[1]);
                                 $price = mysqli_real_escape_string($con, $row[2]);
                                 $component_type = mysqli_real_escape_string($con, $row[3]);
                                 $component_name = mysqli_real_escape_string($con, $row[4]);
+                                $component_poke_type = mysqli_real_escape_string($con, $row[5]);
 
                                 // Формируем SQL запрос с явным указанием столбцов
-                                $sql = "INSERT INTO components (`title`, `img`, `price`, `component_type`, `component_name`) 
-                                    VALUES ('$title', '$img', '$price', '$component_type', '$component_name')";
+                                $sql = "INSERT INTO components (`title`, `img`, `price`, `component_type`, `component_name`, `component_poke_type`) 
+                                    VALUES ('$title', '$img', '$price', '$component_type', '$component_name', '$component_poke_type')";
 
                                 // Выполняем запрос
                                 mysqli_query($con, $sql);
