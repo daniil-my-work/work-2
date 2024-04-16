@@ -77,8 +77,16 @@ function include_template($name, array $data = [])
     return $result;
 }
 
-
-// Проверка на уникальность айди заказа
+/**
+ * Проверяет уникальность значения в указанной таблице базы данных.
+ *
+ * @param object $con mysqli Объект подключения к базе данных.
+ * @param int $order_id Идентификатор заказа, значение которого требуется проверить на уникальность.
+ * @param string $table Имя таблицы, в которой требуется проверить уникальность значения.
+ * @param string $value Название столбца, значение которого требуется проверить на уникальность.
+ *
+ * @return bool Возвращает true, если значение уникально, и false, если значение не уникально.
+ */
 function checkUniquenessValue($con, $order_id, $table, $value)
 {
     // SQl код для проверки уникальности идентификатора заказа
@@ -91,8 +99,16 @@ function checkUniquenessValue($con, $order_id, $table, $value)
     return $count == 0;
 }
 
-
-// Добавляет данные о выбранном продукте в сессию
+/**
+ * Добавляет информацию о выбранном продукте в сессию корзины.
+ *
+ * @param object $con mysqli Объект подключения к базе данных.
+ * @param string $tableName Имя таблицы, куда добавляется продукт.
+ * @param int $productId Идентификатор продукта.
+ * @param int $quantity Количество продукта.
+ *
+ * @return void
+ */
 function addProductInSession($con, $tableName, $productId, $quantity)
 {
     // Инициализируйте или обновите данные корзины в сессии
@@ -137,80 +153,14 @@ function addProductInSession($con, $tableName, $productId, $quantity)
     }
 }
 
-
-// Обновляет данные о статусе заказа
-function updateOrderStatus($con, $orderId, $status)
-{
-    if ($status === 'true') {
-        $date_end = date("Y-m-d H:i:s");
-        $sql = "UPDATE orders SET orders.date_end = '$date_end' WHERE orders.order_id = '$orderId'";
-    } else {
-        $sql = "UPDATE orders SET orders.date_end = null WHERE orders.order_id = '$orderId'";
-    }
-
-    $result = mysqli_query($con, $sql);
-
-    if ($result) {
-        echo "Статус заказа успешно обновлен.";
-    } else {
-        echo "Ошибка при обновлении статуса заказа: " . mysqli_error($con);
-    }
-}
-
-
-// Возвращает список категорий меню
-function getCategories($con)
-{
-    // Получает список категорий меню 
-    $sql = get_query_categories();
-    $categories = mysqli_query($con, $sql);
-
-    // Список категорий меню 
-    $categoryList = mysqli_num_rows($categories) > 0 ? get_arrow($categories) : null;
-
-    return $categoryList;
-}
-
-// Возвращает список категорий меню
-function getComponentList($con)
-{
-    // Получает список категорий меню 
-    $sql = get_query_components();
-    $components = mysqli_query($con, $sql);
-
-    // Список категорий меню 
-    $componentList = mysqli_num_rows($components) > 0 ? get_arrow($components) : null;
-
-    return $componentList;
-}
-
-
-// Возвращает список адресов кафе
-function getCafeList($con)
-{
-    // Получает список категорий меню 
-    $sql = get_query_cafe_address();
-    $cafeAddress = mysqli_query($con, $sql);
-
-    $cafeList = mysqli_num_rows($cafeAddress) > 0 ? get_arrow($cafeAddress) : null;
-
-    return $cafeList;
-}
-
-
-// Возвращает данные о пользователе
-function getUserInfo($con)
-{
-    $userEmail = $_SESSION['user_email'];
-    $sql = get_query_user_info($userEmail);
-    $result = mysqli_query($con, $sql);
-    $userInfo = get_arrow($result);
-
-    return $userInfo;
-}
-
-
-// Функция для получения списка заказов
+/**
+ * Возвращает список заказов, сгруппированных по идентификатору заказа.
+ *
+ * @param object $con mysqli Объект подключения к базе данных.
+ * @param string $sql SQL-запрос для получения списка заказов.
+ *
+ * @return array Массив, содержащий список заказов, сгруппированных по идентификатору заказа.
+ */
 function getGroupOrderItems($con, $sql)
 {
     $result = mysqli_query($con, $sql);
@@ -229,7 +179,13 @@ function getGroupOrderItems($con, $sql)
     }
 }
 
-// Функция для получения списка 
+/**
+ * Извлекает результат запроса в виде массива.
+ *
+ * @param object $result Результат запроса mysqli.
+ *
+ * @return array Возвращает массив данных из результата запроса.
+ */
 function fetchResultAsArray($result)
 {
     $data = [];
@@ -243,8 +199,13 @@ function fetchResultAsArray($result)
     return $data;
 }
 
-
-// Функция для создания пагинации
+/**
+ * Генерирует пагинацию на основе сгруппированных элементов.
+ *
+ * @param array $groupedItems Массив, содержащий сгруппированные элементы.
+ *
+ * @return array Возвращает массив страниц пагинации.
+ */
 function generatePagination($groupedItems)
 {
     $groupedItemLength = count($groupedItems);
@@ -254,23 +215,14 @@ function generatePagination($groupedItems)
     return $paginationLength > 0 ? range(1, $paginationLength) : [0];
 }
 
-
-// Функция для получения списка блюд
-function getProductList($con, $category = null)
-{
-    if (is_null($category)) {
-        $sql = get_query_products();
-    } else {
-        $sql = get_query_selected_category($category);
-    }
-
-    $products = mysqli_query($con, $sql);
-
-    return mysqli_num_rows($products) > 0 ? get_arrow($products) : null;
-}
-
-
-// Возвращает массив выбранных блюд из таблицы Меню / Поке
+/**
+ * Возвращает массив выбранных блюд из таблицы Меню / Поке.
+ *
+ * @param object $con mysqli Объект подключения к базе данных.
+ * @param array $productsData Массив данных о выбранных продуктах.
+ *
+ * @return array Возвращает массив выбранных блюд из таблицы Меню / Поке.
+ */
 function getProductListInBasket($con, $productsData)
 {
     $productList = [];
@@ -290,38 +242,3 @@ function getProductListInBasket($con, $productsData)
 
     return $productList;
 }
-
-// записывает новый заказ в таблицу Заказы
-function createNewOrder($con, $order)
-{
-    // Добавляет запись в базу с заказами
-    $createNewOrder = get_query_create_order();
-    $stmt = db_get_prepare_stmt($con, $createNewOrder, $order);
-    mysqli_stmt_execute($stmt);
-
-    // Получает ID последнего вставленного заказа
-    $orderNum = mysqli_insert_id($con);
-
-    return $orderNum;
-}
-
-
-// записывает новый заказ в таблицу Заказы
-function getOrderId($con, $insertOrderId)
-{
-    // Добавляет запись в базу с заказами
-    $sql = get_query_order_id($insertOrderId);
-    $res = mysqli_query($con, $sql);
-    $orderId = ($res) ? get_arrow($res)['order_id'] : null;
-
-    return $orderId;
-}
-
-
-
-// Возвращает данные о пользователе
-// function getSafeValue($value)
-// {
-//     $safevalue = isset($value) ? $value : null;
-//     return $safevalue;
-// }

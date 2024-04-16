@@ -1,6 +1,12 @@
 <?php
 
-// Проверяет E-mail
+/**
+ * Проверяет валидность электронной почты.
+ *
+ * @param string $email Адрес электронной почты для проверки.
+ *
+ * @return string|null Возвращает сообщение об ошибке, если адрес электронной почты неверен, в противном случае null.
+ */
 function validate_email($email)
 {
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -8,7 +14,13 @@ function validate_email($email)
     }
 };
 
-// Проверяет Номер телефона
+/**
+ * Проверяет валидность номера телефона.
+ *
+ * @param string|null $phone Номер телефона для проверки.
+ *
+ * @return string|null Возвращает сообщение об ошибке, если номер телефона неверен, в противном случае null.
+ */
 function validate_phone($phone)
 {
     if ($phone === null) {
@@ -32,7 +44,15 @@ function validate_phone($phone)
     return '';
 }
 
-// Проверяет длину
+/**
+ * Проверяет длину строки.
+ *
+ * @param string|null $value Строка для проверки длины.
+ * @param int $min Минимальная длина строки.
+ * @param int $max Максимальная длина строки.
+ *
+ * @return string|null Возвращает сообщение об ошибке, если длина строки неверна, в противном случае null.
+ */
 function validate_length($value, $min, $max)
 {
     if ($value) {
@@ -43,8 +63,15 @@ function validate_length($value, $min, $max)
     }
 }
 
-
-// Проверяет наличие компонента
+/**
+ * Проверяет наличие компонента.
+ *
+ * @param mysqli $con Объект соединения с базой данных.
+ * @param string $componentType Тип компонента для проверки.
+ * @param mixed $value Значение компонента или массив значений.
+ *
+ * @return string|null Возвращает сообщение об ошибке, если компонент не существует, в противном случае null.
+ */
 function validate_component($con, $componentType, $value)
 {
     $sql = get_query_component_types();
@@ -88,16 +115,27 @@ function validate_component($con, $componentType, $value)
 }
 
 
-// Проверяет длину
+/**
+ * Проверяет длину компонента в соответствии с выбранной схемой.
+ *
+ * @param string $name Имя компонента.
+ * @param array $value Массив значений компонента.
+ * @param int|null $shema Выбранная схема.
+ *
+ * @return string|null Возвращает сообщение об ошибке, если длина компонента не соответствует схеме, в противном случае null.
+ */
 function validate_component_length($name, $value, $shema)
 {
+    // Если $shema равно null, вернуть сообщение об ошибке
+    if ($shema === null) {
+        return "Схема не определена";
+    }
+
     $len = count($value);
 
     if ($shema == 1) {
         if ($name === 'filler') {
             if ($len != 5) {
-                print_r('Сработало');
-
                 return "Для выбора доступно 5 наполнителей";
             }
         }
@@ -120,4 +158,7 @@ function validate_component_length($name, $value, $shema)
             }
         }
     }
+
+    // Если не было обнаружено ошибок, вернуть null
+    return null;
 }

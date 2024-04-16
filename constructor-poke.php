@@ -48,16 +48,15 @@ $proteinAddList = $sortComponentList['protein-add'];
 // extract($sortComponentList);
 
 
-
-// Массив для хранения уникальных ключей component_type
-$uniqueComponentNames = array();
-
-// Проходим по массиву и извлекаем уникальные значения ключа component_type
-foreach ($componentList as $item) {
-    if (!in_array($item['component_name'], $uniqueComponentNames)) {
-        $uniqueComponentNames[$item['component_type']] = $item['component_name'];
+// Массив для хранения уникальных компонентов
+$uniqueComponentNames = array_reduce($componentList, function ($carry, $item) {
+    if (!isset($carry[$item['component_type']])) {
+        $carry[$item['component_type']] = $item['component_type'];
     }
-}
+
+    return $carry;
+}, []);
+
 
 
 
@@ -82,18 +81,10 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $errors = [];
 
     $rules = [
-        'component' => function ($key, $value) use ($con) {
-            return validate_component($con, $key, $value);
-        },
-        'shema' => function ($value) {
-            return !in_array($value, [1, 2]) ? 'Указана неверная схема для наполнителя и топпинга' : null;
-        },
-        'total-price' => function ($value) {
-            return $value < 0 ? 'Вы ничего не выбрали' : null;
-        },
-        'component-length' => function ($name, $value, $shema) {
-            return validate_component_length($name, $value, $shema);
-        },
+        'component' => fn ($key, $value) => validate_component($con, $key, $value),
+        'shema' => fn ($value) => !in_array($value, [1, 2]) ? 'Указана неверная схема для наполнителя и топпинга' : null,
+        'total-price' => fn ($value) => $value < 0 ? 'Вы ничего не выбрали' : null,
+        'component-length' => fn ($name, $value, $shema) => validate_component_length($name, $value, $shema),
     ];
 
     $createdPoke = filter_input_array(INPUT_POST, ['protein' => FILTER_DEFAULT, 'base' => FILTER_DEFAULT, 'shema' => FILTER_DEFAULT, 'filler' => FILTER_DEFAULT, 'topping' => FILTER_DEFAULT, 'sauce' => FILTER_DEFAULT, 'crunch' => FILTER_DEFAULT, 'total-price' => FILTER_DEFAULT, 'proteinAdd' => FILTER_DEFAULT, 'fillerAdd' => FILTER_DEFAULT, 'toppingAdd' => FILTER_DEFAULT, 'sauceAdd' => FILTER_DEFAULT, 'crunchAdd' => FILTER_DEFAULT], true);
@@ -104,85 +95,65 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     // Форматирует поля в объекте $createdPoke
     foreach ($createdPoke as $key => $value) {
         if (in_array($key, $inputList)) {
-            $createdPokeItem = isset($_POST[$key]) ? $_POST[$key] : null;
+            $createdPokeItem = $_POST[$key] ?? null;
 
+            // Если значение отсутствует, удаляем поле из $createdPoke
             if (is_null($createdPokeItem)) {
                 unset($createdPoke[$key]);
-                continue;
+            } else {
+                // Иначе, заменяем значение в $createdPoke на значение из $_POST
+                $createdPoke[$key] = $createdPokeItem;
             }
-
-            $createdPoke[$key] = $createdPokeItem;
-            continue;
-        }
-
-        if ($value == '') {
-            unset($createdPoke[$key]);
-            continue;
+        } else {
+            // Если значение пустое, удаляем поле из $createdPoke
+            if ($value == '') {
+                unset($createdPoke[$key]);
+            }
         }
     }
 
     // Проверка на валидность полей формы 
     foreach ($createdPoke as $key => $value) {
         if (in_array($key, $required) && empty($value)) {
-            $fieldName = $uniqueComponentNames[$key];
-            $errors[$key] = "Поле . $fieldName . должно быть заполено";
-        }
+            $fieldName = $uniqueComponentNames[$key] ?? null;
 
-        if ($key == 'shema') {
-            $shemaId = (int)$value;
-            $rule = $rules['shema'];
-            $errors['shema'] = $rule($shemaId);
-            continue;
-        }
-
-        if ($key == 'filler' || $key == 'topping') {
-            $rule = $rules['component-length'];
-            $errors[$key] = $rule($key, $value, $createdPoke['shema']);
-
-            if (!$errors[$key]) {
-                // Проверка наличия компонента в Поке
-                $ruleSecond = $rules['component'];
-                $errors[$key] = $ruleSecond($key, $value);
+            if ($fieldName) {
+                $errors[$key] = "Поле . $fieldName . должно быть заполено";
             }
-
-            continue;
         }
 
-        if ($key == 'total-price') {
-            $rule = $rules['total-price'];
-            $errors['total-price'] = $rule($value);
-            continue;
+        switch ($key) {
+            case 'shema':
+                $errors['shema'] = $rules['shema']((int)$value);
+                break;
+
+            case 'filler':
+            case 'topping':
+                $errors[$key] = $rules['component-length']($key, $value, $createdPoke['shema'] ?? null);
+                if (!$errors[$key]) {
+                    $errors[$key] = $rules['component']($key, $value);
+                }
+                break;
+
+            case 'total-price':
+                $errors['total-price'] = $rules['total-price']($value);
+                break;
+
+            case 'proteinAdd':
+            case 'fillerAdd':
+            case 'toppingAdd':
+            case 'sauceAdd':
+            case 'crunchAdd':
+                if ($value !== '') {
+                    $newKey = ($key === 'proteinAdd') ? 'protein-add' : (($key === 'fillerAdd') ? 'filler' : (($key === 'toppingAdd') ? 'topping' : (($key === 'sauceAdd') ? 'sauce' : 'crunch')));
+                    $errors[$key] = $rules['component']($newKey, $value);
+                }
+                break;
+
+            default:
+                $errors[$key] = $rules['component']($key, $value);
+                break;
         }
-
-        $isAddComponent = $key == 'proteinAdd' || $key == 'fillerAdd' || $key == 'toppingAdd' || $key == 'sauceAdd' || $key == 'crunchAdd';
-        if ($isAddComponent && $value != '') {
-
-            $newKey = '';
-            if ($key === 'proteinAdd') {
-                $newKey = 'protein-add';
-            } elseif ($key === 'fillerAdd') {
-                $newKey = 'filler';
-            } elseif ($key === 'toppingAdd') {
-                $newKey = 'topping';
-            } elseif ($key === 'sauceAdd') {
-                $newKey = 'sauce';
-            } else {
-                $newKey = 'crunch';
-            }
-
-            $rule = $rules['component'];
-            $errors[$key] = $rule($newKey, $value);
-
-            continue;
-        }
-
-        if ($isAddComponent && $value == '') {
-            continue;
-        }
-
-        // Проверка на наличие компонента в Поке
-        $rule = $rules['component'];
-        $errors[$key] = $rule($key, $value);
     }
 
     // Фильтрует массив ошибок
