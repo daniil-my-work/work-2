@@ -41,6 +41,7 @@ function handleFileUpload($fieldName, $uploadDir, $validExtensions)
     // Проверка наличия файла и ошибок загрузки
     if (!isset($_FILES[$fieldName]) || $_FILES[$fieldName]['error'] !== UPLOAD_ERR_OK) {
         $result['error'] = 'Файл не был загружен.';
+        
         return $result;
     }
 
@@ -48,6 +49,7 @@ function handleFileUpload($fieldName, $uploadDir, $validExtensions)
     $fileExtension = strtolower(pathinfo($_FILES[$fieldName]['name'], PATHINFO_EXTENSION));
     if (!in_array($fileExtension, $validExtensions)) {
         $result['error'] = 'Недопустимое расширение файла.';
+
         return $result;
     }
 
@@ -56,6 +58,7 @@ function handleFileUpload($fieldName, $uploadDir, $validExtensions)
     $uploadFilePath = $uploadDir . $fileName;
     if (!move_uploaded_file($_FILES[$fieldName]['tmp_name'], $uploadFilePath)) {
         $result['error'] = 'Ошибка при сохранении файла.';
+
         return $result;
     }
 
@@ -77,6 +80,7 @@ function importCsvData($con, $filePath, $expectedColumns, $tableName)
     $file = fopen($filePath, 'r');
     if (!$file) {
         $result['error'] = 'Ошибка при открытии файла.';
+
         return $result;
     }
 
@@ -86,6 +90,7 @@ function importCsvData($con, $filePath, $expectedColumns, $tableName)
         fclose($file);
         unlink($filePath);
         $result['error'] = 'Не удалось прочитать заголовки из файла.';
+
         return $result;
     }
 
@@ -125,7 +130,10 @@ function importCsvData($con, $filePath, $expectedColumns, $tableName)
         }
     }
 
+    // Закрытие файла после завершения чтения
     fclose($file);
+
+    // Удаление файла только после того, как все данные были успешно обработаны или если возникла ошибка
     unlink($filePath);
 
     return $result;
