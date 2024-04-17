@@ -7,62 +7,35 @@ require_once('./functions/db.php');
 require_once('./data/data.php');
 
 
-
-// Функция для выполнения запроса к базе данных и получения данных
-function fetchDataFromDb($con, $sql)
-{
-    $result = mysqli_query($con, $sql);
-    $data = [];
-
-    while ($row = mysqli_fetch_assoc($result)) {
-        $data[] = $row;
-    }
-
-    return $data;
-}
-
-// Функция для создания CSV файла и записи данных
-function createCsvFile($filename, $data, $columns)
-{
-    $fp = fopen($filename, 'w');
-    fprintf($fp, chr(0xEF).chr(0xBB).chr(0xBF)); // Добавляем BOM для UTF-8
-
-    // Добавляет хедер
-    fputcsv($fp, $columns);
-    
-    foreach ($data as $row) {
-        fputcsv($fp, $row);
-    }
-
-    fclose($fp);
-}
+// Определяет вкладку
+$tabGroup = $_GET['tab'] ?? 'menu';
 
 
-$tabGroup = $_GET['tabGroup'] ?? 'menu';
+// Конфигурация SQL запросов и названий колонок в зависимости от типа данных
+$queryConfig = [
+    'menu' => [
+        'query' => "SELECT menu.title, menu.img, menu.description, menu.price, menu.cooking_time, menu.category_id FROM menu",
+        'columns' => $columnNameMenu
+    ],
+    'poke' => [
+        'query' => "SELECT components.title, components.img, components.price, components.component_type, components.component_name, components.component_poke_type FROM components",
+        'columns' => $columnNamePoke
+    ]
+];
 
+// Определение типа данных, которые нужно извлечь
+$type = $tabGroup === 'menu' ? 'menu' : 'poke';
 
-// Получаем из массива строку с наименованием колонок
-if ($tabGroup === 'menu') {
-    $getDataFromMenu = "SELECT menu.title, menu.img, menu.description, menu.price, menu.cooking_time, menu.category_id FROM menu";
+// Получение SQL запроса и названий колонок для заданного типа данных
+$sql = $queryConfig[$type]['query'];
+$columns = array_values($queryConfig[$type]['columns']);
 
-    // Получение данных из базы данных
-    $data = fetchDataFromDb($con, $getDataFromMenu);
-
-    // Названия колонок
-    $columns = array_values($columnNameMenu);
-} else {
-    $getDataFromPoke = "SELECT components.title, components.img, components.price, components.component_type, components.component_name, components.component_poke_type FROM components";
-
-    // Получение данных из базы данных
-    $data = fetchDataFromDb($con, $getDataFromPoke);
-
-    // Названия колонок
-    $columns = array_values($columnNamePoke);
-}
+// Получение данных из базы данных
+$data = fetchDataFromDb($con, $sql);
 
 
 // Создание CSV файла
-$filename = "{$tabGroup}.csv";
+$filename = "{$type}.csv";
 createCsvFile($filename, $data, $columns);
 
 // Устанавливаем заголовки для скачивания файла

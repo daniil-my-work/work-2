@@ -277,9 +277,13 @@ function get_query_order_id($orderId)
 * Формирует SQL-запрос для получения заказа 
 * @return string SQL-запрос
 */
-function get_query_insert_data_from_file($tableName, $placeholders)
+function get_query_insert_data_from_file($tableName)
 {
-   $sql = "INSERT INTO {$tableName} VALUES ({$placeholders})";
+    if ($tableName === 'menu') {
+        $sql = "INSERT INTO menu (`title`, `img`, `description`, `price`, `cooking_time`, `category_id`) VALUES (?, ?, ?, ?, ?, ?)";
+    } else {
+        $sql = "INSERT INTO components (`title`, `img`, `price`, `component_type`, `component_name`, `component_poke_type`) VALUES (?, ?, ?, ?, ?, ?)";
+    }
 
    return $sql;
 }

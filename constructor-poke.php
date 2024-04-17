@@ -10,39 +10,42 @@ require_once('./data/data.php');
 
 
 // Список категорий меню
-$categoryList = getCategories($con);
+$categoryList = getCategories($con) ?? [];
 
 // Список компонентов Поке
-$componentList = getComponentList($con);
+$componentList = getComponentList($con) ?? [];
 
 
-// Извлекаем уникальные значения ключа component_type
-$uniqueComponentTypes = array_unique(array_column($componentList, 'component_type'));
+// Извлекаем уникальные значения ключа component_type, только если список не пуст
+if (!empty($componentList)) {
+    $uniqueComponentTypes = array_unique(array_column($componentList, 'component_type'));
 
+    // Создаем массив для хранения отфильтрованных компонентов
+    $sortComponentList = array_reduce($uniqueComponentTypes, function ($carry, $uniqueType) use ($componentList) {
+        // Фильтруем массив $componentList для текущего уникального типа
+        $filteredComponents = array_filter($componentList, function ($item) use ($uniqueType) {
+            return $item['component_type'] === $uniqueType;
+        });
 
-// Создаем массив для хранения отфильтрованных компонентов
-$sortComponentList = array_reduce($uniqueComponentTypes, function ($carry, $uniqueType) use ($componentList) {
-    // Фильтруем массив $componentList для текущего уникального типа
-    $filteredComponents = array_filter($componentList, function ($item) use ($uniqueType) {
-        return $item['component_type'] === $uniqueType;
-    });
+        // Добавляем отфильтрованные компоненты в итоговый массив, используя тип как ключ
+        $carry[$uniqueType] = $filteredComponents;
 
-    // Добавляем отфильтрованные компоненты в итоговый массив, используя тип как ключ
-    $carry[$uniqueType] = $filteredComponents;
-
-    return $carry;
-}, []);
-
+        return $carry;
+    }, []);
+} else {
+    // Если список компонентов пуст, возвращаем пустой массив или другое подходящее значение
+    $sortComponentList = [];
+}
 
 
 // Списки компонентов
-$proteinList = $sortComponentList['protein'];
-$baseList = $sortComponentList['base'];
-$fillerList = $sortComponentList['filler'];
-$toppingList = $sortComponentList['topping'];
-$sauceList = $sortComponentList['sauce'];
-$crunchList = $sortComponentList['crunch'];
-$proteinAddList = $sortComponentList['protein-add'];
+$proteinList = $sortComponentList['protein'] ?? null;
+$baseList = $sortComponentList['base'] ?? null;
+$fillerList = $sortComponentList['filler'] ?? null;
+$toppingList = $sortComponentList['topping'] ?? null;
+$sauceList = $sortComponentList['sauce'] ?? null;
+$crunchList = $sortComponentList['crunch'] ?? null;
+$proteinAddList = $sortComponentList['protein-add'] ?? null;
 
 
 // Массив для хранения уникальных компонентов

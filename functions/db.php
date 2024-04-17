@@ -257,8 +257,7 @@ function clearTable($con, $tableName)
  */
 function insertData($con, $tableName, $rowData)
 {
-    $placeholders = implode(',', array_fill(0, count($rowData), '?'));
-    $sql = get_query_insert_data_from_file($tableName, $placeholders);
+    $sql = get_query_insert_data_from_file($tableName);
 
     // Подготавливаем и выполняем запрос
     $stmt = db_get_prepare_stmt($con, $sql, $rowData);

@@ -263,3 +263,42 @@ function get_poke_title($con, $proteinId)
         return "Поке (название не найдено)";
     }
 }
+
+
+/**
+ * Создает CSV файл и записывает в него данные. Функция открывает файл для записи, добавляет BOM для поддержки UTF-8,
+ * записывает заголовки столбцов и последовательно добавляет данные из массива.
+ *
+ * @param string $filename Путь к файлу, который будет создан или перезаписан.
+ * @param array $data Массив массивов, содержащий строки данных, которые будут записаны в CSV файл.
+ * @param array $columns Массив, содержащий заголовки столбцов для CSV файла.
+ * @return void Функция не возвращает значение.
+ */
+function createCsvFile($filename, $data, $columns)
+{
+    $fp = fopen($filename, 'w');
+    fprintf($fp, chr(0xEF) . chr(0xBB) . chr(0xBF)); // Добавляем BOM для UTF-8
+
+    // Добавляет хедер
+    fputcsv($fp, $columns);
+
+    foreach ($data as $row) {
+        fputcsv($fp, $row);
+    }
+
+    fclose($fp);
+}
+
+
+// Функция для выполнения запроса к базе данных и получения данных
+function fetchDataFromDb($con, $sql)
+{
+    $result = mysqli_query($con, $sql);
+    $data = [];
+
+    while ($row = mysqli_fetch_assoc($result)) {
+        $data[] = $row;
+    }
+
+    return $data;
+}

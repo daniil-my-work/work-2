@@ -50,11 +50,13 @@
                                 Не выбран
                             </option>
 
-                            <?php foreach ($proteinList as $proteinItem) : ?>
-                                <option value="<?= $proteinItem['id']; ?>" data-price="<?= $proteinItem['price']; ?>">
-                                    <?= $proteinItem['title']; ?>
-                                </option>
-                            <?php endforeach; ?>
+                            <?php if ($proteinList) : ?>
+                                <?php foreach ($proteinList as $proteinItem) : ?>
+                                    <option value="<?= $proteinItem['id']; ?>" data-price="<?= $proteinItem['price']; ?>">
+                                        <?= $proteinItem['title']; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </select>
 
                         <?php $classHidden = isset($errors['protein']) ? '' : 'hidden'; ?>
@@ -82,11 +84,13 @@
                                 Не выбран
                             </option>
 
-                            <?php foreach ($baseList as $baseItem) : ?>
-                                <option value="<?= $baseItem['id']; ?>">
-                                    <?= $baseItem['title']; ?>
-                                </option>
-                            <?php endforeach; ?>
+                            <?php if ($baseList) : ?>
+                                <?php foreach ($baseList as $baseItem) : ?>
+                                    <option value="<?= $baseItem['id']; ?>">
+                                        <?= $baseItem['title']; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </select>
 
                         <?php $classHidden = isset($errors['base']) ? '' : 'hidden'; ?>
@@ -142,15 +146,17 @@
                         </div>
 
                         <ul class="constructor-poke-list">
-                            <?php foreach ($fillerList as $fillerItem) : ?>
-                                <li class="constructor-poke-item">
-                                    <input type="checkbox" class="constructor-poke-item-checkbox constructor-poke-item-checkbox--filler" id="<?= $fillerItem['title']; ?>" name="filler[]" value="<?= $fillerItem['id']; ?>">
+                            <?php if ($fillerList) : ?>
+                                <?php foreach ($fillerList as $fillerItem) : ?>
+                                    <li class="constructor-poke-item">
+                                        <input type="checkbox" class="constructor-poke-item-checkbox constructor-poke-item-checkbox--filler" id="<?= $fillerItem['title']; ?>" name="filler[]" value="<?= $fillerItem['id']; ?>">
 
-                                    <label for="<?= $fillerItem['title']; ?>">
-                                        <?= $fillerItem['title']; ?>
-                                    </label>
-                                </li>
-                            <?php endforeach; ?>
+                                        <label for="<?= $fillerItem['title']; ?>">
+                                            <?= $fillerItem['title']; ?>
+                                        </label>
+                                    </li>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </ul>
                     </div>
 
@@ -184,15 +190,17 @@
                         </div>
 
                         <ul class="constructor-poke-list constructor-poke-list--toping">
-                            <?php foreach ($toppingList as $toppingItem) : ?>
-                                <li class="constructor-poke-item">
-                                    <input type="checkbox" class="constructor-poke-item-checkbox constructor-poke-item-checkbox--toping" id="<?= $toppingItem['title']; ?>" name="topping[]" value="<?= $toppingItem['id']; ?>">
+                            <?php if ($toppingList) : ?>
+                                <?php foreach ($toppingList as $toppingItem) : ?>
+                                    <li class="constructor-poke-item">
+                                        <input type="checkbox" class="constructor-poke-item-checkbox constructor-poke-item-checkbox--toping" id="<?= $toppingItem['title']; ?>" name="topping[]" value="<?= $toppingItem['id']; ?>">
 
-                                    <label for="<?= $toppingItem['title']; ?>">
-                                        <?= $toppingItem['title']; ?>
-                                    </label>
-                                </li>
-                            <?php endforeach; ?>
+                                        <label for="<?= $toppingItem['title']; ?>">
+                                            <?= $toppingItem['title']; ?>
+                                        </label>
+                                    </li>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </ul>
                     </div>
 
@@ -215,11 +223,13 @@
                                 Не выбран
                             </option>
 
-                            <?php foreach ($sauceList as $sauceItem) : ?>
-                                <option value="<?= $sauceItem['id']; ?>">
-                                    <?= $sauceItem['title']; ?>
-                                </option>
-                            <?php endforeach; ?>
+                            <?php if ($sauceList) : ?>
+                                <?php foreach ($sauceList as $sauceItem) : ?>
+                                    <option value="<?= $sauceItem['id']; ?>">
+                                        <?= $sauceItem['title']; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </select>
 
                         <?php $classHidden = isset($errors['sauce']) ? '' : 'hidden'; ?>
@@ -247,11 +257,13 @@
                                 Не выбран
                             </option>
 
-                            <?php foreach ($crunchList as $crunchItem) : ?>
-                                <option value="<?= $crunchItem['id']; ?>">
-                                    <?= $crunchItem['title']; ?>
-                                </option>
-                            <?php endforeach; ?>
+                            <?php if ($crunchList) : ?>
+                                <?php foreach ($crunchList as $crunchItem) : ?>
+                                    <option value="<?= $crunchItem['id']; ?>">
+                                        <?= $crunchItem['title']; ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </select>
 
                         <?php $classHidden = isset($errors['crunch']) ? '' : 'hidden'; ?>
@@ -288,11 +300,13 @@
                             Не выбран
                         </option>
 
-                        <?php foreach ($proteinAddList as $proteinAddItem) : ?>
-                            <option value="<?= $proteinAddItem['id']; ?>" data-price="<?= $proteinAddItem['price']; ?>">
-                                <?= $proteinAddItem['title']; ?>
-                            </option>
-                        <?php endforeach; ?>
+                        <?php if ($proteinAddList) : ?>
+                            <?php foreach ($proteinAddList as $proteinAddItem) : ?>
+                                <option value="<?= $proteinAddItem['id']; ?>" data-price="<?= $proteinAddItem['price']; ?>">
+                                    <?= $proteinAddItem['title']; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </select>
 
 
@@ -309,15 +323,18 @@
                     </span>
 
                     <ul class="constructor-poke-list constructor-poke-list--second" id="constructor-poke__fillerAdd">
-                        <?php foreach ($fillerList as $fillerItem) : ?>
-                            <li class="constructor-poke-item" data-price="<?= $fillerItem['price']; ?>">
-                                <input type="checkbox" class="constructor-poke-item-checkbox constructor-poke-item-checkbox--fillerAdd" id="<?= $fillerItem['title']; ?>-add" name="fillerAdd[]" value="<?= $fillerItem['id']; ?>" data-price="<?= $fillerItem['price']; ?>">
 
-                                <label for="<?= $fillerItem['title']; ?>-add">
-                                    <?= $fillerItem['title']; ?>
-                                </label>
-                            </li>
-                        <?php endforeach; ?>
+                        <?php if ($fillerList) : ?>
+                            <?php foreach ($fillerList as $fillerItem) : ?>
+                                <li class="constructor-poke-item" data-price="<?= $fillerItem['price']; ?>">
+                                    <input type="checkbox" class="constructor-poke-item-checkbox constructor-poke-item-checkbox--fillerAdd" id="<?= $fillerItem['title']; ?>-add" name="fillerAdd[]" value="<?= $fillerItem['id']; ?>" data-price="<?= $fillerItem['price']; ?>">
+
+                                    <label for="<?= $fillerItem['title']; ?>-add">
+                                        <?= $fillerItem['title']; ?>
+                                    </label>
+                                </li>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </ul>
 
 
@@ -334,15 +351,17 @@
                     </span>
 
                     <ul class="constructor-poke-list constructor-poke-list--second" id="constructor-poke__toppingAdd">
-                        <?php foreach ($toppingList as $toppingItem) : ?>
-                            <li class="constructor-poke-item" data-price="<?= $toppingItem['price']; ?>">
-                                <input type="checkbox" class="constructor-poke-item-checkbox constructor-poke-item-checkbox--toppingAdd" id="<?= $toppingItem['title']; ?>-add" name="toppingAdd[]" value="<?= $toppingItem['id']; ?>" data-price="<?= $toppingItem['price']; ?>">
+                        <?php if ($toppingList) : ?>
+                            <?php foreach ($toppingList as $toppingItem) : ?>
+                                <li class="constructor-poke-item" data-price="<?= $toppingItem['price']; ?>">
+                                    <input type="checkbox" class="constructor-poke-item-checkbox constructor-poke-item-checkbox--toppingAdd" id="<?= $toppingItem['title']; ?>-add" name="toppingAdd[]" value="<?= $toppingItem['id']; ?>" data-price="<?= $toppingItem['price']; ?>">
 
-                                <label for="<?= $toppingItem['title']; ?>-add">
-                                    <?= $toppingItem['title']; ?>
-                                </label>
-                            </li>
-                        <?php endforeach; ?>
+                                    <label for="<?= $toppingItem['title']; ?>-add">
+                                        <?= $toppingItem['title']; ?>
+                                    </label>
+                                </li>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </ul>
 
 
@@ -363,11 +382,13 @@
                             Не выбран
                         </option>
 
-                        <?php foreach ($sauceList as $sauceItem) : ?>
-                            <option value="<?= $sauceItem['id']; ?>" data-price="<?= $sauceItem['price']; ?>">
-                                <?= $sauceItem['title']; ?>
-                            </option>
-                        <?php endforeach; ?>
+                        <?php if ($sauceList) : ?>
+                            <?php foreach ($sauceList as $sauceItem) : ?>
+                                <option value="<?= $sauceItem['id']; ?>" data-price="<?= $sauceItem['price']; ?>">
+                                    <?= $sauceItem['title']; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </select>
 
 
@@ -388,11 +409,13 @@
                             Не выбран
                         </option>
 
-                        <?php foreach ($crunchList as $crunchItem) : ?>
-                            <option value="<?= $crunchItem['id']; ?>" data-price="<?= $crunchItem['price']; ?>">
-                                <?= $crunchItem['title']; ?>
-                            </option>
-                        <?php endforeach; ?>
+                        <?php if ($crunchList) : ?>
+                            <?php foreach ($crunchList as $crunchItem) : ?>
+                                <option value="<?= $crunchItem['id']; ?>" data-price="<?= $crunchItem['price']; ?>">
+                                    <?= $crunchItem['title']; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </select>
                 </div>
 
