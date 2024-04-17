@@ -272,3 +272,14 @@ function get_query_order_id($orderId)
 
     return $sql;
 }
+
+/**
+* Формирует SQL-запрос для получения заказа 
+* @return string SQL-запрос
+*/
+function get_query_insert_data_from_file($tableName, $placeholders)
+{
+   $sql = "INSERT INTO {$tableName} VALUES ({$placeholders})";
+
+   return $sql;
+}

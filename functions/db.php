@@ -214,14 +214,55 @@ function insertPokeInDb($con, $poke)
 }
 
 
-// Функция для получения названия компонента из базы данных
-function getComponentTitle($con, $componentId) {
+/**
+ * Получает название компонента по его идентификатору из базы данных.
+ *
+ * @param object $con Объект подключения к базе данных.
+ * @param int $componentId Идентификатор компонента, для которого необходимо получить название.
+ * @return string Название компонента, если найдено, или строку "Неизвестный компонент" в случае ошибки или если компонент не найден.
+ */
+function getComponentTitle($con, $componentId)
+{
     $sql = get_query_component_names($componentId);
     $result = mysqli_query($con, $sql);
-   
+
     if ($row = mysqli_fetch_assoc($result)) {
         return $row['title'];
     }
-   
+
     return "Неизвестный компонент";
+}
+
+
+/**
+ * Очищает все записи из указанной таблицы в базе данных.
+ *
+ * @param object $con Объект подключения к базе данных.
+ * @param string $tableName Имя таблицы, из которой будут удалены все записи.
+ */
+function clearTable($con, $tableName)
+{
+    $sqlClear = "DELETE FROM {$tableName}";
+    mysqli_query($con, $sqlClear);
+}
+
+
+/**
+ * Вставляет данные в указанную таблицу на основе предоставленных данных.
+ *
+ * @param object $con Объект подключения к базе данных.
+ * @param string $tableName Имя таблицы, в которую будут вставлены данные.
+ * @param array $rowData Массив данных, которые необходимо вставить в таблицу.
+ * @return boolean Возвращает true, если операция вставки прошла успешно, иначе false.
+ */
+function insertData($con, $tableName, $rowData)
+{
+    $placeholders = implode(',', array_fill(0, count($rowData), '?'));
+    $sql = get_query_insert_data_from_file($tableName, $placeholders);
+
+    // Подготавливаем и выполняем запрос
+    $stmt = db_get_prepare_stmt($con, $sql, $rowData);
+    $res = mysqli_stmt_execute($stmt);
+
+    return $res;
 }

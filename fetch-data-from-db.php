@@ -4,26 +4,8 @@ require_once('./functions/init.php');
 require_once('./functions/helpers.php');
 require_once('./functions/models.php');
 require_once('./functions/db.php');
+require_once('./data/data.php');
 
-
-// Названия столбцов Меню
-$columnNameMenu = [
-    'title' => 'Название',
-    'img' => 'Фото (ссылка)',
-    'description' => 'Описание',
-    'price' => 'Цена',
-    'cooking_time' => 'Время приготовления',
-    'category_id' => 'Айди категории: (поке – 1; роллы – 2; супы – 3; горячее – 4; вок – 5; закуски – 6; сэндвичи – 7; десерты – 8; напитки – 9; соус – 10; авторский поке – 11)'
-];
-
-// Названия столбцов Поке
-$columnNamePoke = [
-    'title' => 'Название',
-    'img' => 'Фото (ссылка)',
-    'price' => 'Цена',
-    'component_type' => 'Тип компонента: (protein; protein-add; base; filler; topping; sauce; crunch)',
-    'component_name' => 'Название компонента: (протеин; протеин-добавка; основа; наполнитель; топпинг; соус; хруст)',
-];
 
 
 // Функция для выполнения запроса к базе данных и получения данных
@@ -56,7 +38,7 @@ function createCsvFile($filename, $data, $columns)
 }
 
 
-$tabGroup = isset($_GET['tabGroup']) ? $_GET['tabGroup'] : 'menu';
+$tabGroup = $_GET['tabGroup'] ?? 'menu';
 
 
 // Получаем из массива строку с наименованием колонок
@@ -69,7 +51,7 @@ if ($tabGroup === 'menu') {
     // Названия колонок
     $columns = array_values($columnNameMenu);
 } else {
-    $getDataFromPoke = "SELECT components.title, components.img, components.price, components.component_type, components.component_name FROM components";
+    $getDataFromPoke = "SELECT components.title, components.img, components.price, components.component_type, components.component_name, components.component_poke_type FROM components";
 
     // Получение данных из базы данных
     $data = fetchDataFromDb($con, $getDataFromPoke);
@@ -80,7 +62,7 @@ if ($tabGroup === 'menu') {
 
 
 // Создание CSV файла
-$filename = 'data.csv';
+$filename = "{$tabGroup}.csv";
 createCsvFile($filename, $data, $columns);
 
 // Устанавливаем заголовки для скачивания файла
