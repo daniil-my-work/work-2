@@ -7,27 +7,17 @@ require_once('./functions/models.php');
 require_once('./data/data.php');
 
 
-// Получает список категорий меню 
-$getСategories = get_query_categories();
-$categories = mysqli_query($con, $getСategories);
+// Список категорий меню
+$categoryList = getCategories($con);
 
-if ($categories && mysqli_num_rows($categories) > 0) {
-    $categoryList = get_arrow($categories);
-} else {
-    $categoryList = NULL;
-}
 
 // Данные об айди заказа
-$orderId = isset($_GET['orderId']) ? $_GET['orderId'] : null;
-$nameLink = isset($_GET['prevLink']) ? $_GET['prevLink'] : null;
+$orderId = $_GET['orderId'] ?? null;
+$nameLink = $_GET['prevLink'] ?? null;
 
-if ($nameLink == 'account') {
-    $backLink = './account.php';
-    $backLinkName = 'личный кабинет';
-} else {
-    $backLink = './index.php';
-    $backLinkName = 'на главную';
-}
+// Упрощение условия с помощью тернарного оператора
+$backLink = ($nameLink === 'account') ? './account.php' : './index.php';
+$backLinkName = ($nameLink === 'account') ? 'личный кабинет' : 'на главную';
 
 
 if (is_null($orderId)) {
@@ -37,14 +27,15 @@ if (is_null($orderId)) {
 
 
 // Получает данные о конкретном заказе по id заказа
-$sql = "SELECT * FROM orders WHERE orders.order_id = '$orderId'";
+$sql = get_query_order_info_by_id($orderId);
 $result = mysqli_query($con, $sql);
 
-$orderInfo = null;
+// Проверяем наличие результатов и возвращаем данные или перенаправляем пользователя
 if ($result && mysqli_num_rows($result) > 0) {
     $orderInfo = get_arrow($result);
 } else {
     header("Location: $backLink");
+    exit;
 }
 
 

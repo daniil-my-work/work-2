@@ -21,7 +21,7 @@
     <div class="menu">
         <div class="menu__wrapper">
             <h2 class="title menu__title">
-                <?php if ($products) : ?>
+                <?php if (!empty($products)) : ?>
                     <?= formatFirstLetter($categoryName['category_name']); ?>
                 <?php else : ?>
                     <div class="error">
@@ -33,11 +33,11 @@
             </h2>
 
             <ul class="menu__list">
-                <?php if ($products) : ?>
+                <?php if (!empty($products)) : ?>
                     <!-- Список продуктов -->
                     <?php foreach ($products as $product) : ?>
                         <?php $productId = $product['id']; ?>
-                        <li class="menu__item" data-product-id="<?= $productId ?>">
+                        <li class="menu__item" data-product-id="<?= $productId; ?>">
                             <?php $hiddenButton = isset($productsData[$productId]) ? 'hidden' : ''; ?>
                             <?php $hiddenCounter = !isset($productsData[$productId]) ? 'hidden' : ''; ?>
 

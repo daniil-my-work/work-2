@@ -274,6 +274,17 @@ function get_query_order_id($orderId)
 }
 
 /**
+ * Формирует SQL-запрос для получения данных о конкретном заказе по id заказа
+ * @return string SQL-запрос
+ */
+function get_query_order_info_by_id($orderId)
+{
+    $sql = "SELECT * FROM orders WHERE orders.order_id = '$orderId'";
+
+    return $sql;
+}
+
+/**
 * Формирует SQL-запрос для получения заказа 
 * @return string SQL-запрос
 */

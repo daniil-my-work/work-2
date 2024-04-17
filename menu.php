@@ -17,43 +17,20 @@ if (isset($productsData['menu'])) {
 }
 
 
-// Получает список категорий меню 
-$getСategories = get_query_categories();
-$categories = mysqli_query($con, $getСategories);
-
-if ($categories && mysqli_num_rows($categories) > 0) {
-    $categoryList = get_arrow($categories);
-} else {
-    $categoryList = NULL;
-}
-
+// Список категорий меню
+$categoryList = getCategories($con);
 
 // Получает активную категорию
 $activeCategory = isset($_GET['category']) ? $_GET['category'] : 'rolls';
 
-
 // Получает данные о выбранной категории
-$getSelectedCategory = get_query_selected_category($activeCategory);
-$category = mysqli_query($con, $getSelectedCategory);
-
-if ($category && mysqli_num_rows($category) > 0) {
-    $categoryName = get_arrow($category);
-} else {
-    $categoryName = NULL;
-}
-
+$categoryName = fetchCategoryName($con, $activeCategory);
 
 // Получает список продуктов по выбранной категории 
-$getProductsByCategory = get_query_selected_products($activeCategory);
-$products = mysqli_query($con, $getProductsByCategory);
-
-if ($products && mysqli_num_rows($products) > 0) {
-    $productList = get_arrow($products);
-} else {
-    $productList = NULL;
-}
+$productList = getProductsByCategory($con, $activeCategory);
 
 
+// ==== ШАБЛОНЫ ====
 $page_head = include_template(
     'head.php',
     [

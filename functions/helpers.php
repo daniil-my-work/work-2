@@ -290,7 +290,15 @@ function createCsvFile($filename, $data, $columns)
 }
 
 
-// Функция для выполнения запроса к базе данных и получения данных
+/**
+ * Извлекает данные из базы данных по заданному SQL запросу. Функция выполняет SQL запрос и возвращает результаты 
+ * в виде массива ассоциативных массивов, где каждый ассоциативный массив представляет одну строку результата запроса.
+ *
+ * @param mysqli $con Объект соединения с базой данных, через который выполняется запрос.
+ * @param string $sql Строка SQL запроса, который будет выполнен для извлечения данных.
+ * @return array Массив ассоциативных массивов, содержащий результаты запроса. Каждый элемент массива 
+ * представляет собой строку из базы данных в виде ассоциативного массива.
+ */
 function fetchDataFromDb($con, $sql)
 {
     $result = mysqli_query($con, $sql);
@@ -301,4 +309,38 @@ function fetchDataFromDb($con, $sql)
     }
 
     return $data;
+}
+
+
+/**
+ * Получает имя категории на основе идентификатора активной категории.
+ *
+ * @param mysqli $con Подключение к базе данных.
+ * @param int|string $activeCategory Идентификатор активной категории.
+ * @return string|null Возвращает имя категории, если она найдена, иначе возвращает null.
+ */
+function fetchCategoryName($con, $activeCategory)
+{
+    $getSelectedCategory = get_query_selected_category($activeCategory);
+    $category = mysqli_query($con, $getSelectedCategory);
+
+    // Используем тернарный оператор для упрощения возврата значения
+    return ($category && mysqli_num_rows($category) > 0) ? get_arrow($category) : null;
+}
+
+
+/**
+ * Получает имя категории на основе идентификатора активной категории.
+ *
+ * @param mysqli $con Подключение к базе данных.
+ * @param int|string $activeCategory Идентификатор активной категории.
+ * @return string|null Возвращает имя категории, если она найдена, иначе возвращает null.
+ */
+function getProductsByCategory($con, $activeCategory)
+{
+    $getProductsByCategory = get_query_selected_products($activeCategory);
+    $products = fetchDataFromDb($con, $getProductsByCategory);
+
+    // Используем тернарный оператор для упрощения возврата значения
+    return $products ?? [];
 }
