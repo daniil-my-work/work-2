@@ -17,32 +17,34 @@
     </p>
 
     <ul class="basket__list">
-        <?php foreach ($productList as $productItem) : ?>
-            <?php $productId = $productItem['product_id']; ?>
-            <li class="basket__item basket__item--second" data-product-id="<?= $productId ?>">
-                <div class="basket__item-wrapper">
-                    <img src="<?= $productItem['img']; ?>" alt="" class="basket__item-img">
+        <?php if (!empty($productList)) : ?>
+            <?php foreach ($productList as $productItem) : ?>
+                <?php $productId = $productItem['product_id']; ?>
+                <li class="basket__item basket__item--second" data-product-id="<?= $productId ?>">
+                    <div class="basket__item-wrapper">
+                        <img src="<?= $productItem['img']; ?>" alt="" class="basket__item-img">
 
-                    <div class="basket__item-info basket__item-info--second">
-                        <p class="sub-title basket__item-title">
-                            <?= $productItem['title']; ?>
-                        </p>
+                        <div class="basket__item-info basket__item-info--second">
+                            <p class="sub-title basket__item-title">
+                                <?= $productItem['title']; ?>
+                            </p>
 
-                        <p class="text basket__item-price">
-                            <?= $productItem['description']; ?>
-                        </p>
+                            <p class="text basket__item-price">
+                                <?= $productItem['description']; ?>
+                            </p>
+                        </div>
                     </div>
-                </div>
 
-                <div class="product-item__counter">
-                    <div class="product-item__counter-number-wrapper">
-                        <p class="product-item__counter-number">
-                            <?= $productItem['quantity']; ?>
-                        </p>
+                    <div class="product-item__counter">
+                        <div class="product-item__counter-number-wrapper">
+                            <p class="product-item__counter-number">
+                                <?= $productItem['quantity']; ?>
+                            </p>
+                        </div>
                     </div>
-                </div>
-            </li>
-        <?php endforeach; ?>
+                </li>
+            <?php endforeach; ?>
+        <?php endif; ?>
     </ul>
 
 

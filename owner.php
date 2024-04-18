@@ -13,15 +13,13 @@ if (!$isAuth) {
     exit;
 }
 
-$userEmail = $_SESSION['user_email'];
-$sql = get_query_user_info($userEmail);
-$result = mysqli_query($con, $sql);
-$userInfo = get_arrow($result);
-
+// Получает данные о пользователе
+$userInfo = getUserInfo($con);
 
 $statisticGroup = isset($_GET['group']) ? $_GET['group'] : 'orders';
 
 
+// ==== ШАБЛОНЫ ====
 $page_head = include_template(
     'head.php',
     [

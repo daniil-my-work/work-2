@@ -344,3 +344,49 @@ function getProductsByCategory($con, $activeCategory)
     // Используем тернарный оператор для упрощения возврата значения
     return $products ?? [];
 }
+
+
+/**
+ * Получает данные о конкретном заказе по id заказа
+ *
+ * @param mysqli $con Подключение к базе данных.
+ * @param int|string $orderId Идентификатор заказа.
+ * @return string|null Возвращает имя категории, если она найдена, иначе возвращает null.
+ */
+function getOrderInfoById($con, $orderId)
+{
+    $sql = get_query_order_info_by_id($orderId);
+    $result = mysqli_query($con, $sql);
+    $orderInfo = get_arrow($result);
+
+    return $orderInfo ?? null;
+}
+
+/**
+ * Получает данные о конкретном заказе по id заказа
+ *
+ * @param mysqli $con Подключение к базе данных.
+ * @param int|string $orderId Идентификатор заказа.
+ * @return string|null Возвращает имя категории, если она найдена, иначе возвращает null.
+ */
+function getOrderItems($con, $orderId)
+{
+    $sql = get_query_order_items($orderId);
+    $result = mysqli_query($con, $sql);
+    $orderItems = fetchResultAsArray($result);
+
+    return $orderItems ?? [];
+
+    // $sql = get_query_order_items($orderId);
+    // $result = mysqli_query($con, $sql);
+    // $orderItems = [];
+
+    // if ($result) {
+    //     while ($row = mysqli_fetch_assoc($result)) {
+    //         $orderItems[] = $row;
+    //     }
+    // }
+
+    // return $orderItems;
+}
+

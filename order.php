@@ -27,82 +27,37 @@ if (is_null($orderId)) {
 
 
 // Получает данные о конкретном заказе по id заказа
-$sql = get_query_order_info_by_id($orderId);
-$result = mysqli_query($con, $sql);
+$orderInfo = getOrderInfoById($con, $orderId);
 
-// Проверяем наличие результатов и возвращаем данные или перенаправляем пользователя
-if ($result && mysqli_num_rows($result) > 0) {
-    $orderInfo = get_arrow($result);
-} else {
+if (is_null($orderInfo)) {
     header("Location: $backLink");
     exit;
 }
 
 
-if (is_null($orderInfo)) {
-    $productList = array();
-} else {
-    $productList = array();
+// Данные о товарах в заказе
+$orderId = $orderInfo['order_id'];
 
-    // Данные о товарах в заказе
-    $order_id = $orderInfo['order_id'];
-    $sql = "SELECT order_items.product_id, order_items.tableName FROM order_items WHERE order_items.order_id = '$order_id'";
-    $result = mysqli_query($con, $sql);
+$orderItems = getOrderItems($con, $orderId);
 
-    if ($result && mysqli_num_rows($result) > 0) {
-        $orderItems = get_arrow($result);
-        $orderItemsLength = mysqli_num_rows($result);
-    } else {
-        $orderItems = null;
-        $orderItemsLength = 0;
-    }
 
-    if (!is_null($orderItems)) {
-        if ($orderItemsLength == 1) {
-            $productId = $orderItems['product_id'];
-            $table = $orderItems['tableName'];
+$productList = [];
+if (is_array($orderItems)) {  // Добавьте проверку на массив
+    foreach ($orderItems as $orderItem) {
+        $productId = $orderItem['product_id'];
+        $table = $orderItem['tableName'];
 
-            if ($table == 'menu') {
-                $sql = "SELECT order_items.product_id, order_items.quantity, order_items.unit_price, menu.title, menu.img, menu.description, menu.category_id 
-                        FROM order_items 
-                        LEFT JOIN menu ON order_items.product_id = menu.id
-                        WHERE menu.id = '$productId' AND order_items.order_id = '$orderId'";
-            } else {
-                $sql = "SELECT order_items.product_id, order_items.quantity, order_items.unit_price, poke.title, menu.img, poke.description, poke.category_id 
-                        FROM order_items
-                        LEFT JOIN poke ON order_items.product_id = poke.id
-                        WHERE order_items.product_id = '$productId' AND order_items.order_id = '$orderId'";
-            }
-
-            $result = mysqli_query($con, $sql);
-
-            if ($result) {
-                $productInfo = get_arrow($result);
-                $productList[] = $productInfo;
-            }
+        if ($table == 'menu') {
+            $sql = get_query_order_items_from_menu($productId, $orderId);
         } else {
-            foreach ($orderItems as $orderItem) {
-                $productId = $orderItem['product_id'];
-                $table = $orderItem['tableName'];
+            $sql = get_query_order_items_from_poke($productId, $orderId);
+        }
 
-                if ($table == 'menu') {
-                    $sql = "SELECT order_items.product_id, order_items.quantity, order_items.unit_price, menu.title, menu.img, menu.description, menu.category_id 
-                        FROM order_items 
-                        LEFT JOIN menu ON order_items.product_id = menu.id
-                        WHERE menu.id = '$productId' AND order_items.order_id = '$orderId'";
-                } else {
-                    $sql = "SELECT order_items.product_id, order_items.quantity, order_items.unit_price, poke.title, menu.img, poke.description, poke.category_id 
-                        FROM order_items
-                        LEFT JOIN poke ON order_items.product_id = poke.id
-                        WHERE order_items.product_id = '$productId' AND order_items.order_id = '$orderId'";
-                }
+        $result = mysqli_query($con, $sql);
 
-                $result = mysqli_query($con, $sql);
-
-                if ($result) {
-                    $productInfo = get_arrow($result);
-                    $productList[] = $productInfo;
-                }
+        if ($result) {
+            while ($productInfo = mysqli_fetch_assoc($result)) {
+                $productList[] = $productInfo;
             }
         }
     }
@@ -110,6 +65,7 @@ if (is_null($orderInfo)) {
 
 
 
+// ==== ШАБЛОНЫ ====
 $page_head = include_template(
     'head.php',
     [

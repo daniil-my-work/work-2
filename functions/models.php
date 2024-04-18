@@ -285,9 +285,9 @@ function get_query_order_info_by_id($orderId)
 }
 
 /**
-* Формирует SQL-запрос для получения заказа 
-* @return string SQL-запрос
-*/
+ * Формирует SQL-запрос для получения заказа 
+ * @return string SQL-запрос
+ */
 function get_query_insert_data_from_file($tableName)
 {
     if ($tableName === 'menu') {
@@ -296,5 +296,45 @@ function get_query_insert_data_from_file($tableName)
         $sql = "INSERT INTO components (`title`, `img`, `price`, `component_type`, `component_name`, `component_poke_type`) VALUES (?, ?, ?, ?, ?, ?)";
     }
 
-   return $sql;
+    return $sql;
+}
+
+/**
+ * Формирует SQL-запрос для получения данных о товарах в заказе 
+ * @return string SQL-запрос
+ */
+function get_query_order_items($order_id)
+{
+    $sql = "SELECT order_items.product_id, order_items.tableName FROM order_items WHERE order_items.order_id = '$order_id'";
+
+    return $sql;
+}
+
+
+/**
+ * Формирует SQL-запрос для получения данных о товаре из таблицы Меню 
+ * @return string SQL-запрос
+ */
+function get_query_order_items_from_menu($productId, $orderId)
+{
+    $sql = "SELECT order_items.product_id, order_items.quantity, order_items.unit_price, menu.title, menu.img, menu.description, menu.category_id 
+        FROM order_items 
+        LEFT JOIN menu ON order_items.product_id = menu.id
+        WHERE menu.id = '$productId' AND order_items.order_id = '$orderId'";
+
+    return $sql;
+}
+
+/**
+ * Формирует SQL-запрос для получения данных о товаре из таблицы Меню 
+ * @return string SQL-запрос
+ */
+function get_query_order_items_from_poke($productId, $orderId)
+{
+    $sql = "SELECT order_items.product_id, order_items.quantity, order_items.unit_price, poke.title, menu.img, poke.description, poke.category_id 
+        FROM order_items
+        LEFT JOIN poke ON order_items.product_id = poke.id
+        WHERE order_items.product_id = '$productId' AND order_items.order_id = '$orderId'";
+
+    return $sql;
 }
