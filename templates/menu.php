@@ -2,7 +2,7 @@
 <div class="page__menu">
     <!-- Вкладка -->
     <div class="account__orders-group page__menu-group">
-        <?php if ($categoryList) : ?>
+        <?php if (!is_null($categoryList)) : ?>
             <a class="button--basic account__orders-group-link" href="./constructor-poke.php">
                 конструктор поке
             </a>

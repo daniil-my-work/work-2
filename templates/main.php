@@ -31,7 +31,7 @@
 
 
             <!-- Меню -->
-            <?php if ($products) : ?>
+            <?php if (!is_null($products)) : ?>
                 <ul class="menu__list">
                     <?php foreach ($products as $product) : ?>
                         <?php $productId = $product['id']; ?>
@@ -81,7 +81,6 @@
                         </li>
                     <?php endforeach; ?>
                 </ul>
-
 
                 <nav class="menu__nav">
                     <button class="menu__nav-button menu__nav-button--prev">

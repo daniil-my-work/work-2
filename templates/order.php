@@ -1,19 +1,19 @@
 <!-- Страница заказ -->
 <div class="page__order">
-    <a href="<?= $backLink; ?>" class="basket__breadcrumbs">
+    <a href="<?= $backLink ?? ''; ?>" class="basket__breadcrumbs">
         <svg class="basket__breadcrumbs-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
             <path fill="currentColor" d="M4 15a1 1 0 0 0 1 1h19.586l-4.292 4.292a1 1 0 0 0 1.414 1.414l6-6a.99.99 0 0 0 .292-.702V15c0-.13-.026-.26-.078-.382a.99.99 0 0 0-.216-.324l-6-6a1 1 0 0 0-1.414 1.414L24.586 14H5a1 1 0 0 0-1 1z" />
         </svg>
 
         <span>
-            <?= $backLinkName; ?>
+            <?= $backLinkName ?? ''; ?>
         </span>
     </a>
 
     <img src="./img/svg/bag.svg" alt="" class="basket__icon">
 
     <p class="sub-title order__id">
-        #<?= $orderInfo['order_id']; ?>
+        #<?= $orderInfo['order_id'] ?? ''; ?>
     </p>
 
     <ul class="basket__list">
@@ -53,7 +53,7 @@
             Сумма заказа:
 
             <span class="basket__order-number">
-                <?= $orderInfo['total_amount']; ?>
+                <?= $orderInfo['total_amount'] ?? ''; ?>
             </span>
         </p>
     </div>

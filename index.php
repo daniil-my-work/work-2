@@ -22,27 +22,27 @@ $categoryList = getCategories($con);
 
 // Модальное окно: Контент для вставки
 // $modalList = [
-    // [
-    //     'title' => 'Выберите ваш город',
-    //     'button' => [
-    //         ['text' => 'Ярославль', 'class' => 'btn btn-primary btn-sm'],
-    //         ['text' => 'Рыбинск', 'class' => 'btn btn-secondary btn-sm']
-    //     ],
-    //     'category' => 'city',
-    // ],
-    // [
-    //     'title' => 'Заголовок ошибки',
-    //     'error' => 'Текст ошибки',
-    //     'category' => 'error',
-    // ],
-    // [
-    //     'title' => 'Зарегистрируетесь, чтобы получить бонусы',
-    //     'link' => [
-    //         'linkTitle' => 'Создать личный кабинет',
-    //         'address' => './dsdsds',
-    //     ],
-    //     'category' => 'link',
-    // ],
+//     [
+//         'title' => 'Выберите ваш город',
+//         'button' => [
+//             ['text' => 'Ярославль', 'class' => 'btn btn-primary btn-sm'],
+//             ['text' => 'Рыбинск', 'class' => 'btn btn-secondary btn-sm']
+//         ],
+//         'category' => 'city',
+//     ],
+//     [
+//         'title' => 'Заголовок ошибки',
+//         'error' => 'Текст ошибки',
+//         'category' => 'error',
+//     ],
+//     [
+//         'title' => 'Зарегистрируетесь, чтобы получить бонусы',
+//         'link' => [
+//             'linkTitle' => 'Создать личный кабинет',
+//             'address' => './dsdsds',
+//         ],
+//         'category' => 'link',
+//     ],
 // ];
 
 $modalList = null;
