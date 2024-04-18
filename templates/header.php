@@ -38,7 +38,7 @@
                 <li class="header__nav-item">
                     <?php $accountLink = './account.php'; ?>
 
-                    <?php if ($_SESSION && isset($_SESSION['user_role'])) : ?>
+                    <?php if (isset($_SESSION['user_role'])) : ?>
                         <?php if ($_SESSION['user_role'] == $userRole['owner']) : ?>
                             <?php $accountLink = './owner.php'; ?>
                         <?php elseif ($_SESSION['user_role'] == $userRole['admin']) : ?>
@@ -51,7 +51,7 @@
                     </a>
                 </li>
 
-                <?php if ($_SESSION && isset($_SESSION['user_role'])) : ?>
+                <?php if (isset($_SESSION['user_role'])) : ?>
                     <?php if ($_SESSION['user_role'] == $userRole['client']) : ?>
                         <li class="header__nav-item">
                             <a class="header__nav-item-link" href="./basket.php">
@@ -67,7 +67,7 @@
                     </a>
                 </li>
 
-                <?php if ($_SESSION && isset($_SESSION['user_role'])) : ?>
+                <?php if (isset($_SESSION['user_role'])) : ?>
                     <?php if ($_SESSION['user_role'] == $userRole['owner'] || $_SESSION['user_role'] == $userRole['admin']) : ?>
                         <li class="header__nav-item">
                             <a class="header__nav-item-link" href="./load-menu.php">

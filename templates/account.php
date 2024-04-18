@@ -3,10 +3,10 @@
     <div class="account">
         <!-- Общая инфа для всех кабинетов -->
         <div class="account__info">
-            <img class="account__info-img" src="<?= isset($userInfo['user_img']) ? $userInfo['user_img'] : ''; ?>" alt="">
+            <img class="account__info-img" src="<?= $userInfo['user_img'] ?? ''; ?>" alt="">
 
             <h3 class="account__info-name">
-                <?= isset($userInfo['user_name']) ? $userInfo['user_name'] : ''; ?>
+                <?= $userInfo['user_name'] ?? ''; ?>
             </h3>
 
             <!-- Таблица с данными -->
@@ -17,7 +17,7 @@
                             Почта:
                         </th>
                         <td>
-                            <?= isset($userInfo['user_email']) ? $userInfo['user_email'] : ''; ?>
+                            <?= $userInfo['user_email'] ?? ''; ?>
                         </td>
                     </tr>
                     <tr>
@@ -25,7 +25,7 @@
                             Номер телефона:
                         </th>
                         <td>
-                            <?= isset($userInfo['user_telephone']) ? $userInfo['user_telephone'] : ''; ?>
+                            <?= $userInfo['user_telephone'] ?? ''; ?>
                         </td>
                     </tr>
                     <tr>
@@ -138,7 +138,7 @@
 
 
             <!-- Навигация для таблицы заказов -->
-            <?php if (count($pagination) > 1) : ?>
+            <?php if ($pagination && count($pagination) > 1) : ?>
                 <nav class="menu__nav account__orders-nav">
                     <?php $prevPageNumber = $currentPage - 1; ?>
                     <?php $nextPageNumber = $currentPage + 1; ?>

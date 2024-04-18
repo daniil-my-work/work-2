@@ -20,7 +20,7 @@
                     Меню poke-room
                 </h3>
 
-                <?php if ($categoryList) : ?>
+                <?php if (!is_null($categoryList)) : ?>
                     <ul class="footer__list">
                         <?php foreach ($categoryList as $category) : ?>
                             <li class="footer__item">

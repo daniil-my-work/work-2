@@ -22,11 +22,13 @@ $categoryList = getCategories($con);
 
 // Определяет вкладку
 $tabGroup = $_GET['tabGroup'] ?? 'menu';
+$activeGroup = $tabGroup === 'menu' ? 'меню' : 'поке';
 
 $page_modal = null;
 
 $page_body = include_template('load-menu.php', [
     'tabGroup' => $tabGroup,
+    'activeGroup' => $activeGroup,
 ]);
 
 
@@ -62,6 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             [
                 'errors' => $errors,
                 'tabGroup' => $tabGroup,
+                'activeGroup' => $activeGroup,
             ]
         );
     }

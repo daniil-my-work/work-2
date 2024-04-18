@@ -3,13 +3,6 @@
 
     <!-- Загрузка меню -->
     <div class="load">
-        <?php if (isset($tabGroup)) : ?>
-            <?php $activeGroup = $tabGroup === 'menu' ? 'меню' : 'поке'; ?>
-            <?php $activeTab = $tabGroup; ?>
-        <?php else : ?>
-            <?php $activeGroup = 'меню'; ?>
-        <?php endif; ?>
-
         <h2 class="title load__title">
             Редактировать <?= $activeGroup; ?>
         </h2>
@@ -52,7 +45,7 @@
         <!-- Обновленное значение меню -->
         <div class="load__update">
             <div class="load__update-description">
-                <?php if (isset($tabGroup) && $tabGroup === 'menu') : ?>
+                <?php if (($tabGroup ?? '') === 'menu') : ?>
                     <p class="text about__text mb-2" id="load-description-menu">
                         Чтобы обновить меню, прикрепите файл в формате csv, полученный в виде шаблона.
                     </p>
@@ -77,7 +70,7 @@
 
                 <?php $classHidden = isset($errors['file']) ? '' : 'hidden'; ?>
                 <span class="reg__form-input-wrapper-error <?= $classHidden; ?>">
-                    <?= $errors['file']; ?>
+                    <?= $errors['file'] ?? ''; ?>
                 </span>
 
                 <!-- hidden -->

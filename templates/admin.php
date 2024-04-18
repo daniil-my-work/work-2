@@ -3,10 +3,10 @@
     <div class="account">
         <!-- Общая инфа для всех кабинетов -->
         <div class="account__info">
-            <img class="account__info-img" src="<?= isset($userInfo['user_img']) ? $userInfo['user_img'] : ''; ?>" alt="">
+            <img class="account__info-img" src="<?= $userInfo['user_img'] ?? ''; ?>" alt="">
 
             <h3 class="account__info-name">
-                <?= isset($userInfo['user_name']) ? $userInfo['user_name'] : ''; ?>
+                <?= $userInfo['user_name'] ?? ''; ?>
             </h3>
 
             <!-- Таблица с данными -->
@@ -17,7 +17,7 @@
                             Почта:
                         </th>
                         <td>
-                            <?= isset($userInfo['user_email']) ? $userInfo['user_email'] : ''; ?>
+                            <?= $userInfo['user_email'] ?? ''; ?>
                         </td>
                     </tr>
                     <tr>
@@ -25,7 +25,7 @@
                             Номер телефона:
                         </th>
                         <td>
-                            <?= isset($userInfo['user_telephone']) ? $userInfo['user_telephone'] : ''; ?>
+                            <?= $userInfo['user_telephone'] ?? ''; ?>
                         </td>
                     </tr>
                 </tbody>
@@ -100,7 +100,7 @@
                             </thead>
                             <tbody>
                                 <!-- Проходится по массиву заказов -->
-                                <?php if ($orderListSearch && count($orderListSearch) != 0) : ?>
+                                <?php if (!empty($orderListSearch)) : ?>
                                     <?php foreach ($keysSearch as $key) : ?>
                                         <?php if (count($orderListSearch[$key]) == 1) : ?>
                                             <?php $groupedItemFirst = $orderListSearch[$key][0]; ?>
@@ -286,7 +286,7 @@
                             </thead>
                             <tbody>
                                 <!-- Проходится по массиву заказов -->
-                                <?php if ($orderListActive && count($orderListActive) != 0) : ?>
+                                <?php if (!empty($orderListActive)) : ?>
                                     <?php foreach ($keysActive as $key) : ?>
                                         <?php if (count($orderListActive[$key]) == 1) : ?>
                                             <?php $groupedItemFirst = $orderListActive[$key][0]; ?>
@@ -443,7 +443,7 @@
                             </thead>
                             <tbody>
                                 <!-- Проходится по массиву заказов -->
-                                <?php if ($orderListСomplete && count($orderListСomplete) != 0) : ?>
+                                <?php if (!empty($orderListСomplete)) : ?>
                                     <?php foreach ($keysСomplete as $key) : ?>
                                         <?php if (count($orderListСomplete[$key]) == 1) : ?>
                                             <?php $groupedItemFirst = $orderListСomplete[$key][0]; ?>
@@ -619,7 +619,7 @@
                             </thead>
                             <tbody>
                                 <!-- Проходится по массиву заказов -->
-                                <?php if ($userListLength != 0) : ?>
+                                <?php if (!empty($userListLength)) : ?>
                                     <?php foreach ($userListFormatted as $userItem) : ?>
                                         <tr>
                                             <th scope="row" class="align-middle">

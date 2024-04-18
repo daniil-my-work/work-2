@@ -37,7 +37,7 @@
 
                 <?php $classHidden = isset($errors['user_email']) ? '' : 'hidden'; ?>
                 <span class="reg__form-input-wrapper-error <?= $classHidden; ?>">
-                    <?= $errors['user_email']; ?>
+                    <?= $errors['user_email'] ?? ''; ?>
                 </span>
             </div>
 
@@ -47,7 +47,7 @@
 
                 <?php $classHidden = isset($errors['user_password']) ? '' : 'hidden'; ?>
                 <span class="reg__form-input-wrapper-error <?= $classHidden; ?>">
-                    <?= $errors['user_password']; ?>
+                    <?= $errors['user_password'] ?? ''; ?>
                 </span>
             </div>
 

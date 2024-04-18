@@ -171,10 +171,12 @@ function getGroupOrderItems($con, $sql)
         return [];
     } else {
         $groupedItems = [];
+
         while ($row = mysqli_fetch_assoc($result)) {
             $orderId = $row['order_id'];
             $groupedItems[$orderId][] = $row;
         }
+
         return $groupedItems;
     }
 }
