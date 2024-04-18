@@ -8,7 +8,18 @@ require_once('./functions/validators.php');
 require_once('./data/data.php');
 
 
-$page_body = include_template('reg.php');
+
+$page_body = include_template('reg.php', []);
+
+$modalList = null;
+
+$page_modal = include_template(
+    'modal.php',
+    [
+        'modalList' => $modalList,
+    ]
+);
+
 
 
 // Проверка на отправку формы
@@ -38,7 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Проверка на незаполненное поле
         if (in_array($key, $required) && empty($value)) {
             $field = $fieldDescriptions[$key] ?? '';
-
             $errors[$key] = 'Поле ' . $field . ' должно быть заполнено.';
         }
 
@@ -49,11 +59,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-
-    // print_r($user);
-    // var_dump($user['user_phone']);
-    // print_r($errors);
-    
 
     $errors = array_filter($errors);
 
@@ -67,25 +72,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
     } else {
         // Получаем реальный IP-адрес пользователя, учитывая прокси
-        if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $userIP = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        } else {
-            $userIP = $_SERVER['REMOTE_ADDR'];
-        }
-
+        $userIP = !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
         $user['user_ip'] = $userIP;
 
-        // Формирует sql запрос для добавления записи в таблицу User
+        // Формирует SQL запрос для добавления записи в таблицу User
         $sql = get_query_create_user();
+
+        // Установка начальной роли пользователя
         $user['user_role'] = 'client';
 
-        // Устанавливает роль: Админ
+        // Устанавливает роль: Админ или Собственник
         if (in_array($user['user_phone'], $adminTelephone)) {
             $user['user_role'] = $userRole['admin'];
-        }
-
-        // Устанавливает роль: Собственник
-        if (in_array($user['user_phone'], $ownerTelephone)) {
+        } elseif (in_array($user['user_phone'], $ownerTelephone)) {
             $user['user_role'] = $userRole['owner'];
         }
 
@@ -101,10 +100,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header("Location: /auth.php");
             exit;
         } else {
-            echo "Ошибка при выполнении запроса:" . mysqli_error($con);
-            echo "Номер ошибки" . mysqli_errno($con);
 
-            $page_body = include_template('reg.php');
+            // Модальное окно: Контент для вставки
+            $modalList = [
+                [
+                    'title' => 'Ошибка при регистрации',
+                    'error' => 'Ошибка при выполнении запроса',
+                    'category' => 'error',
+                ],
+            ];
+
+            $page_modal = include_template(
+                'modal.php',
+                [
+                    'modalList' => $modalList,
+                ]
+            );
         }
 
         mysqli_stmt_close($stmt);
@@ -112,6 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 
+// ==== ШАБЛОНЫ ====
 $page_head = include_template(
     'head.php',
     [
@@ -132,11 +144,16 @@ $page_footer = include_template(
     []
 );
 
-$layout_content = include_template('layout.php', [
-    'head' => $page_head,
-    'header' => $page_header,
-    'main' => $page_body,
-    'footer' => $page_footer,
-]);
+$layout_content = include_template(
+    'layout.php',
+    [
+        'head' => $page_head,
+        'modal' => $page_modal,
+        'header' => $page_header,
+        'main' => $page_body,
+        'footer' => $page_footer,
+    ]
+);
+
 
 print($layout_content);
