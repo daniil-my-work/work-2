@@ -12,6 +12,12 @@ if (!$isAuth) {
     header("Location: ./auth.php");
     exit;
 }
+// Проверка прав доступа
+$sessionRole = $_SESSION['user_role'] ?? null;
+$allowedRoles = [$userRole['owner']];
+checkAccess($isAuth, $sessionRole, $allowedRoles);
+
+
 
 // Получает данные о пользователе
 $userInfo = getUserInfo($con);

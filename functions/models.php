@@ -338,3 +338,29 @@ function get_query_order_items_from_poke($productId, $orderId)
 
     return $sql;
 }
+
+/**
+ * Формирует SQL-запрос для получения заказов пользователя с учетом временного промежутка.
+ *
+ * @param string $userId Идентификатор пользователя.
+ * @param string|null $dateFirst Начальная дата временного интервала.
+ * @param string|null $dateSecond Конечная дата временного интервала.
+ * @return string SQL-запрос.
+ */
+function get_query_user_order($userId, $dateFirst = null, $dateSecond = null)
+{
+    $sql = "SELECT orders.*, order_items.product_id, order_items.quantity, menu.title 
+        FROM orders 
+        LEFT JOIN order_items ON orders.order_id = order_items.order_id 
+        LEFT JOIN menu ON order_items.product_id = menu.id 
+        WHERE orders.customer_id = '$userId'";
+
+    // Проверка наличия данных о временном промежутке
+    if (!is_null($dateFirst) && !is_null($dateSecond)) {
+        $sql .= " AND orders.order_date BETWEEN '$dateFirst 00:00:00' AND '$dateSecond 23:59:59'";
+    }
+
+    // Добавление сортировки к запросу
+    $sql .= " ORDER BY orders.id DESC;";
+    return $sql;
+}

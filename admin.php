@@ -7,16 +7,10 @@ require_once('./functions/db.php');
 require_once('./data/data.php');
 
 
-// Максимальное кол-во строк
-define("MAX_ROW", 5);
-define("PAGINATION_LENGTH", 3);
-
-
-// Проверка на авторизацию
-if (!$isAuth || $_SESSION['user_role'] != $userRole['admin']) {
-    header("Location: ./auth.php");
-    exit;
-}
+// Проверка прав доступа
+$sessionRole = $_SESSION['user_role'] ?? null;
+$allowedRoles = [$userRole['admin']];
+checkAccess($isAuth, $sessionRole, $allowedRoles);
 
 
 // Список категорий меню

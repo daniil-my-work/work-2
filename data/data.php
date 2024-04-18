@@ -1,5 +1,11 @@
 <?php
 
+// Максимальное кол-во строк в таблице
+define("MAX_ROW", 5);
+
+// Длина пагинации 
+define("PAGINATION_LENGTH", 3);
+
 // Список номеров телефонов: Админ
 $adminTelephone = [
     '+79807057008',
@@ -11,6 +17,7 @@ $ownerTelephone = [
     '+79807057005',
 ];
 
+// Список ролей
 $userRole = [
     'client' => 'CLIENT',
     'admin' => 'ADMIN',
@@ -44,4 +51,17 @@ $columnNamePoke = [
     'component_type' => 'Тип компонента: (protein, protein-add, base, filler, topping, sauce, crunch)',
     'component_name' => 'Название компонента: (протеин, протеин-добавка, основа, наполнитель, топпинг, соус, хруст)',
     'component_poke_type' => 'Заполняется для типа протеин. Поке с ...'
+];
+
+
+// Конфигурация SQL запросов и названий колонок в зависимости от типа данных
+$queryConfig = [
+    'menu' => [
+        'query' => "SELECT menu.title, menu.img, menu.description, menu.price, menu.cooking_time, menu.category_id FROM menu",
+        'columns' => $columnNameMenu
+    ],
+    'poke' => [
+        'query' => "SELECT components.title, components.img, components.price, components.component_type, components.component_name, components.component_poke_type FROM components",
+        'columns' => $columnNamePoke
+    ]
 ];

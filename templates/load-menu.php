@@ -20,12 +20,12 @@
             </span>
 
             <?php $activeLinkMenu = isset($tabGroup) && $tabGroup === 'menu' ? 'account__orders-group-link--active' : ''; ?>
-            <a class="button--basic account__orders-group-link <?= $activeLinkMenu; ?>" href="./load-menu.php?tab=menu">
+            <a class="button--basic account__orders-group-link <?= $activeLinkMenu; ?>" href="./load-menu.php?tabGroup=menu">
                 Меню
             </a>
 
             <?php $activeLinkPoke = isset($tabGroup) && $tabGroup === 'poke' ? 'account__orders-group-link--active' : ''; ?>
-            <a class="button--basic account__orders-group-link <?= $activeLinkPoke; ?>" href="./load-menu.php?tab=poke">
+            <a class="button--basic account__orders-group-link <?= $activeLinkPoke; ?>" href="./load-menu.php?tabGroup=poke">
                 Поке
             </a>
         </div>

@@ -19,7 +19,7 @@ $categoryList = getCategories($con);
 
 
 // Определяет вкладку
-$tabGroup = isset($_GET['tab']) ? $_GET['tab'] : 'menu';
+$tabGroup = $_GET['tabGroup'] ?? 'menu';
 
 
 $page_modal = null;
@@ -27,117 +27,6 @@ $page_modal = null;
 $page_body = include_template('load-menu.php', [
     'tabGroup' => $tabGroup,
 ]);
-
-
-
-function handleFileUpload($fieldName, $uploadDir, $validExtensions)
-{
-    // Инициализация массива для хранения результатов
-    $result = [
-        'error' => null,
-        'fileName' => null
-    ];
-
-    // Проверка наличия файла и ошибок загрузки
-    if (!isset($_FILES[$fieldName]) || $_FILES[$fieldName]['error'] !== UPLOAD_ERR_OK) {
-        $result['error'] = 'Файл не был загружен.';
-        
-        return $result;
-    }
-
-    // Проверка расширения файла
-    $fileExtension = strtolower(pathinfo($_FILES[$fieldName]['name'], PATHINFO_EXTENSION));
-    if (!in_array($fileExtension, $validExtensions)) {
-        $result['error'] = 'Недопустимое расширение файла.';
-
-        return $result;
-    }
-
-    // Перемещение файла и обновление имени файла в результате
-    $fileName = uniqid("file_", true) . '.' . $fileExtension;
-    $uploadFilePath = $uploadDir . $fileName;
-    if (!move_uploaded_file($_FILES[$fieldName]['tmp_name'], $uploadFilePath)) {
-        $result['error'] = 'Ошибка при сохранении файла.';
-
-        return $result;
-    }
-
-    // Обновляем имя файла в результате
-    $result['fileName'] = $fileName;
-
-    // Возвращаем результат
-    return $result;
-}
-
-
-function importCsvData($con, $filePath, $expectedColumns, $tableName)
-{
-    // Инициализация массива для хранения результатов
-    $result = [
-        'error' => null,
-    ];
-
-    $file = fopen($filePath, 'r');
-    if (!$file) {
-        $result['error'] = 'Ошибка при открытии файла.';
-
-        return $result;
-    }
-
-    // Получаем первую строку (заголовки столбцов)
-    $headersArray = fgetcsv($file, 0, ";");
-    if (!$headersArray) {
-        fclose($file);
-        unlink($filePath);
-        $result['error'] = 'Не удалось прочитать заголовки из файла.';
-
-        return $result;
-    }
-
-    // Проверяем заголовки и удаляем BOM если он есть
-    $headers = array_map(function ($headersArray) {
-        return trim(str_replace('"', '', $headersArray), "\xEF\xBB\xBF");
-    }, $headersArray);
-
-    $headersString = implode(';', $headers); // Используем точку с запятой в качестве разделителя
-    $headersColumn = fgetcsv($file, 0, ",");
-
-    if ($headersString !== $expectedColumns) {
-        fclose($file);
-        unlink($filePath);
-        $result['error'] = 'Названия столбцов в файле не соответствуют ожидаемым.';
-        return $result;
-    }
-
-    // Очистка таблицы перед вставкой новых данных
-    clearTable($con, $tableName);
-
-    while (($row = fgetcsv($file, 0, ",")) !== false) {
-        if (count($row) == count($headersColumn)) {
-            if ($tableName === 'menu') {
-                $row[3] = intval($row[3]);
-            } else {
-                $row[2] = intval($row[2]);
-            }
-
-            if (!insertData($con, $tableName, $row)) {
-                $result['error'] = 'Ошибка при вставке данных.';
-                break;
-            }
-        } else {
-            $result['error'] = 'Количество элементов в строке не соответствует количеству столбцов.';
-            break;
-        }
-    }
-
-    // Закрытие файла после завершения чтения
-    fclose($file);
-
-    // Удаление файла только после того, как все данные были успешно обработаны или если возникла ошибка
-    unlink($filePath);
-
-    return $result;
-}
 
 
 

@@ -7,16 +7,12 @@ require_once('./functions/db.php');
 require_once('./data/data.php');
 
 
-// Максимальное кол-во строк
-define("MAX_ROW", 5);
-define("PAGINATION_LENGTH", 3);
 
+// Проверка прав доступа
+$sessionRole = $_SESSION['user_role'] ?? null;
+$allowedRoles = [$userRole['client']];
+checkAccess($isAuth, $sessionRole, $allowedRoles);
 
-// Проверка на авторизацию
-if (!$isAuth || $_SESSION['user_role'] != $userRole['client']) {
-    header("Location: ./auth.php");
-    exit;
-}
 
 // Текущая страница
 $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -36,19 +32,6 @@ $dateFirst = $_SESSION['orderTime']['start'] ?? null;
 $dateSecond = $_SESSION['orderTime']['end'] ?? null;
 
 
-// Определение базового SQL-запроса
-$sql = "SELECT orders.*, order_items.product_id, order_items.quantity, menu.title 
-        FROM orders 
-        LEFT JOIN order_items ON orders.order_id = order_items.order_id 
-        LEFT JOIN menu ON order_items.product_id = menu.id 
-        WHERE orders.customer_id = '$userId'";
-
-// Проверка наличия данных о временном промежутке
-if ($dateFirst !== null && $dateSecond !== null) {
-    $sql .= " AND orders.order_date BETWEEN '$dateFirst 00:00:00' AND '$dateSecond 23:59:59'";
-}
-
-
 // Устанавливает отрезок время в сессию
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Если запрос POST, обновляем данные о временном промежутке в $_SESSION
@@ -56,15 +39,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dateSecond = $_POST['date-second'];
 
     // Обновление SQL-запроса с новым временным промежутком
-    $sql .= " AND orders.order_date BETWEEN '$dateFirst 00:00:00' AND '$dateSecond 23:59:59'";
+    $sql = get_query_user_order($userId, $dateFirst, $dateSecond);
 
     // Присвоение данных сессии
     $_SESSION['orderTime']['start'] = $dateFirst;
     $_SESSION['orderTime']['end'] = $dateSecond;
 }
 
-// Завершение SQL-запроса
-$sql .= " ORDER BY orders.id DESC;";
+
+// Формирует запрос для получения данных из таблицы Заказы 
+$sql = get_query_user_order($userId, $dateFirst, $dateSecond);
 
 // Получает все записи из таблицы Состовляющие заказа и группирует их по айди 
 $groupedItems = getGroupOrderItems($con, $sql);

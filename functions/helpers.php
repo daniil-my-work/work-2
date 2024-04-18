@@ -376,17 +376,155 @@ function getOrderItems($con, $orderId)
     $orderItems = fetchResultAsArray($result);
 
     return $orderItems ?? [];
-
-    // $sql = get_query_order_items($orderId);
-    // $result = mysqli_query($con, $sql);
-    // $orderItems = [];
-
-    // if ($result) {
-    //     while ($row = mysqli_fetch_assoc($result)) {
-    //         $orderItems[] = $row;
-    //     }
-    // }
-
-    // return $orderItems;
 }
 
+
+/**
+ * Проверяет авторизацию пользователя и его роль.
+ *
+ * @param bool $isAuth Флаг, указывающий на состояние авторизации пользователя.
+ * @param string $currentRole Текущая роль пользователя в сессии.
+ * @param array $allowedRoles Массив допустимых ролей для доступа к ресурсу.
+ * @param string $redirectUrl URL для перенаправления в случае неудачной проверки.
+ */
+function checkAccess($isAuth, $currentRole, $allowedRoles, $redirectUrl = './auth.php')
+{
+    // Проверка авторизации и наличия роли в списке разрешенных
+    if (!$isAuth || !in_array($currentRole, $allowedRoles)) {
+        // Если проверка не прошла, перенаправление на страницу аутентификации
+        header("Location: $redirectUrl");
+        exit;
+    }
+}
+
+
+/**
+ * Загружает файл, отправленный через форму, в указанную директорию.
+ * Проверяет наличие файла, его тип и обрабатывает загрузку.
+ *
+ * @param string $fieldName Имя поля в форме, через которое был отправлен файл.
+ * @param string $uploadDir Директория, куда файл будет загружен.
+ * @param array $validExtensions Массив допустимых расширений файла.
+ * @return array Ассоциативный массив с ключами 'error' и 'fileName'. 
+ *               'error' содержит сообщение об ошибке (если ошибка произошла) и 'fileName' содержит имя файла, если файл был успешно загружен.
+ */
+function handleFileUpload($fieldName, $uploadDir, $validExtensions)
+{
+    // Инициализация массива для хранения результатов
+    $result = [
+        'error' => null,
+        'fileName' => null
+    ];
+
+    // Проверка наличия файла и ошибок загрузки
+    if (!isset($_FILES[$fieldName]) || $_FILES[$fieldName]['error'] !== UPLOAD_ERR_OK) {
+        $result['error'] = 'Файл не был загружен.';
+
+        return $result;
+    }
+
+    // Проверка расширения файла
+    $fileExtension = strtolower(pathinfo($_FILES[$fieldName]['name'], PATHINFO_EXTENSION));
+    if (!in_array($fileExtension, $validExtensions)) {
+        $result['error'] = 'Недопустимое расширение файла.';
+
+        return $result;
+    }
+
+    // Перемещение файла и обновление имени файла в результате
+    $fileName = uniqid("file_", true) . '.' . $fileExtension;
+    $uploadFilePath = $uploadDir . $fileName;
+    if (!move_uploaded_file($_FILES[$fieldName]['tmp_name'], $uploadFilePath)) {
+        $result['error'] = 'Ошибка при сохранении файла.';
+
+        return $result;
+    }
+
+    // Обновляем имя файла в результате
+    $result['fileName'] = $fileName;
+
+    // Возвращаем результат
+    return $result;
+}
+
+
+/**
+ * Импортирует данные из CSV файла в указанную таблицу базы данных.
+ * Функция открывает файл, проверяет соответствие заголовков ожидаемым, и осуществляет вставку данных в таблицу.
+ *
+ * @param mysqli $con Соединение с базой данных.
+ * @param string $filePath Путь к файлу CSV.
+ * @param string $expectedColumns Строка с ожидаемыми заголовками столбцов, разделёнными точкой с запятой.
+ * @param string $tableName Имя таблицы в базе данных, куда будут импортироваться данные.
+ * @return array Массив с ключом 'error', содержащий сообщение об ошибке, если ошибка произошла, или null, если данные были успешно обработаны.
+ *
+ * Примечание: функция также удаляет файл после завершения импорта, независимо от того, произошла ошибка или нет.
+ */
+function importCsvData($con, $filePath, $expectedColumns, $tableName)
+{
+    // Инициализация массива для хранения результатов
+    $result = [
+        'error' => null,
+    ];
+
+    $file = fopen($filePath, 'r');
+    if (!$file) {
+        $result['error'] = 'Ошибка при открытии файла.';
+
+        return $result;
+    }
+
+    // Получаем первую строку (заголовки столбцов)
+    $headersArray = fgetcsv($file, 0, ";");
+    if (!$headersArray) {
+        fclose($file);
+        unlink($filePath);
+        $result['error'] = 'Не удалось прочитать заголовки из файла.';
+
+        return $result;
+    }
+
+    // Проверяем заголовки и удаляем BOM если он есть
+    $headers = array_map(function ($headersArray) {
+        return trim(str_replace('"', '', $headersArray), "\xEF\xBB\xBF");
+    }, $headersArray);
+
+    $headersString = implode(';', $headers); // Используем точку с запятой в качестве разделителя
+    $headersColumn = fgetcsv($file, 0, ",");
+
+    if ($headersString !== $expectedColumns) {
+        fclose($file);
+        unlink($filePath);
+        $result['error'] = 'Названия столбцов в файле не соответствуют ожидаемым.';
+        return $result;
+    }
+
+    // Очистка таблицы перед вставкой новых данных
+    clearTable($con, $tableName);
+
+    while (($row = fgetcsv($file, 0, ",")) !== false) {
+        if (count($row) == count($headersColumn)) {
+            if ($tableName === 'menu') {
+                $row[3] = intval($row[3]);
+            } else {
+                $row[2] = intval($row[2]);
+            }
+
+            if (!insertData($con, $tableName, $row)) {
+                $result['error'] = 'Ошибка при вставке данных.';
+                break;
+            }
+        } else {
+            $result['error'] = 'Количество элементов в строке не соответствует количеству столбцов.';
+            break;
+        }
+    }
+
+    // Закрытие файла после завершения чтения
+    fclose($file);
+
+    // Удаление файла только после того, как все данные были успешно обработаны или если возникла ошибка
+    unlink($filePath);
+
+    return $result;
+}

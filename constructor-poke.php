@@ -272,9 +272,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
 
         if (!is_null($insertId)) {
-            // echo $insertId;
-            // echo 'Заказ отправлен в базу';
-
             $tableName = 'poke';
             $quantity = 1;
 

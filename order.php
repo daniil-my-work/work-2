@@ -20,7 +20,12 @@ $backLink = ($nameLink === 'account') ? './account.php' : './index.php';
 $backLinkName = ($nameLink === 'account') ? 'личный кабинет' : 'на главную';
 
 
-if (is_null($orderId)) {
+// Получает данные о наличии заказа 
+$sql = get_query_order_info_by_id($orderId);
+$result = mysqli_query($con, $sql);
+
+
+if (is_null($orderId) || mysqli_num_rows($result) === 0) {
     header("Location: ./index.php");
     return;
 }
@@ -37,12 +42,11 @@ if (is_null($orderInfo)) {
 
 // Данные о товарах в заказе
 $orderId = $orderInfo['order_id'];
-
 $orderItems = getOrderItems($con, $orderId);
 
 
 $productList = [];
-if (is_array($orderItems)) {  // Добавьте проверку на массив
+if (is_array($orderItems)) {
     foreach ($orderItems as $orderItem) {
         $productId = $orderItem['product_id'];
         $table = $orderItem['tableName'];
