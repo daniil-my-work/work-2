@@ -7,14 +7,14 @@ require_once('./functions/db.php');
 require_once('./data/data.php');
 
 
+// Список ролей
+$userRole = $appData['userRoles'];
 
 // Получение данных из сессии о добавленных в корзину блюд
 $productsDataMenu = $_SESSION['order']['menu'] ?? [];
 
-
 // Получает список блюд
 $productList = getProductList($con);
-
 
 // Список категорий меню
 $categoryList = getCategories($con);

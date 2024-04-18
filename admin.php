@@ -9,6 +9,9 @@ require_once('./data/data.php');
 
 // Проверка прав доступа
 $sessionRole = $_SESSION['user_role'] ?? null;
+
+// Список ролей
+$userRole = $appData['userRoles'];
 $allowedRoles = [$userRole['admin']];
 checkAccess($isAuth, $sessionRole, $allowedRoles);
 

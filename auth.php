@@ -8,6 +8,9 @@ require_once('./functions/validators.php');
 require_once('./data/data.php');
 
 
+// Список ролей
+$userRole = $appData['userRoles'];
+
 $page_body = include_template(
     'auth.php',
     []

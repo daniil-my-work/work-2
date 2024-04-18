@@ -6,23 +6,6 @@ define("MAX_ROW", 5);
 // Длина пагинации 
 define("PAGINATION_LENGTH", 3);
 
-// Список номеров телефонов: Админ
-$adminTelephone = [
-    '+79807057008',
-    '+79807057009',
-];
-
-// Список номеров телефонов: Собственник
-$ownerTelephone = [
-    '+79807057005',
-];
-
-// Список ролей
-$userRole = [
-    'client' => 'CLIENT',
-    'admin' => 'ADMIN',
-    'owner' => 'OWNER',
-];  
 
 // Описание полей для проверки Логин/Авторизация
 $fieldDescriptions = [
@@ -32,6 +15,16 @@ $fieldDescriptions = [
     'user_password' => 'Пароль',
 ];
 
+// Номера телефонов: Админ
+$adminPhone = [
+    '+79807057008',
+    '+79807057009'
+];
+
+// Номера телефонов: Собственник 
+$ownerPhone = [
+    '+79807057005'
+];
 
 // Названия столбцов Меню
 $columnNameMenu = [
@@ -54,14 +47,28 @@ $columnNamePoke = [
 ];
 
 
-// Конфигурация SQL запросов и названий колонок в зависимости от типа данных
-$queryConfig = [
-    'menu' => [
-        'query' => "SELECT menu.title, menu.img, menu.description, menu.price, menu.cooking_time, menu.category_id FROM menu",
-        'columns' => $columnNameMenu
+// Данные приложения
+$appData = [
+    // Роли для работы в сервисе
+    'userRoles' => [
+        'client' => 'CLIENT',
+        'admin' => 'ADMIN',
+        'owner' => 'OWNER',
     ],
-    'poke' => [
-        'query' => "SELECT components.title, components.img, components.price, components.component_type, components.component_name, components.component_poke_type FROM components",
-        'columns' => $columnNamePoke
+    // Список телефонов для собственников и админов 
+    'telephones' => [
+        'admin' => $adminPhone,
+        'owner' => $ownerPhone,
+    ],
+    // Конфигурация SQL запросов и названий колонок в зависимости от таблицы
+    'queries' => [
+        'menu' => [
+            'query' => "SELECT menu.title, menu.img, menu.description, menu.price, menu.cooking_time, menu.category_id FROM menu",
+            'columns' => $columnNameMenu
+        ],
+        'poke' => [
+            'query' => "SELECT components.title, components.img, components.price, components.component_type, components.component_name, components.component_poke_type FROM components",
+            'columns' => $columnNamePoke
+        ]
     ]
 ];

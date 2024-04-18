@@ -7,9 +7,11 @@ require_once('./functions/models.php');
 require_once('./data/data.php');
 
 
+// Список ролей
+$userRole = $appData['userRoles'];
+
 // Список категорий меню
 $categoryList = getCategories($con);
-
 
 // Данные об айди заказа
 $orderId = $_GET['orderId'] ?? null;
@@ -19,17 +21,14 @@ $nameLink = $_GET['prevLink'] ?? null;
 $backLink = ($nameLink === 'account') ? './account.php' : './index.php';
 $backLinkName = ($nameLink === 'account') ? 'личный кабинет' : 'на главную';
 
-
 // Получает данные о наличии заказа 
 $sql = get_query_order_info_by_id($orderId);
 $result = mysqli_query($con, $sql);
-
 
 if (is_null($orderId) || mysqli_num_rows($result) === 0) {
     header("Location: ./index.php");
     return;
 }
-
 
 // Получает данные о конкретном заказе по id заказа
 $orderInfo = getOrderInfoById($con, $orderId);

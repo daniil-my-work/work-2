@@ -8,6 +8,10 @@ require_once('./functions/validators.php');
 require_once('./data/data.php');
 
 
+
+// Список ролей
+$userRole = $appData['userRoles'];
+
 // Список категорий меню
 $categoryList = getCategories($con) ?? [];
 

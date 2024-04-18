@@ -7,17 +7,14 @@ require_once('./functions/db.php');
 require_once('./data/data.php');
 
 
-// Проверка на авторизацию
-if (!$isAuth) {
-    header("Location: ./auth.php");
-    exit;
-}
+
 // Проверка прав доступа
 $sessionRole = $_SESSION['user_role'] ?? null;
 $allowedRoles = [$userRole['owner']];
 checkAccess($isAuth, $sessionRole, $allowedRoles);
 
-
+// Список ролей
+$userRole = $appData['userRoles'];
 
 // Получает данные о пользователе
 $userInfo = getUserInfo($con);

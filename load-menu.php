@@ -7,20 +7,21 @@ require_once('./functions/db.php');
 require_once('./data/data.php');
 
 
+
+// Список ролей
+$userRole = $appData['userRoles'];
+
 // Получение данных из сессии
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
 
 // Cписок выбранных блюд 
 $productList = getProductListInBasket($con, $productsData);
 
-
 // Список категорий меню
 $categoryList = getCategories($con);
 
-
 // Определяет вкладку
 $tabGroup = $_GET['tabGroup'] ?? 'menu';
-
 
 $page_modal = null;
 

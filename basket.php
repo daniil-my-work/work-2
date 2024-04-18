@@ -8,17 +8,17 @@ require_once('./functions/formatter.php');
 require_once('./data/data.php');
 
 
+// Список ролей
+$userRole = $appData['userRoles'];
+
 // Список категорий меню
 $categoryList = getCategories($con);
-
 
 // Cписок адресов кафе
 $cafeList = getCafeList($con);
 
-
 // Получение данных из сессии
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
-
 
 // Cписок выбранных блюд 
 $productList = getProductListInBasket($con, $productsData);

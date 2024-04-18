@@ -7,6 +7,9 @@ require_once('./functions/validators.php');
 require_once('./data/data.php');
 
 
+// Список ролей
+$userRole = $appData['userRoles'];
+
 $page_body = include_template('reg.php', []);
 
 $modalList = null;
@@ -17,7 +20,6 @@ $page_modal = include_template(
         'modalList' => $modalList,
     ]
 );
-
 
 
 // Проверка на отправку формы
@@ -78,6 +80,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Установка начальной роли пользователя
         $user['user_role'] = 'client';
+
+        // Номера телефонов для Админа или Собственника
+        $adminTelephone = $appData['telephones']['admin'];
+        $ownerTelephone = $appData['telephones']['owner'];
 
         // Устанавливает роль: Админ или Собственник
         if (in_array($user['user_phone'], $adminTelephone)) {

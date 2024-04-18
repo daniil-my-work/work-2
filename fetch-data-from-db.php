@@ -10,6 +10,9 @@ require_once('./data/data.php');
 // Определяет вкладку
 $tabGroup = isset($_GET['tabGroup']) ? trim($_GET['tabGroup']) : 'menu';
 
+// Получает данные для скачивания файла 
+$queryConfig = $appData['queries'];
+
 // Получение SQL запроса и названий колонок для заданного типа данных
 $sql = $queryConfig[$tabGroup]['query'];
 $columns = array_values($queryConfig[$tabGroup]['columns']);

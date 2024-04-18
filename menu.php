@@ -8,6 +8,8 @@ require_once('./functions/formatter.php');
 require_once('./data/data.php');
 
 
+// Список ролей
+$userRole = $appData['userRoles'];
 
 // Получение данных из сессии
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
@@ -16,7 +18,6 @@ $productsDataMenu = array();
 if (isset($productsData['menu'])) {
     $productsDataMenu = $productsData['menu'];
 }
-
 
 // Список категорий меню
 $categoryList = getCategories($con);
