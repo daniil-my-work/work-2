@@ -114,15 +114,6 @@ function get_query_components()
 }
 
 /**
- * Формирует SQL-запрос для получения информации из таблицы 
- * @return string SQL-запрос
- */
-// function get_query_component_info($componentId)
-// {
-//     return "SELECT * FROM components WHERE components.id = $componentId";
-// }
-
-/**
  * Формирует SQL-запрос для получения названия компонента Поке
  * @return string SQL-запрос
  */
@@ -309,7 +300,6 @@ function get_query_order_items($order_id)
 
     return $sql;
 }
-
 
 /**
  * Формирует SQL-запрос для получения данных о товаре из таблицы Меню 

@@ -216,56 +216,6 @@ function generatePagination($groupedItems)
 }
 
 /**
- * Возвращает массив выбранных блюд из таблицы Меню / Поке.
- *
- * @param object $con mysqli Объект подключения к базе данных.
- * @param array $productsData Массив данных о выбранных продуктах.
- *
- * @return array Возвращает массив выбранных блюд из таблицы Меню / Поке.
- */
-function getProductListInBasket($con, $productsData)
-{
-    $productList = [];
-
-    foreach ($productsData as $category => $items) {
-        $table = ($category == 'menu') ? 'menu' : 'poke';
-
-        foreach ($items as $itemId => $quantity) {
-            $sql = ($table == 'menu') ? get_query_product_item($itemId) : get_query_product_item_poke($itemId);
-
-            $products = mysqli_query($con, $sql);
-            $productItem = get_arrow($products);
-
-            $productList[] = ['item' => $productItem, 'quantity' => $quantity, 'table' => $table];
-        }
-    }
-
-    return $productList;
-}
-
-
-/**
- * Получает название компонента Поке и формирует заголовок Поке.
- *
- * @param string $proteinId ID компонента Поке.
- * @param mysqli $con Соединение с базой данных.
- * @return string Заголовок Поке.
- */
-function get_poke_title($con, $proteinId)
-{
-    $sql = get_query_component_poke_type($proteinId);
-    $result = mysqli_query($con, $sql);
-    $pokeTitle = mysqli_fetch_assoc($result);
-
-    if ($pokeTitle && isset($pokeTitle['component_poke_type'])) {
-        return "Поке " . $pokeTitle['component_poke_type'];
-    } else {
-        return "Поке (название не найдено)";
-    }
-}
-
-
-/**
  * Создает CSV файл и записывает в него данные. Функция открывает файл для записи, добавляет BOM для поддержки UTF-8,
  * записывает заголовки столбцов и последовательно добавляет данные из массива.
  *
@@ -289,7 +239,6 @@ function createCsvFile($filename, $data, $columns)
     fclose($fp);
 }
 
-
 /**
  * Извлекает данные из базы данных по заданному SQL запросу. Функция выполняет SQL запрос и возвращает результаты 
  * в виде массива ассоциативных массивов, где каждый ассоциативный массив представляет одну строку результата запроса.
@@ -311,74 +260,6 @@ function fetchDataFromDb($con, $sql)
     return $data;
 }
 
-
-/**
- * Получает имя категории на основе идентификатора активной категории.
- *
- * @param mysqli $con Подключение к базе данных.
- * @param int|string $activeCategory Идентификатор активной категории.
- * @return string|null Возвращает имя категории, если она найдена, иначе возвращает null.
- */
-function fetchCategoryName($con, $activeCategory)
-{
-    $getSelectedCategory = get_query_selected_category($activeCategory);
-    $category = mysqli_query($con, $getSelectedCategory);
-
-    // Используем тернарный оператор для упрощения возврата значения
-    return ($category && mysqli_num_rows($category) > 0) ? get_arrow($category) : null;
-}
-
-
-/**
- * Получает имя категории на основе идентификатора активной категории.
- *
- * @param mysqli $con Подключение к базе данных.
- * @param int|string $activeCategory Идентификатор активной категории.
- * @return string|null Возвращает имя категории, если она найдена, иначе возвращает null.
- */
-function getProductsByCategory($con, $activeCategory)
-{
-    $getProductsByCategory = get_query_selected_products($activeCategory);
-    $products = fetchDataFromDb($con, $getProductsByCategory);
-
-    // Используем тернарный оператор для упрощения возврата значения
-    return $products ?? [];
-}
-
-
-/**
- * Получает данные о конкретном заказе по id заказа
- *
- * @param mysqli $con Подключение к базе данных.
- * @param int|string $orderId Идентификатор заказа.
- * @return string|null Возвращает имя категории, если она найдена, иначе возвращает null.
- */
-function getOrderInfoById($con, $orderId)
-{
-    $sql = get_query_order_info_by_id($orderId);
-    $result = mysqli_query($con, $sql);
-    $orderInfo = get_arrow($result);
-
-    return $orderInfo ?? null;
-}
-
-/**
- * Получает данные о конкретном заказе по id заказа
- *
- * @param mysqli $con Подключение к базе данных.
- * @param int|string $orderId Идентификатор заказа.
- * @return string|null Возвращает имя категории, если она найдена, иначе возвращает null.
- */
-function getOrderItems($con, $orderId)
-{
-    $sql = get_query_order_items($orderId);
-    $result = mysqli_query($con, $sql);
-    $orderItems = fetchResultAsArray($result);
-
-    return $orderItems ?? [];
-}
-
-
 /**
  * Проверяет авторизацию пользователя и его роль.
  *
@@ -396,7 +277,6 @@ function checkAccess($isAuth, $currentRole, $allowedRoles, $redirectUrl = './aut
         exit;
     }
 }
-
 
 /**
  * Загружает файл, отправленный через форму, в указанную директорию.
