@@ -1,12 +1,10 @@
 <?php
 
-require_once('./data/data.php');
-require_once('./functions/helpers.php');
 require_once('./functions/init.php');
+require_once('./functions/helpers.php');
 require_once('./functions/models.php');
 require_once('./functions/validators.php');
 require_once('./data/data.php');
-
 
 
 $page_body = include_template('reg.php', []);

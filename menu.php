@@ -1,11 +1,12 @@
 <?php
 
-require_once('./functions/helpers.php');
 require_once('./functions/init.php');
+require_once('./functions/helpers.php');
 require_once('./functions/models.php');
 require_once('./functions/db.php');
 require_once('./functions/formatter.php');
 require_once('./data/data.php');
+
 
 
 // Получение данных из сессии

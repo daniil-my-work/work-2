@@ -2,7 +2,6 @@
 
 require_once('./functions/init.php');
 
-
 // Очищает сессию
 $_SESSION = [];
 
