@@ -20,6 +20,8 @@ $productList = getProductList($con);
 // Список категорий меню
 $categoryList = getCategories($con);
 
+
+// ==== Вывод ошибок ====
 // Записывает ошибку в сессию: Не загрузился список продуктов 
 if (is_null($productList)) {
     $option = ['value' => 'меню'];
@@ -29,6 +31,7 @@ if (is_null($productList)) {
 }
 
 // Записывает ошибку в сессию: Не загрузились категории меню 
+// $categoryList = null;
 if (is_null($categoryList)) {
     $option = ['value' => 'категорий меню'];
     $toast = getModalToast(null, $option);
@@ -38,7 +41,7 @@ if (is_null($categoryList)) {
 
 // Модальное окно со списком ошибок
 $modalList = $_SESSION['toasts'] ?? [];
-// unset($_SESSION['toasts']);
+print_r($_SESSION);
 
 
 // ==== ШАБЛОНЫ ====
@@ -48,7 +51,6 @@ $page_modal = include_template(
         'modalList' => $modalList,
     ]
 );
-
 
 $page_head = include_template(
     'head.php',

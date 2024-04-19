@@ -86,7 +86,7 @@
                 </thead>
                 <tbody>
                     <!-- Проходится по массиву заказов -->
-                    <?php if (count($orderList) != 0) : ?>
+                    <?php if (!empty($orderList)) : ?>
                         <?php foreach ($keys as $key) : ?>
                             <?php if (count($orderList[$key]) == 1) : ?>
                                 <?php $groupedItemFirst = $orderList[$key][0]; ?>
@@ -138,7 +138,7 @@
 
 
             <!-- Навигация для таблицы заказов -->
-            <?php if ($pagination && count($pagination) > 1) : ?>
+            <?php if (count($pagination) > 1) : ?>
                 <nav class="menu__nav account__orders-nav">
                     <?php $prevPageNumber = $currentPage - 1; ?>
                     <?php $nextPageNumber = $currentPage + 1; ?>

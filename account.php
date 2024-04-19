@@ -63,7 +63,48 @@ $orderList = array_slice($groupedItems, $startIndex, MAX_ROW);
 $keys = array_keys($orderList);
 
 
+
+// ==== Вывод ошибок ====
+// Записывает ошибку в сессию: Не загрузилась инфа о пользователе 
+// $userInfo = null;
+if (is_null($userInfo)) {
+    $option = ['value' => 'данных пользователя'];
+    $toast = getModalToast(null, $option);
+
+    $_SESSION['toasts'][] = $toast;
+}
+
+// Записывает ошибку в сессию: Не загрузились категории меню 
+// $categoryList = null;
+if (is_null($categoryList)) {
+    $option = ['value' => 'категорий меню'];
+    $toast = getModalToast(null, $option);
+
+    $_SESSION['toasts'][] = $toast;
+}
+
+// Записывает ошибку в сессию: Не загрузился список заказов 
+// $groupedItems = null;
+if (is_null($groupedItems)) {
+    $option = ['value' => 'списка заказов'];
+    $toast = getModalToast(null, $option);
+
+    $_SESSION['toasts'][] = $toast;
+}
+
+// Модальное окно со списком ошибок
+$modalList = $_SESSION['toasts'] ?? [];
+print_r($_SESSION);
+
+
 // ==== ШАБЛОНЫ ====
+$page_modal = include_template(
+    'modal.php',
+    [
+        'modalList' => $modalList,
+    ]
+);
+
 $page_head = include_template(
     'head.php',
     [
@@ -103,11 +144,11 @@ $layout_content = include_template(
     'layout.php',
     [
         'head' => $page_head,
+        'modal' => $page_modal,
         'header' => $page_header,
         'main' => $page_body,
         'footer' => $page_footer,
     ]
 );
-
 
 print($layout_content);

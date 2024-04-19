@@ -210,11 +210,10 @@ function fetchResultAsArray($result)
  */
 function generatePagination($groupedItems)
 {
-    $groupedItemLength = count($groupedItems);
-    $paginationLength = ceil($groupedItemLength / MAX_ROW);
+    $paginationLength = ceil(count($groupedItems) / MAX_ROW);
 
     // Создаем массив чисел от 1 до $paginationLength
-    return $paginationLength > 0 ? range(1, $paginationLength) : [0];
+    return $paginationLength > 1 ? range(1, $paginationLength) : [];
 }
 
 /**

@@ -9,4 +9,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Добавляет блюдо в сессию
     deleteToastFromSession($toastId);
+
+    // Удаляет данные из сессии
+    if (count($_SESSION['toasts']) === 0) {
+        unset($_SESSION['toasts']);
+    }
 }
