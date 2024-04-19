@@ -94,7 +94,7 @@ if (is_null($groupedItems)) {
 
 // Модальное окно со списком ошибок
 $modalList = $_SESSION['toasts'] ?? [];
-print_r($_SESSION);
+// print_r($_SESSION);
 
 
 // ==== ШАБЛОНЫ ====

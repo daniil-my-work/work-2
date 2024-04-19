@@ -41,7 +41,7 @@ if (is_null($categoryList)) {
 
 // Модальное окно со списком ошибок
 $modalList = $_SESSION['toasts'] ?? [];
-print_r($_SESSION);
+// print_r($_SESSION);
 
 
 // ==== ШАБЛОНЫ ====
