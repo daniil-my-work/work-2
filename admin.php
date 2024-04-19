@@ -18,6 +18,7 @@ checkAccess($isAuth, $sessionRole, $allowedRoles);
 
 // Список категорий меню
 $categoryList = getCategories($con);
+// $categoryList = null;
 
 // Получает данные о пользователе
 $userInfo = getUserInfo($con);

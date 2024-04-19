@@ -7,6 +7,7 @@ require_once('./functions/db.php');
 require_once('./data/data.php');
 
 
+
 // Список ролей
 $userRole = $appData['userRoles'];
 
@@ -19,33 +20,25 @@ $productList = getProductList($con);
 // Список категорий меню
 $categoryList = getCategories($con);
 
+// Записывает ошибку в сессию: Не загрузился список продуктов 
+if (is_null($productList)) {
+    $option = ['value' => 'меню'];
+    $toast = getModalToast(null, $option);
 
-// Модальное окно: Контент для вставки
-// $modalList = [
-//     [
-//         'title' => 'Выберите ваш город',
-//         'button' => [
-//             ['text' => 'Ярославль', 'class' => 'btn btn-primary btn-sm'],
-//             ['text' => 'Рыбинск', 'class' => 'btn btn-secondary btn-sm']
-//         ],
-//         'category' => 'city',
-//     ],
-//     [
-//         'title' => 'Заголовок ошибки',
-//         'error' => 'Текст ошибки',
-//         'category' => 'error',
-//     ],
-//     [
-//         'title' => 'Зарегистрируетесь, чтобы получить бонусы',
-//         'link' => [
-//             'linkTitle' => 'Создать личный кабинет',
-//             'address' => './dsdsds',
-//         ],
-//         'category' => 'link',
-//     ],
-// ];
+    $_SESSION['toasts'][] = $toast;
+}
 
-$modalList = null;
+// Записывает ошибку в сессию: Не загрузились категории меню 
+if (is_null($categoryList)) {
+    $option = ['value' => 'категорий меню'];
+    $toast = getModalToast(null, $option);
+
+    $_SESSION['toasts'][] = $toast;
+}
+
+// Модальное окно со списком ошибок
+$modalList = $_SESSION['toasts'] ?? [];
+// unset($_SESSION['toasts']);
 
 
 // ==== ШАБЛОНЫ ====

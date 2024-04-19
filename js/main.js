@@ -956,6 +956,27 @@ async function apiUpdateModalCity(params) {
     }
 }
 
+// Отправляет данные на сервер о городе пользователя
+async function apiCloseToast(params) {
+    try {
+        const response = await fetch("api-close-toast.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: params.toString(),
+        });
+
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+
+        // console.log("Данные успешно обновлены в сессии");
+    } catch (error) {
+        console.error("There has been a problem with your fetch operation:", error);
+    }
+}
+
 
 // Функция для установки значения города в сессии
 async function getModalInfo(evt) {
@@ -966,17 +987,25 @@ async function getModalInfo(evt) {
         return;
     }
 
-    // Скрывает и удаляет тост, при клике на крестик
-    if (target && target.classList.contains('btn-close')) {
-        toast.classList.remove('show');
-        toast.remove();
-    }
-
     // Формирование строки параметров
     const params = new URLSearchParams();
 
     // Категория тоста
     const categoryToast = toast.getAttribute('data-set-category');
+
+    // Айди тоста
+    const toastId = toast.getAttribute('data-set-popup-id');
+
+    // Скрывает и удаляет тост, при клике на крестик
+    if (target && target.classList.contains('btn-close')) {
+        toast.classList.remove('show');
+        toast.remove();
+
+        params.append("toastId", toastId);
+
+        // Удаляет тоаст из сессии по id
+        await apiCloseToast(params);
+    }
 
     // Логика для тоста с городом
     if (categoryToast === 'city') {
@@ -987,6 +1016,9 @@ async function getModalInfo(evt) {
             try {
                 // Обновляет данные о городе пользователя
                 await apiUpdateModalCity(params);
+
+                // Удаляет тоаст из сессии по id
+                await apiCloseToast(params);
 
                 // Скрывает и удаляет тост
                 toast.classList.remove('show');
@@ -1063,3 +1095,5 @@ const loadDataButton = document.querySelector('.load__current-button');
 if (loadDataButton) {
     loadDataButton.addEventListener('click', getInfoFromMenu);
 }
+
+

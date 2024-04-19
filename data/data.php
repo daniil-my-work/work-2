@@ -6,6 +6,8 @@ define("MAX_ROW", 5);
 // Длина пагинации 
 define("PAGINATION_LENGTH", 3);
 
+// $cities = ['Ярославль', 'Рыбинск'];
+
 
 // Описание полей для проверки Логин/Авторизация
 $fieldDescriptions = [

@@ -410,3 +410,147 @@ function importCsvData($con, $filePath, $expectedColumns, $tableName)
 
     return $result;
 }
+
+
+
+// Модальное окно: Контент для вставки
+// $modalList = [
+//     [
+//         'id' => '',
+//         'title' => 'Выберите ваш город',
+//         'button' => [
+//             ['text' => 'Ярославль', 'class' => 'btn btn-primary btn-sm'],
+//             ['text' => 'Рыбинск', 'class' => 'btn btn-secondary btn-sm']
+//         ],
+//         'category' => 'city',
+//     ],
+//     [
+// 'id' => '',
+//         'title' => 'Заголовок ошибки',
+//         'text' => 'Текст ошибки',
+//         'category' => 'error',
+//     ],
+//     [
+// 'id' => '',
+//         'title' => 'Зарегистрируетесь, чтобы получить бонусы',
+//         'link' => [
+//             'linkTitle' => 'Создать личный кабинет',
+//             'address' => './dsdsds',
+//         ],
+//         'category' => 'link',
+//     ],
+// ];
+
+
+/**
+ * Генерирует объект сообщения для модального окна на основе указанной категории.
+ * Функция поддерживает создание различных типов сообщений в модальном окне, включая ссылки, выбор города и сообщения об ошибках.
+ *
+ * @param string $category Категория сообщения, которая определяет тип возвращаемого объекта ('city', 'link', или по умолчанию для ошибок).
+ * @param array $options Массив параметров, необходимых для создания сообщения. В зависимости от категории это могут быть названия, адреса ссылок или описания ошибок.
+ * @return array Массив, представляющий модальное сообщение соответствующего типа. Возвращает null, если категория не распознана.
+ */
+function getModalToast($category, $options)
+{
+    $id = uniqid();
+
+    switch ($category) {
+        case 'city':
+            return getModalCity($id, $options['cities']);
+
+        case 'link':
+            return getModalLink($id, $options['title'], $options['linkTitle'], $options['linkAdress']);
+
+        default:
+            return getModalError($id, $options['value']);
+    }
+
+    return null;
+}
+
+/**
+ * Создаёт объект сообщения для модального окна с ссылкой.
+ * Функция формирует сообщение, содержащее ссылку с заданными параметрами.
+ *
+ * @param string $id Уникальный идентификатор сообщения.
+ * @param string $title Заголовок сообщения.
+ * @param string $linkTitle Название ссылки.
+ * @param string $linkAdress URL адрес ссылки.
+ * @return array Массив, представляющий модальное сообщение с ссылкой.
+ */
+function getModalLink($id, $title, $linkTitle, $linkAdress)
+{
+    $message =  [
+        'id' => $id,
+        'title' => $title,
+        'link' => ['linkTitle' => $linkTitle, 'address' => $linkAdress],
+        'category' => 'link',
+    ];
+
+    return $message;
+}
+
+/**
+ * Создаёт объект сообщения для модального окна с выбором города.
+ * Функция формирует сообщение, предлагающее пользователю выбор города из списка.
+ *
+ * @param string $id Уникальный идентификатор сообщения.
+ * @param array $cities Массив городов, каждый элемент которого содержит имя города и CSS класс для кнопки.
+ * @return array Массив, представляющий модальное сообщение с выбором города.
+ */
+function getModalCity($id, $cities)
+{
+    $buttons = array_map(function ($city) {
+        return ['text' => $city['name'], 'class' => $city['class']];
+    }, $cities);
+
+    $message = [
+        'id' => $id,
+        'title' => 'Выберите ваш город',
+        'button' => $buttons,
+        'category' => 'city',
+    ];
+
+    return $message;
+}
+
+/**
+ * Создаёт объект сообщения об ошибке для модального окна.
+ * Функция формирует сообщение об ошибке, связанной с загрузкой определённого элемента.
+ *
+ * @param string $id Уникальный идентификатор сообщения.
+ * @param string $value Название элемента, при загрузке которого произошла ошибка.
+ * @return array Массив, представляющий модальное сообщение об ошибке.
+ */
+function getModalError($id, $value)
+{
+    $message = [
+        'id' => $id,
+        'title' => "Ошибка при загрузке {$value}",
+        'text' => "Не удалось загрузить {$value} из-за сбоя в интернет-соединении. Пожалуйста, проверьте ваше подключение и перезагрузите страницу. Если проблема сохранилась обратитесь в поддержку.",
+        'category' => 'error',
+    ];
+
+    return $message;
+}
+
+/**
+ * Удаляет сообщение с определённым идентификатором из сессии.
+ * Функция удаляет сообщение об ошибке из массива 'toasts' в сессии, предотвращая его повторное отображение.
+ *
+ * @param string $toastId Идентификатор сообщения, которое нужно удалить.
+ */
+function deleteToastFromSession($toastId)
+{
+    // Инициализируйте или обновите данные корзины в сессии
+    if (isset($_SESSION['toasts']) && is_array($_SESSION['toasts'])) {
+        foreach ($_SESSION['toasts'] as $key => $toast) {
+            if ($toast['id'] === $toastId) {
+                unset($_SESSION['toasts'][$key]);
+                // Переиндексация массива после удаления элемента
+                $_SESSION['toasts'] = array_values($_SESSION['toasts']);
+                break;
+            }
+        }
+    }
+}

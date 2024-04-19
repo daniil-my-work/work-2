@@ -5,10 +5,8 @@ require_once('./functions/helpers.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Получите данные из запроса
-    $tableName = $_POST['tableName'] ?? null;
-    $productId = $_POST['productId'] ?? null;
-    $quantity = $_POST['quantity'] ?? null;
+    $toastId = $_POST['toastId'] ?? null;
 
     // Добавляет блюдо в сессию
-    addProductInSession($con, $tableName, $productId, $quantity);
+    deleteToastFromSession($toastId);
 }

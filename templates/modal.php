@@ -3,8 +3,9 @@
         <?php foreach ($modalList as $modalItem) : ?>
 
             <!-- ТОСТ -->
+            <?php $id = $modalItem['id'] ?? ''; ?>
             <?php $category = $modalItem['category'] ?? ''; ?>
-            <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true" data-set-category="<?= $category; ?>">
+            <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true" data-set-category="<?= $category; ?>" data-set-popup-id="<?= $id; ?>">
                 <div class="toast-header">
                     <?= $modalItem['title'] ?? ''; ?>
 
@@ -26,7 +27,7 @@
                                 break;
 
                             case 'error':
-                                echo $modalItem['error'];
+                                echo $modalItem['text'];
                                 break;
 
                             case 'link':
