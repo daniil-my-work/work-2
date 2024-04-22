@@ -67,8 +67,38 @@ if (is_array($orderItems)) {
 }
 
 
+// ==== Вывод ошибок ====
+// Записывает ошибку в сессию: Не удалось загрузить ...
+// $categoryList = null;
+if (is_null($categoryList)) {
+    $option = ['value' => 'категорий меню'];
+    $toast = getModalToast(null, $option);
+
+    $_SESSION['toasts'][] = $toast;
+}
+
+// Записывает ошибку в сессию: Не удалось загрузить ...
+// $orderInfo = null;
+if (is_null($orderInfo)) {
+    $option = ['value' => 'информацию о заказе'];
+    $toast = getModalToast(null, $option);
+
+    $_SESSION['toasts'][] = $toast;
+}
+
+// Модальное окно со списком ошибок
+$modalList = $_SESSION['toasts'] ?? [];
+// print_r($_SESSION);
+
 
 // ==== ШАБЛОНЫ ====
+$page_modal = include_template(
+    'modal.php',
+    [
+        'modalList' => $modalList,
+    ]
+);
+
 $page_head = include_template(
     'head.php',
     [
@@ -105,6 +135,7 @@ $layout_content = include_template(
     'layout.php',
     [
         'head' => $page_head,
+        'modal' => $page_modal,
         'header' => $page_header,
         'main' => $page_body,
         'footer' => $page_footer,

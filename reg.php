@@ -3,6 +3,7 @@
 require_once('./functions/init.php');
 require_once('./functions/helpers.php');
 require_once('./functions/models.php');
+require_once('./functions/db.php');
 require_once('./functions/validators.php');
 require_once('./data/data.php');
 
@@ -10,16 +11,10 @@ require_once('./data/data.php');
 // Список ролей
 $userRole = $appData['userRoles'];
 
+// Список категорий меню
+$categoryList = getCategories($con);
+
 $page_body = include_template('reg.php', []);
-
-$modalList = null;
-
-$page_modal = include_template(
-    'modal.php',
-    [
-        'modalList' => $modalList,
-    ]
-);
 
 
 // Проверка на отправку формы
@@ -127,7 +122,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 
+// ==== Вывод ошибок ====
+// Записывает ошибку в сессию: Не удалось загрузить ...
+// $categoryList = null;
+if (is_null($categoryList)) {
+    $option = ['value' => 'категорий меню'];
+    $toast = getModalToast(null, $option);
+
+    $_SESSION['toasts'][] = $toast;
+}
+
+// Модальное окно со списком ошибок
+$modalList = $_SESSION['toasts'] ?? [];
+// print_r($_SESSION);
+
+
 // ==== ШАБЛОНЫ ====
+$page_modal = include_template(
+    'modal.php',
+    [
+        'modalList' => $modalList,
+    ]
+);
+
 $page_head = include_template(
     'head.php',
     [
@@ -145,7 +162,9 @@ $page_header = include_template(
 
 $page_footer = include_template(
     'footer.php',
-    []
+    [
+        'categoryList' => $categoryList,
+    ]
 );
 
 $layout_content = include_template(
@@ -158,6 +177,5 @@ $layout_content = include_template(
         'footer' => $page_footer,
     ]
 );
-
 
 print($layout_content);

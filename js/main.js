@@ -464,7 +464,9 @@ function setDeliveryType(evt) {
 
 // Прибавляет или убавляет кол-во блюд в заказе на странице Корзина
 const basketList = document.querySelector(".basket__list");
-if (basketList) {
+
+const pageBasket = document.querySelector("#page-basket");
+if (pageBasket) {
     console.log("Корзина");
 
     basketList.addEventListener("click", addProductInBasketSecond);
