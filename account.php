@@ -22,12 +22,14 @@ $startIndex = ($currentPage == 1) ? 1 : ($currentPage - 1) * MAX_ROW;
 
 // Список категорий меню
 $categoryList = getCategories($con);
+// $categoryList = null;
 
 // Получает данные о пользователе
 $userInfo = getUserInfo($con);
+// $userInfo = null;
 
 // Получает данные о заказах пользователя
-$userId = $userInfo['id'];
+$userId = $userInfo['id'] ?? null;
 
 // Инициализация переменных для временного промежутка
 $dateFirst = $_SESSION['orderTime']['start'] ?? null;
@@ -54,6 +56,7 @@ $sql = get_query_user_order($userId, $dateFirst, $dateSecond);
 
 // Получает все записи из таблицы Состовляющие заказа и группирует их по айди 
 $groupedItems = getGroupOrderItems($con, $sql);
+// $groupedItems = [];
 
 // Создание пагинации
 $pagination = generatePagination($groupedItems);
@@ -63,17 +66,7 @@ $orderList = array_slice($groupedItems, $startIndex, MAX_ROW);
 $keys = array_keys($orderList);
 
 
-
 // ==== Вывод ошибок ====
-// Записывает ошибку в сессию: Не удалось загрузить ...
-// $userInfo = null;
-if (is_null($userInfo)) {
-    $option = ['value' => 'данных пользователя'];
-    $toast = getModalToast(null, $option);
-
-    $_SESSION['toasts'][] = $toast;
-}
-
 // Записывает ошибку в сессию: Не удалось загрузить ...
 // $categoryList = null;
 if (is_null($categoryList)) {
@@ -84,9 +77,9 @@ if (is_null($categoryList)) {
 }
 
 // Записывает ошибку в сессию: Не удалось загрузить ...
-// $groupedItems = [];
-if (empty($groupedItems)) {
-    $option = ['value' => 'список заказов'];
+// $userInfo = null;
+if (is_null($userInfo)) {
+    $option = ['value' => 'данных пользователя'];
     $toast = getModalToast(null, $option);
 
     $_SESSION['toasts'][] = $toast;

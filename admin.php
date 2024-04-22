@@ -17,9 +17,12 @@ checkAccess($isAuth, $sessionRole, $allowedRoles);
 
 // Список категорий меню
 $categoryList = getCategories($con);
+// $categoryList = null;
 
 // Получает данные о пользователе
 $userInfo = getUserInfo($con);
+// $userInfo = null;
+
 
 // Определяет вкладку
 $statisticGroup = isset($_GET['group']) ? $_GET['group'] : 'orders';
@@ -72,6 +75,7 @@ if ($statisticGroup === 'search') {
 
     // Выполнение запроса и обработка результата
     $groupedItems = getGroupOrderItems($con, $sql);
+    // $groupedItems = [];
 
     // Создание пагинации
     $paginationSearch = generatePagination($groupedItems);
@@ -103,10 +107,11 @@ if ($statisticGroup === 'search') {
 
     // Выполнение запроса и обработка результата
     $usersInfo = getUsersInfo($con, $phoneValue);
+    // $usersInfo = null;
 
     // Список юзеров
-    $userList = $usersInfo['list'];
-    $userListLength = $usersInfo['length'];
+    $userList = $usersInfo['list'] ?? [];
+    $userListLength = $usersInfo['length'] ?? [];
 
     // Создание пагинации
     $paginationSearch = generatePagination($userList);
@@ -143,6 +148,7 @@ if ($statisticGroup === 'search') {
 
     // Получает все записи из таблицы Состовляющие заказа и группирует их по айди 
     $groupedItems = getGroupOrderItems($con, $sql);
+    // $groupedItems = [];
 
     // Создаем массив для хранения активных и завершенных заказов
     $filteredList = ['active' => [], 'complete' => []];
@@ -197,15 +203,6 @@ if (is_null($userInfo)) {
 // $categoryList = null;
 if (is_null($categoryList)) {
     $option = ['value' => 'категорий меню'];
-    $toast = getModalToast(null, $option);
-
-    $_SESSION['toasts'][] = $toast;
-}
-
-// Записывает ошибку в сессию: Не удалось загрузить ...
-// $groupedItems = [];
-if (empty($groupedItems) && $statisticGroup !== 'clients') {
-    $option = ['value' => 'список заказов'];
     $toast = getModalToast(null, $option);
 
     $_SESSION['toasts'][] = $toast;
