@@ -21,18 +21,29 @@ if (isset($productsData['menu'])) {
 
 // Список категорий меню
 $categoryList = getCategories($con);
+// $categoryList = null;
 
 // Получает активную категорию
 $activeCategory = isset($_GET['category']) ? $_GET['category'] : 'rolls';
 
 // Получает данные о выбранной категории
 $categoryName = fetchCategoryName($con, $activeCategory);
+// $categoryName = null;
 
 // Получает список продуктов по выбранной категории 
 $productList = getProductsByCategory($con, $activeCategory);
 
 
 // ==== Вывод ошибок ====
+// Записывает ошибку в сессию: Не удалось загрузить ...
+// $categoryList = null;
+if (is_null($categoryName)) {
+    $option = ['value' => 'название активной категории'];
+    $toast = getModalToast(null, $option);
+
+    $_SESSION['toasts'][] = $toast;
+}
+
 // Записывает ошибку в сессию: Не удалось загрузить ...
 // $categoryList = null;
 if (is_null($categoryList)) {

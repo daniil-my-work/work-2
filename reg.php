@@ -13,6 +13,7 @@ $userRole = $appData['userRoles'];
 
 // Список категорий меню
 $categoryList = getCategories($con);
+// $categoryList = null;
 
 $page_body = include_template('reg.php', []);
 

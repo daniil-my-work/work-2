@@ -14,13 +14,14 @@ $userRole = $appData['userRoles'];
 
 // Список категорий меню
 $categoryList = getCategories($con);
+// $categoryList = null;
 
 // Список компонентов Поке
-$componentList = getComponentList($con);
-
+$componentList = getComponentList($con) ?? [];
+// $componentList = [];
 
 // Извлекаем уникальные значения ключа component_type, только если список не пуст
-if (!empty($componentList)) {
+if (!is_null($componentList)) {
     $uniqueComponentTypes = array_unique(array_column($componentList, 'component_type'));
 
     // Создаем массив для хранения отфильтрованных компонентов
@@ -299,8 +300,8 @@ if (is_null($categoryList)) {
 }
 
 // Записывает ошибку в сессию: Не удалось загрузить ...
-// $componentList = null;
-if (is_null($componentList)) {
+// $componentList = [];
+if (empty($componentList)) {
     $option = ['value' => 'список компонентов'];
     $toast = getModalToast(null, $option);
 

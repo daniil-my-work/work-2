@@ -13,12 +13,15 @@ $userRole = $appData['userRoles'];
 
 // Список категорий меню
 $categoryList = getCategories($con);
+// $categoryList = null;
 
 // Cписок адресов кафе
 $cafeList = getCafeList($con);
+// $cafeList = null;
 
 // Получение данных из сессии
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
+// $productsData = [];
 
 // Cписок выбранных блюд 
 $productList = getProductListInBasket($con, $productsData);

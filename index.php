@@ -16,13 +16,16 @@ $productsDataMenu = $_SESSION['order']['menu'] ?? [];
 
 // Получает список блюд
 $productList = getProductList($con);
+// $productList = null;
 
 // Список категорий меню
 $categoryList = getCategories($con);
+// $categoryList = null;
 
 
 // ==== Вывод ошибок ====
 // Записывает ошибку в сессию: Не загрузился список продуктов 
+// $productList = null;
 if (is_null($productList)) {
     $option = ['value' => 'меню'];
     $toast = getModalToast(null, $option);

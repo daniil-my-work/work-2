@@ -113,7 +113,8 @@ function getUserInfo($con)
     $userEmail = $_SESSION['user_email'];
     $sql = get_query_user_info($userEmail);
     $result = mysqli_query($con, $sql);
-    $userInfo = get_arrow($result);
+
+    $userInfo = mysqli_num_rows($result) > 0 ? get_arrow($result) : null;
 
     return $userInfo;
 }
@@ -134,9 +135,10 @@ function getProductList($con, $category = null)
         $sql = get_query_selected_category($category);
     }
 
-    $products = mysqli_query($con, $sql);
+    $result = mysqli_query($con, $sql);
+    $products = mysqli_num_rows($result) > 0 ? get_arrow($result) : null;
 
-    return mysqli_num_rows($products) > 0 ? get_arrow($products) : null;
+    return $products;
 }
 
 /**

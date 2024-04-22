@@ -12,6 +12,7 @@ $userRole = $appData['userRoles'];
 
 // Список категорий меню
 $categoryList = getCategories($con);
+// $categoryList = null;
 
 // Данные об айди заказа
 $orderId = $_GET['orderId'] ?? null;
@@ -42,7 +43,7 @@ if (is_null($orderInfo)) {
 // Данные о товарах в заказе
 $orderId = $orderInfo['order_id'];
 $orderItems = getOrderItems($con, $orderId);
-
+// $orderItems = [];
 
 $productList = [];
 if (is_array($orderItems)) {
@@ -57,12 +58,7 @@ if (is_array($orderItems)) {
         }
 
         $result = mysqli_query($con, $sql);
-
-        if ($result) {
-            while ($productInfo = mysqli_fetch_assoc($result)) {
-                $productList[] = $productInfo;
-            }
-        }
+        $productList = fetchResultAsArray($result);
     }
 }
 
@@ -72,15 +68,6 @@ if (is_array($orderItems)) {
 // $categoryList = null;
 if (is_null($categoryList)) {
     $option = ['value' => 'категорий меню'];
-    $toast = getModalToast(null, $option);
-
-    $_SESSION['toasts'][] = $toast;
-}
-
-// Записывает ошибку в сессию: Не удалось загрузить ...
-// $orderInfo = null;
-if (is_null($orderInfo)) {
-    $option = ['value' => 'информацию о заказе'];
     $toast = getModalToast(null, $option);
 
     $_SESSION['toasts'][] = $toast;

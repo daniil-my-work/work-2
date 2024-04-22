@@ -22,7 +22,7 @@
         <div class="menu__wrapper">
             <h2 class="title menu__title">
                 <?php if (!empty($products)) : ?>
-                    <?= formatFirstLetter($categoryName['category_name']); ?>
+                    <?= formatFirstLetter($categoryName['category_name'] ?? ''); ?>
                 <?php else : ?>
                     <div class="error">
                         <p class="error__text">

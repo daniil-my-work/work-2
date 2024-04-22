@@ -23,10 +23,8 @@ $categoryList = getCategories($con);
 $userInfo = getUserInfo($con);
 // $userInfo = null;
 
-
 // Определяет вкладку
 $statisticGroup = isset($_GET['group']) ? $_GET['group'] : 'orders';
-
 
 // Значение по умолчанию
 // -- Вкладка: Поиск заказа
