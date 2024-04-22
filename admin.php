@@ -15,14 +15,11 @@ $userRole = $appData['userRoles'];
 $allowedRoles = [$userRole['admin']];
 checkAccess($isAuth, $sessionRole, $allowedRoles);
 
-
 // Список категорий меню
 $categoryList = getCategories($con);
-// $categoryList = null;
 
 // Получает данные о пользователе
 $userInfo = getUserInfo($con);
-
 
 // Определяет вкладку
 $statisticGroup = isset($_GET['group']) ? $_GET['group'] : 'orders';
@@ -54,8 +51,6 @@ $orderListActive = null;
 $orderListСomplete = null;
 $keysActive = null;
 $keysСomplete = null;
-
-
 
 
 if ($statisticGroup === 'search') {
@@ -106,13 +101,12 @@ if ($statisticGroup === 'search') {
         $phoneValue = null;
     }
 
-    // Формирует SQL-запрос для клиента по номеру телефона
-    $sql = get_query_search_clients_by_phone($phoneValue);
-    $result = mysqli_query($con, $sql);
+    // Выполнение запроса и обработка результата
+    $usersInfo = getUsersInfo($con, $phoneValue);
 
     // Список юзеров
-    $userList = fetchResultAsArray($result);
-    $userListLength = count($userList);
+    $userList = $usersInfo['list'];
+    $userListLength = $usersInfo['length'];
 
     // Создание пагинации
     $paginationSearch = generatePagination($userList);
@@ -189,8 +183,47 @@ if ($statisticGroup === 'search') {
 }
 
 
+// ==== Вывод ошибок ====
+// Записывает ошибку в сессию: Не удалось загрузить ...
+// $userInfo = null;
+if (is_null($userInfo)) {
+    $option = ['value' => 'данные пользователя'];
+    $toast = getModalToast(null, $option);
+
+    $_SESSION['toasts'][] = $toast;
+}
+
+// Записывает ошибку в сессию: Не удалось загрузить ...
+// $categoryList = null;
+if (is_null($categoryList)) {
+    $option = ['value' => 'категорий меню'];
+    $toast = getModalToast(null, $option);
+
+    $_SESSION['toasts'][] = $toast;
+}
+
+// Записывает ошибку в сессию: Не удалось загрузить ...
+// $groupedItems = [];
+if (empty($groupedItems) && $statisticGroup !== 'clients') {
+    $option = ['value' => 'список заказов'];
+    $toast = getModalToast(null, $option);
+
+    $_SESSION['toasts'][] = $toast;
+}
+
+// Модальное окно со списком ошибок
+$modalList = $_SESSION['toasts'] ?? [];
+// print_r($_SESSION);
+
 
 // ==== ШАБЛОНЫ ====
+$page_modal = include_template(
+    'modal.php',
+    [
+        'modalList' => $modalList,
+    ]
+);
+
 $page_head = include_template(
     'head.php',
     [
@@ -237,9 +270,6 @@ $page_body = include_template(
     ]
 );
 
-
-
-// ==== ШАБЛОНЫ ====
 $page_footer = include_template(
     'footer.php',
     [
@@ -251,11 +281,11 @@ $layout_content = include_template(
     'layout.php',
     [
         'head' => $page_head,
+        'modal' => $page_modal,
         'header' => $page_header,
         'main' => $page_body,
         'footer' => $page_footer,
     ]
 );
-
 
 print($layout_content);

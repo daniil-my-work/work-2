@@ -14,6 +14,8 @@ $userRole = $appData['userRoles'];
 // Получение данных из сессии
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
 
+$productsData = [];
+
 // Cписок выбранных блюд 
 $productList = getProductListInBasket($con, $productsData);
 
@@ -32,7 +34,6 @@ $page_body = include_template('load-menu.php', [
 ]);
 
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = [];
     $uploadDir = './uploads/';
@@ -40,7 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $columnName = $tabGroup === 'menu' ? array_values($columnNameMenu) : array_values($columnNamePoke);
     $tableName = $tabGroup === 'menu' ? 'menu' : 'components';
     $expectedColumns = implode(',', $columnName);
-
 
     // Проверяет загруженный файл
     $uploadResult = handleFileUpload('file', $uploadDir, $validExtensions);
@@ -57,7 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-
     if (!empty($errors['file'])) {
         $page_body = include_template(
             'load-menu.php',
@@ -71,7 +70,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 
+// ==== Вывод ошибок ====
+// Записывает ошибку в сессию: Не удалось загрузить ...
+// $categoryList = null;
+if (is_null($categoryList)) {
+    $option = ['value' => 'категорий меню'];
+    $toast = getModalToast(null, $option);
+
+    $_SESSION['toasts'][] = $toast;
+}
+
+// Модальное окно со списком ошибок
+$modalList = $_SESSION['toasts'] ?? [];
+// print_r($_SESSION);
+
+
 // ==== ШАБЛОНЫ ====
+$page_modal = include_template(
+    'modal.php',
+    [
+        'modalList' => $modalList,
+    ]
+);
+
 $page_head = include_template(
     'head.php',
     [

@@ -382,3 +382,28 @@ function getOrderItems($con, $orderId)
 
     return $orderItems ?? [];
 }
+
+/**
+ * Получает информацию о текущем пользователе из базы данных.
+ *
+ * @param object $con mysqli Объект подключения к базе данных.
+ *
+ * @return array|null Возвращает информацию о пользователе в виде массива объектов или null, если информация не найдена.
+ */
+function getUsersInfo($con, $phoneValue)
+{
+    // Формирует SQL-запрос для клиента по номеру телефона
+    $sql = get_query_search_clients_by_phone($phoneValue);
+    $result = mysqli_query($con, $sql);
+
+    // Список юзеров
+    $userList = fetchResultAsArray($result);
+    $userListLength = count($userList);
+
+    $users = [
+        'list' => $userList,
+        'length' => $userListLength,
+    ];
+
+    return $users;
+}

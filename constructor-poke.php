@@ -13,10 +13,10 @@ require_once('./data/data.php');
 $userRole = $appData['userRoles'];
 
 // Список категорий меню
-$categoryList = getCategories($con) ?? [];
+$categoryList = getCategories($con);
 
 // Список компонентов Поке
-$componentList = getComponentList($con) ?? [];
+$componentList = getComponentList($con);
 
 
 // Извлекаем уникальные значения ключа component_type, только если список не пуст
@@ -288,7 +288,37 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
 
 
+// ==== Вывод ошибок ====
+// Записывает ошибку в сессию: Не удалось загрузить ...
+// $categoryList = null;
+if (is_null($categoryList)) {
+    $option = ['value' => 'категорий меню'];
+    $toast = getModalToast(null, $option);
+
+    $_SESSION['toasts'][] = $toast;
+}
+
+// Записывает ошибку в сессию: Не удалось загрузить ...
+// $componentList = null;
+if (is_null($componentList)) {
+    $option = ['value' => 'список компонентов'];
+    $toast = getModalToast(null, $option);
+
+    $_SESSION['toasts'][] = $toast;
+}
+
+// Модальное окно со списком ошибок
+$modalList = $_SESSION['toasts'] ?? [];
+
+
 // ==== ШАБЛОНЫ ====
+$page_modal = include_template(
+    'modal.php',
+    [
+        'modalList' => $modalList,
+    ]
+);
+
 $page_head = include_template(
     'head.php',
     [
@@ -315,6 +345,7 @@ $layout_content = include_template(
     'layout.php',
     [
         'head' => $page_head,
+        'modal' => $page_modal,
         'header' => $page_header,
         'main' => $page_body,
         'footer' => $page_footer,

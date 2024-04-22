@@ -24,7 +24,6 @@ $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
 $productList = getProductListInBasket($con, $productsData);
 $productLength = count($productList);
 
-
 // Инициализируем переменную для хранения общей стоимости
 $fullPrice = 0;
 
@@ -219,7 +218,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 
+// ==== Вывод ошибок ====
+// Записывает ошибку в сессию: Не удалось загрузить ...
+// $categoryList = null;
+if (is_null($categoryList)) {
+    $option = ['value' => 'категорий меню'];
+    $toast = getModalToast(null, $option);
+
+    $_SESSION['toasts'][] = $toast;
+}
+
+// Записывает ошибку в сессию: Не удалось загрузить ...
+// $cafeList = null;
+if (is_null($cafeList)) {
+    $option = ['value' => 'список кафе'];
+    $toast = getModalToast(null, $option);
+
+    $_SESSION['toasts'][] = $toast;
+}
+
+// Модальное окно со списком ошибок
+$modalList = $_SESSION['toasts'] ?? [];
+// print_r($_SESSION);
+
+
 // ==== ШАБЛОНЫ ====
+$page_modal = include_template(
+    'modal.php',
+    [
+        'modalList' => $modalList,
+    ]
+);
+
 $page_head = include_template(
     'head.php',
     [
@@ -246,6 +276,7 @@ $layout_content = include_template(
     'layout.php',
     [
         'head' => $page_head,
+        'modal' => $page_modal,
         'header' => $page_header,
         'main' => $page_body,
         'footer' => $page_footer,

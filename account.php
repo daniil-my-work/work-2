@@ -65,7 +65,7 @@ $keys = array_keys($orderList);
 
 
 // ==== Вывод ошибок ====
-// Записывает ошибку в сессию: Не загрузилась инфа о пользователе 
+// Записывает ошибку в сессию: Не удалось загрузить ...
 // $userInfo = null;
 if (is_null($userInfo)) {
     $option = ['value' => 'данных пользователя'];
@@ -74,7 +74,7 @@ if (is_null($userInfo)) {
     $_SESSION['toasts'][] = $toast;
 }
 
-// Записывает ошибку в сессию: Не загрузились категории меню 
+// Записывает ошибку в сессию: Не удалось загрузить ...
 // $categoryList = null;
 if (is_null($categoryList)) {
     $option = ['value' => 'категорий меню'];
@@ -83,10 +83,10 @@ if (is_null($categoryList)) {
     $_SESSION['toasts'][] = $toast;
 }
 
-// Записывает ошибку в сессию: Не загрузился список заказов 
-// $groupedItems = null;
-if (is_null($groupedItems)) {
-    $option = ['value' => 'списка заказов'];
+// Записывает ошибку в сессию: Не удалось загрузить ...
+// $groupedItems = [];
+if (empty($groupedItems)) {
+    $option = ['value' => 'список заказов'];
     $toast = getModalToast(null, $option);
 
     $_SESSION['toasts'][] = $toast;
