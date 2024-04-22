@@ -9,7 +9,7 @@
                 <div class="toast-header">
                     <?= $modalItem['title'] ?? ''; ?>
 
-                    <?php if (in_array($modalItem['category'] ?? null, ['error', 'link'])) : ?>
+                    <?php if (in_array($modalItem['category'] ?? null, ['error', 'link', 'message'])) : ?>
                         <button type="button" class="btn-close me-0 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                     <?php endif; ?>
                 </div>
@@ -27,6 +27,10 @@
                                 break;
 
                             case 'error':
+                                echo $modalItem['text'];
+                                break;
+                            
+                            case 'message':
                                 echo $modalItem['text'];
                                 break;
 

@@ -59,6 +59,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'activeGroup' => $activeGroup,
             ]
         );
+    } else {
+        // Записывает сообщение в сессию:
+        $option = [
+            'title' => "Таблица {$activeGroup} обновлена",
+            'text' => "Записи в таблице {$activeGroup} были успешно добавлены или обновлены."
+        ];
+
+        $toast = getModalToast('message', $option);
+
+        $_SESSION['toasts'][] = $toast;
     }
 }
 

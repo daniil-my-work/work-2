@@ -459,6 +459,9 @@ function getModalToast($category, $options)
 
         case 'link':
             return getModalLink($id, $options['title'], $options['linkTitle'], $options['linkAdress']);
+        
+        case 'message':
+            return getModalMessage($id, $options['title'], $options['text']);
 
         default:
             return getModalError($id, $options['value']);
@@ -528,6 +531,26 @@ function getModalError($id, $value)
         'title' => "Ошибка при загрузке {$value}",
         'text' => "Не удалось загрузить {$value} из-за сбоя в интернет-соединении. Пожалуйста, проверьте ваше подключение и перезагрузите страницу. Если проблема сохранилась обратитесь в поддержку.",
         'category' => 'error',
+    ];
+
+    return $message;
+}
+
+/**
+ * Создаёт объект сообщения об ошибке для модального окна.
+ * Функция формирует сообщение об ошибке, связанной с загрузкой определённого элемента.
+ *
+ * @param string $id Уникальный идентификатор сообщения.
+ * @param string $value Название элемента, при загрузке которого произошла ошибка.
+ * @return array Массив, представляющий модальное сообщение об ошибке.
+ */
+function getModalMessage($id, $title, $text)
+{
+    $message = [
+        'id' => $id,
+        'title' => $title,
+        'text' => $text, 
+        'category' => 'message',
     ];
 
     return $message;
