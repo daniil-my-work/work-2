@@ -1,86 +1,4 @@
 
-// Изменяет кол-во продуктов на странице Корзина
-function addProductInBasketSecond(evt) {
-    // Элементы
-    const element = evt.target;
-    const productItem = element.closest(".basket__item");
-    const productCounterInput = productItem.querySelector(
-        ".product-item__counter-input"
-    );
-    const productCounterNumber = productItem.querySelector(
-        ".product-item__counter-number"
-    );
-    const counterValue = Number(productCounterInput.value);
-
-    // Айди продукта
-    const productDataId = productItem.dataset.productId;
-    const tableName = productItem.dataset.tableName;
-
-    // Формирование строки параметров
-    const params = new URLSearchParams();
-    params.append("productId", productDataId);
-    params.append("tableName", tableName);
-
-    // Уменьшает кол-во блюд
-    const decButton = element.classList.contains(
-        "product-item__counter-action--minus"
-    );
-    if (decButton) {
-        console.log("Минус");
-
-        const newValue = counterValue - 1;
-
-        if (counterValue <= 1) {
-            console.log("Минимальное значение 1");
-            return;
-        }
-
-        // Обновляет данные в сессии
-        params.append("quantity", newValue);
-        apiUpdateProductList(params);
-        // console.log(params.toString());
-
-        productCounterInput.value = newValue;
-        productCounterNumber.textContent = newValue;
-
-        return;
-    }
-
-    // Увеличивает кол-во блюд
-    const plusButton = element.classList.contains(
-        "product-item__counter-action--plus"
-    );
-    if (plusButton) {
-        console.log("Плюс");
-        const newValue = counterValue + 1;
-
-        // Обновляет данные в сессии
-        params.append("quantity", newValue);
-        apiUpdateProductList(params);
-        // console.log(params.toString());
-
-        productCounterInput.value = newValue;
-        productCounterNumber.textContent = newValue;
-
-        return;
-    }
-
-    const delButton =
-        element.classList.contains("product-item__counter-button--basket") ||
-        element.classList.contains("product-item__counter-button-icon--basket");
-    if (delButton) {
-        console.log("Удаляет элемент из Корзины");
-
-        params.append("quantity", 0);
-        apiUpdateProductList(params);
-        // console.log(params.toString());
-
-        productItem.remove();
-
-        return;
-    }
-}
-
 
 // Селект: способ доставки корзина
 const deliveryType = document.querySelector('#delivery-type');
@@ -180,7 +98,7 @@ const pageBasket = document.querySelector("#page-basket");
 if (pageBasket) {
     console.log("Корзина");
 
-    basketList.addEventListener("click", addProductInBasketSecond);
+    // basketList.addEventListener("click", addProductInBasketSecond);
 
     deliveryType.addEventListener('change', setDeliveryType);
 
