@@ -22,8 +22,11 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <!-- Скрипты -->
-    <script src="./js/main.js"></script>
     <script src="./js/flatpickr.js"></script>
+    <script src="./js/main.js"></script>
+    <script src="./js/burger-menu.js"></script>
+    <script src="./js/basket.js"></script>
+    
 
 </body>
 

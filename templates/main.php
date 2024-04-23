@@ -1,5 +1,5 @@
 <!-- Главная страница -->
-<div class="page__main">
+<div class="page__main" id="page-main">
     <!-- Предложение -->
     <div class="offer">
         <div class="offer__wrapper">
