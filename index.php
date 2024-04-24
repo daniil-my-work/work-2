@@ -7,7 +7,6 @@ require_once('./functions/db.php');
 require_once('./data/data.php');
 
 
-
 // Список ролей
 $userRole = $appData['userRoles'];
 

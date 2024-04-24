@@ -8,6 +8,9 @@ require_once('./functions/formatter.php');
 require_once('./data/data.php');
 
 
+// print_r($_SESSION['order']);
+// unset($_SESSION['order']);
+
 // Список ролей
 $userRole = $appData['userRoles'];
 

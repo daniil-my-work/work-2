@@ -6,13 +6,19 @@ class BasketManager {
         this.page = document.querySelector(pageSelector);
 
         if (pageSelector == '#page-main') {
-            this.menuList = this.page.querySelector(".menu__list");
-            this.menuList.addEventListener("click", this.handleBasketOperationsOnMain.bind(this));
+            const menuList = this.page.querySelector(".menu__list");
+
+            if (menuList) {
+                menuList.addEventListener("click", this.handleBasketOperationsOnMain.bind(this));
+            }
 
             this.updateBasketDisplay();
         } else if (pageSelector == '#page-basket') {
-            this.basketList = this.page.querySelector(".basket__list");
-            this.basketList.addEventListener("click", this.handleBasketOperationsOnBasket.bind(this));
+            const basketList = this.page.querySelector(".basket__list");
+
+            if (basketList) {
+                basketList.addEventListener("click", this.handleBasketOperationsOnBasket.bind(this));
+            }
         }
     }
 
@@ -47,10 +53,12 @@ class BasketManager {
             });
 
             if (!response.ok) throw new Error("Network response was not ok");
-            console.log("Данные успешно обновлены в сессии");
+            // console.log("Данные успешно обновлены в сессии");
 
             if (pageSelector == '#page-main') {
                 await this.updateBasketDisplay();
+            } else if (pageSelector == '#page-basket') {
+                location.reload();
             }
         } catch (error) {
             console.error("There has been a problem with your fetch operation:", error);
@@ -68,117 +76,10 @@ class BasketManager {
 
         this.#adjustCounterOnMain(element, counterValue, productCounterInput, productCounterNumber, productCounterButton, productCounterWrapper);
 
-        const params = this.#createParams(productItem, element, counterValue);
+        const params = this.#createParamsOnMain(productItem, element, counterValue);
 
         await this.updateProductList(params, this.selector);
         await this.updateBasketDisplay();
-    }
-
-
-    // Изменяет кол-во продуктов на странице Корзина
-    // function addProductInBasketSecond(evt) {
-    //     // Элементы
-    //     const element = evt.target;
-    //     const productItem = element.closest(".basket__item");
-    //     const productCounterInput = productItem.querySelector(
-    //         ".product-item__counter-input"
-    //     );
-    //     const productCounterNumber = productItem.querySelector(
-    //         ".product-item__counter-number"
-    //     );
-    //     const counterValue = Number(productCounterInput.value);
-
-    //     // Айди продукта
-    //     const productDataId = productItem.dataset.productId;
-    //     const tableName = productItem.dataset.tableName;
-
-    //     // Формирование строки параметров
-    //     const params = new URLSearchParams();
-    //     params.append("productId", productDataId);
-    //     params.append("tableName", tableName);
-
-    //     // Уменьшает кол-во блюд
-    //     const decButton = element.classList.contains(
-    //         "product-item__counter-action--minus"
-    //     );
-    //     if (decButton) {
-    //         console.log("Минус");
-
-    //         const newValue = counterValue - 1;
-
-    //         if (counterValue <= 1) {
-    //             console.log("Минимальное значение 1");
-    //             return;
-    //         }
-
-    //         // Обновляет данные в сессии
-    //         params.append("quantity", newValue);
-    //         apiUpdateProductList(params);
-    //         // console.log(params.toString());
-
-    //         productCounterInput.value = newValue;
-    //         productCounterNumber.textContent = newValue;
-
-    //         return;
-    //     }
-
-    //     // Увеличивает кол-во блюд
-    //     const plusButton = element.classList.contains(
-    //         "product-item__counter-action--plus"
-    //     );
-    //     if (plusButton) {
-    //         console.log("Плюс");
-    //         const newValue = counterValue + 1;
-
-    //         // Обновляет данные в сессии
-    //         params.append("quantity", newValue);
-    //         apiUpdateProductList(params);
-    //         // console.log(params.toString());
-
-    //         productCounterInput.value = newValue;
-    //         productCounterNumber.textContent = newValue;
-
-    //         return;
-    //     }
-
-    //     const delButton =
-    //         element.classList.contains("product-item__counter-button--basket") ||
-    //         element.classList.contains("product-item__counter-button-icon--basket");
-    //     if (delButton) {
-    //         console.log("Удаляет элемент из Корзины");
-
-    //         params.append("quantity", 0);
-    //         apiUpdateProductList(params);
-    //         // console.log(params.toString());
-
-    //         productItem.remove();
-
-    //         return;
-    //     }
-    // }
-
-    async handleBasketOperationsOnBasket(evt) {
-        const element = evt.target;
-        const productItem = element.closest(".basket__item");
-
-        if (!productItem) return;
-
-        const { productCounterButton, productCounterWrapper, productCounterInput, productCounterNumber } = this.#getDOMElements(productItem, this.selector);
-        const counterValue = Number(productCounterInput.value);
-
-        this.#adjustCounterOnBasket(element, productItem, counterValue, productCounterInput, productCounterNumber);
-
-        const params = this.#createParams(productItem, element, counterValue);
-
-        await this.updateProductList(params, this.selector);
-    }
-
-    #createParams(productItem, element, counterValue) {
-        return new URLSearchParams({
-            productId: productItem.dataset.productId,
-            tableName: 'menu',
-            quantity: element.classList.contains("product-item__counter-action--plus") ? counterValue + 1 : counterValue - 1
-        });
     }
 
     #getDOMElements(productItem, pageSelector) {
@@ -191,12 +92,18 @@ class BasketManager {
             };
         } else if (pageSelector == '#page-basket') {
             return {
-                productCounterButton: productItem.querySelector(".product-item__counter-button"),
-                productCounterWrapper: productItem.querySelector(".product-item__counter-number-wrapper"),
                 productCounterInput: productItem.querySelector(".product-item__counter-input"),
                 productCounterNumber: productItem.querySelector(".product-item__counter-number")
             };
         }
+    }
+
+    #createParamsOnMain(productItem, element, counterValue) {
+        return new URLSearchParams({
+            productId: productItem.dataset.productId,
+            tableName: 'menu',
+            quantity: element.classList.contains("product-item__counter-action--plus") ? counterValue + 1 : counterValue - 1
+        });
     }
 
     #adjustCounterOnMain(element, counterValue, productCounterInput, productCounterNumber, productCounterButton, productCounterWrapper) {
@@ -206,16 +113,6 @@ class BasketManager {
             this.#decrementCounter(productCounterInput, productCounterNumber, counterValue, productCounterButton, productCounterWrapper);
         } else if (element.matches(".product-item__counter-button")) {
             this.#clickToButtonBasket(productCounterInput, productCounterNumber, productCounterButton, productCounterWrapper);
-        }
-    }
-
-    #adjustCounterOnBasket(element, productItem, counterValue, productCounterInput, productCounterNumber) {
-        if (element.matches(".product-item__counter-action--plus")) {
-            this.#incrementCounter(productCounterInput, productCounterNumber, counterValue);
-        } else if (element.matches(".product-item__counter-action--minus")) {
-            this.#decrementCounterOnBasket(productCounterInput, productCounterNumber, counterValue);
-        } else if (element.matches(".product-item__counter-button--basket") || element.matches("product-item__counter-button-icon--basket")) {
-            this.#clickToButtonDeleteOnBasket(productItem, productCounterInput, productCounterNumber);
         }
     }
 
@@ -239,22 +136,69 @@ class BasketManager {
         }
     }
 
-    #decrementCounterOnBasket(productCounterInput, productCounterNumber, counterValue) {
-        const newValue = counterValue - 1;
-
-        if (newValue <= 0) {
-            return;
-        } else {
-            productCounterInput.value = newValue;
-            productCounterNumber.textContent = newValue;
-        }
-    }
-
     #clickToButtonBasket(productCounterInput, productCounterNumber, productCounterButton, productCounterWrapper) {
         this.#openCounter(productCounterButton, productCounterWrapper);
 
         productCounterInput.value = 1;
         productCounterNumber.textContent = '1';
+    }
+
+
+    async handleBasketOperationsOnBasket(evt) {
+        const element = evt.target;
+        const productItem = element.closest(".basket__item");
+
+        if (!productItem) return;
+
+        const { productCounterInput, productCounterNumber } = this.#getDOMElements(productItem, this.selector);
+        const counterValue = Number(productCounterInput.value);
+
+        this.#adjustCounterOnBasket(element, productItem, counterValue, productCounterInput, productCounterNumber);
+
+        const params = this.#createParamsOnBasket(productItem, element, counterValue);
+
+        await this.updateProductList(params, this.selector);
+    }
+
+    #createParamsOnBasket(productItem, element, counterValue) {
+        let newValue = counterValue;
+
+        if (element.matches(".product-item__counter-action--plus")) {
+            newValue = counterValue + 1;
+        } else if (element.matches(".product-item__counter-action--minus") && counterValue > 1) {
+            newValue = counterValue - 1;
+        } else if (element.matches(".product-item__counter-button--basket") || element.matches(".product-item__counter-button-icon--basket")) {
+            newValue = 0;
+        }
+
+        return new URLSearchParams({
+            productId: productItem.dataset.productId,
+            tableName: productItem.dataset.tableName,
+            quantity: newValue,
+        });
+    }
+
+    #adjustCounterOnBasket(element, productItem, counterValue, productCounterInput, productCounterNumber) {
+        if (element.matches(".product-item__counter-action--plus")) {
+            this.#incrementCounter(productCounterInput, productCounterNumber, counterValue);
+        } else if (element.matches(".product-item__counter-action--minus")) {
+            this.#decrementCounterOnBasket(productCounterInput, productCounterNumber, counterValue);
+        } else if (element.matches(".product-item__counter-button--basket") || element.matches(".product-item__counter-button-icon--basket")) {
+            this.#clickToButtonDeleteOnBasket(productItem, productCounterInput, productCounterNumber);
+        }
+    }
+
+    #decrementCounterOnBasket(productCounterInput, productCounterNumber, counterValue) {
+        const newValue = counterValue - 1;
+
+        if (newValue <= 0) {
+            productCounterInput.value = 1;
+            productCounterNumber.textContent = 1;
+            return;
+        } else {
+            productCounterInput.value = newValue;
+            productCounterNumber.textContent = newValue;
+        }
     }
 
     #clickToButtonDeleteOnBasket(productItem, productCounterInput, productCounterNumber) {
@@ -294,4 +238,10 @@ document.addEventListener('DOMContentLoaded', function () {
     if (pageBasket) {
         new BasketManager(URL_BASKET_DATA, URL_ADD_TO_BASKET, '#page-basket');
     }
+    
+    // const pageMenu = document.querySelector('#page-menu');
+
+    // if (pageMenu) {
+    //     new BasketManager(URL_BASKET_DATA, URL_ADD_TO_BASKET, '#page-menu');
+    // }
 });
