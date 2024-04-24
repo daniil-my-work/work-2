@@ -28,6 +28,7 @@
     <script src="./js/burger-menu.js"></script>
     <script src="./js/basket.js"></script>
     <script src="./js/address.js"></script>
+    <script src="./js/delivery-type.js"></script>
     
 
 </body>
