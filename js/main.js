@@ -4,71 +4,26 @@
 const deliveryType = document.querySelector('#delivery-type');
 const basketCafe = document.querySelector('#basket-cafe-list');
 const addressList = document.querySelector('#basket-delivery-list');
-const basketDeliveryList = document.querySelector('.basket__delivery-list');
 
 
-if (basketDeliveryList) {
-    // Переместить обработчик события click за пределы функции getFullAddress
-    basketDeliveryList.addEventListener('click', (evt) => {
-        const target = evt.target.textContent;
-        userAddress.value = target;
+// const basketDeliveryList = document.querySelector('.basket__delivery-list');
 
-        // Присвоить значение value атрибуту value элемента #user_address
-        userAddress.setAttribute('value', target);
 
-        // Удалить список адресов после выбора одного из них
-        basketDeliveryList.innerHTML = '';
-    });
-}
+// if (basketDeliveryList) {
+//     // Переместить обработчик события click за пределы функции getFullAddress
+//     basketDeliveryList.addEventListener('click', (evt) => {
+//         const target = evt.target.textContent;
+//         userAddress.value = target;
 
-// Измененный вариант функции getFullAddress
-function getFullAddress(value) {
-    const url = "http://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address";
-    const token = "dedcff8224572325aafcec43188c29827f93a657"; // Апи ключ
-    const targetValue = "г Ярославль " + value;
+//         // Присвоить значение value атрибуту value элемента #user_address
+//         userAddress.setAttribute('value', target);
 
-    const options = {
-        method: "POST",
-        mode: "cors",
-        headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "Authorization": "Token " + token
-        },
-        body: JSON.stringify({
-            query: targetValue,
-            count: 5,
-            language: 'ru',
-        })
-    }
+//         // Удалить список адресов после выбора одного из них
+//         basketDeliveryList.innerHTML = '';
+//     });
+// }
 
-    fetch(url, options)
-        .then(response => response.json())
-        .then(
-            result => {
-                basketDeliveryList.innerHTML = '';
-                const addressResult = result.suggestions;
 
-                addressResult.forEach((el) => {
-                    const item = `<li class="basket__delivery-item">${el.value}</li>`;
-                    basketDeliveryList.innerHTML += item;
-                });
-            }
-        )
-        .catch(error => console.log("error", error));
-}
-
-// Обработчик события input для поля userAddress
-const userAddress = document.querySelector('#user_address');
-
-if (userAddress) {
-    userAddress.addEventListener('input', (evt) => {
-        const value = evt.target.value;
-
-        // Запрос для получения полного адреса
-        getFullAddress(value);
-    });
-}
 
 
 function setDeliveryType(evt) {
@@ -94,11 +49,8 @@ function setDeliveryType(evt) {
 // Прибавляет или убавляет кол-во блюд в заказе на странице Корзина
 const basketList = document.querySelector(".basket__list");
 
-const pageBasket = document.querySelector("#page-basket");
 if (pageBasket) {
     console.log("Корзина");
-
-    // basketList.addEventListener("click", addProductInBasketSecond);
 
     deliveryType.addEventListener('change', setDeliveryType);
 

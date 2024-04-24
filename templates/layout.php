@@ -23,9 +23,11 @@
 
     <!-- Скрипты -->
     <script src="./js/flatpickr.js"></script>
+    <script src="./js/variables.js"></script>
     <script src="./js/main.js"></script>
     <script src="./js/burger-menu.js"></script>
     <script src="./js/basket.js"></script>
+    <script src="./js/address.js"></script>
     
 
 </body>

@@ -235,22 +235,15 @@ const URL_ADD_TO_BASKET = 'api-update-order.php';
 
 // Инициализация класса BasketManager
 document.addEventListener('DOMContentLoaded', function () {
-    const pageMain = document.querySelector('#page-main');
-
     if (pageMain) {
         new BasketManager(URL_BASKET_DATA, URL_ADD_TO_BASKET, '#page-main');
     }
 
-    const pageBasket = document.querySelector('#page-basket');
-
     if (pageBasket) {
         new BasketManager(URL_BASKET_DATA, URL_ADD_TO_BASKET, '#page-basket');
     }
-    
-    const pageMenu = document.querySelector('#page-menu');
 
     if (pageMenu) {
-        console.log('dsds');
         new BasketManager(URL_BASKET_DATA, URL_ADD_TO_BASKET, '#page-menu');
     }
 });
