@@ -19,6 +19,12 @@ class BasketManager {
             if (basketList) {
                 basketList.addEventListener("click", this.handleBasketOperationsOnBasket.bind(this));
             }
+        } else if (pageSelector == '#page-menu') {
+            const menuList = this.page.querySelector(".menu__list");
+
+            if (menuList) {
+                menuList.addEventListener("click", this.handleBasketOperationsOnMain.bind(this));
+            }
         }
     }
 
@@ -71,6 +77,8 @@ class BasketManager {
 
         if (!productItem) return;
 
+        console.log(element);
+        
         const { productCounterButton, productCounterWrapper, productCounterInput, productCounterNumber } = this.#getDOMElements(productItem, this.selector);
         const counterValue = Number(productCounterInput.value);
 
@@ -83,7 +91,7 @@ class BasketManager {
     }
 
     #getDOMElements(productItem, pageSelector) {
-        if (pageSelector == '#page-main') {
+        if (pageSelector == '#page-main' || pageSelector == '#page-menu') {
             return {
                 productCounterButton: productItem.querySelector(".product-item__counter-button"),
                 productCounterWrapper: productItem.querySelector(".product-item__counter-number-wrapper"),
@@ -239,9 +247,10 @@ document.addEventListener('DOMContentLoaded', function () {
         new BasketManager(URL_BASKET_DATA, URL_ADD_TO_BASKET, '#page-basket');
     }
     
-    // const pageMenu = document.querySelector('#page-menu');
+    const pageMenu = document.querySelector('#page-menu');
 
-    // if (pageMenu) {
-    //     new BasketManager(URL_BASKET_DATA, URL_ADD_TO_BASKET, '#page-menu');
-    // }
+    if (pageMenu) {
+        console.log('dsds');
+        new BasketManager(URL_BASKET_DATA, URL_ADD_TO_BASKET, '#page-menu');
+    }
 });

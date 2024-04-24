@@ -1,5 +1,5 @@
 <!-- Страница Меню -->
-<div class="page__menu">
+<div class="page__menu" id="page-menu">
     <!-- Вкладка -->
     <div class="account__orders-group page__menu-group">
         <?php if (!is_null($categoryList)) : ?>
