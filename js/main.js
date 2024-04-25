@@ -21,6 +21,7 @@ function updatePokeSum(pokeObj) {
     localStorage.setItem('constructorPokeSum', JSON.stringify(pokeObj));
 }
 
+
 function updatePokeBasketSum() {
     const storedSumOfPoke = JSON.parse(localStorage.getItem('constructorPokeSum'));
     console.log(storedSumOfPoke); // Выведет сохраненный объект
