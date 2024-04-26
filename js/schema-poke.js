@@ -32,13 +32,13 @@ class pokeManager {
         this.setLocalStorageValue(this.storageSumName, JSON.stringify(this.sumOfPoke));
         this.setLocalStorageValue(this.storageSchemeName, 1);
 
-
-        this.updateSchemePoke();
         this.init();
     }
-
-
+    
+    
     init() {
+        this.updateSchemePoke();
+
         this.setupSelectListener('#constructor-poke__select--protein', null);
         this.setupSelectListener('#constructor-poke__select-proteinAdd', '#constructor-poke__add-price--protein');
         this.setupSelectListener('#constructor-poke__select-sauceAdd', '#constructor-poke__add-price--sauce');
@@ -51,19 +51,6 @@ class pokeManager {
 
     getLocalStorageValue(value) {
         return localStorage.getItem(value);
-    }
-
-    updateSchemePoke() {
-        const schemaPoke = document.querySelector(this.schemeSelector);
-
-        schemaPoke.addEventListener('click', (evt) => {
-            const target = evt.target;
-
-            const schemaItem = target.closest('.constructor-poke-shema-item');
-            const schemaItemValue = schemaItem.dataset.shemaPoke;
-
-            this.setSchemePokeDescription(schemaItemValue);
-        });
     }
 
     setSchemePokeDescription(schemaValue) {
@@ -79,41 +66,18 @@ class pokeManager {
         this.setLocalStorageValue(this.storageSchemeName, schemaValue);
     }
 
-    calcAmountPrice() {
-        let result = 0;
+    updateSchemePoke() {
+        const schemaPoke = document.querySelector(this.schemeSelector);
 
-        Object.values(this.sumOfPoke).forEach(value => {
-            result += value;
+        schemaPoke.addEventListener('click', (evt) => {
+            const target = evt.target;
+
+            const schemaItem = target.closest('.constructor-poke-shema-item');
+            const schemaItemValue = schemaItem.dataset.shemaPoke;
+
+            this.setSchemePokeDescription(schemaItemValue);
         });
-
-        return result;
     }
-
-    setupSelectListener(selector, labelSelector) {
-        const select = document.querySelector(selector);
-        const selectType = select.getAttribute('name');
-
-        if (select) {
-            select.addEventListener('change', (evt) => this.handleSelectChange(evt, selectType, labelSelector));
-        }
-    }
-
-    handleSelectChange(evt, key, priceLabel) {
-        const price = evt.target.options[evt.target.selectedIndex].getAttribute('data-price');
-
-        // Обновляем метку цены для добавок
-        const labelPrice = document.querySelector(priceLabel);
-        if (labelPrice) {
-            labelPrice.textContent = price ? `+ ${price} руб` : '';
-        }
-
-        // Обновляем цену в объекте sumOfPoke и обновляем сумму в корзине
-        this.sumOfPoke[key] = Number(price) || 0;
-        this.updateBasketSum();
-
-        console.log(this.sumOfPoke);
-    }
-
 
     calcAmountPrice() {
         let result = 0;
@@ -132,6 +96,32 @@ class pokeManager {
         basketSum.textContent = `${result} руб`;
         basketSumInput.value = result;
     }
+
+    handleSelectChange(evt, key, priceLabel) {
+        const price = evt.target.options[evt.target.selectedIndex].getAttribute('data-price');
+
+        // Обновляем метку цены для добавок
+        const labelPrice = document.querySelector(priceLabel);
+        if (labelPrice) {
+            labelPrice.textContent = price ? `+ ${price} руб` : '';
+        }
+
+        // Обновляем цену в объекте sumOfPoke и обновляем сумму в корзине
+        this.sumOfPoke[key] = Number(price) || 0;
+        this.updateBasketSum();
+
+        console.log(this.sumOfPoke);
+    }
+
+    setupSelectListener(selector, labelSelector) {
+        const select = document.querySelector(selector);
+        const selectType = select.getAttribute('name');
+
+        if (select) {
+            select.addEventListener('change', (evt) => this.handleSelectChange(evt, selectType, labelSelector));
+        }
+    }
+
 
 
 
