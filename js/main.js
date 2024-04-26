@@ -166,33 +166,33 @@
 
 
 // Список инпутов Топпинг
-const checkboxTopingList = document.querySelectorAll('.constructor-poke-item-checkbox--toping');
+// const checkboxTopingList = document.querySelectorAll('.constructor-poke-item-checkbox--toping');
 
-// Обработчик изменения состояния чекбоксов
-function handleTopingCheckboxChange(event) {
-    const number = localStorage.getItem('shemaPoke');
-    let checkedCount = 0;
+// // Обработчик изменения состояния чекбоксов
+// function handleTopingCheckboxChange(event) {
+//     const number = localStorage.getItem('shemaPoke');
+//     let checkedCount = 0;
 
-    checkboxTopingList.forEach(topppingItem => {
-        if (topppingItem.checked) {
-            checkedCount++;
-        }
-    });
+//     checkboxTopingList.forEach(topppingItem => {
+//         if (topppingItem.checked) {
+//             checkedCount++;
+//         }
+//     });
 
-    const diff = shemaPokeNumber[number]['toping'] - checkedCount;
-    changeTopingCountValue(number, diff);
+//     const diff = shemaPokeNumber[number]['toping'] - checkedCount;
+//     changeTopingCountValue(number, diff);
 
-    if (checkedCount > shemaPokeNumber[number]['toping']) {
-        event.preventDefault(); // Предотвращаем изменение состояния
-        event.target.checked = false;
-        return;
-    }
-}
+//     if (checkedCount > shemaPokeNumber[number]['toping']) {
+//         event.preventDefault(); // Предотвращаем изменение состояния
+//         event.target.checked = false;
+//         return;
+//     }
+// }
 
-// Назначаем обработчик изменения состояния каждому чекбоксу
-checkboxTopingList.forEach(topppingItem => {
-    topppingItem.addEventListener('change', handleTopingCheckboxChange);
-});
+// // Назначаем обработчик изменения состояния каждому чекбоксу
+// checkboxTopingList.forEach(topppingItem => {
+//     topppingItem.addEventListener('change', handleTopingCheckboxChange);
+// });
 
 
 
