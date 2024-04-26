@@ -11,7 +11,7 @@ const shemaPokeNumber = {
 
 
 class pokeManager {
-    constructor(storageSumName, storageSchemeName, schemeSelector, fillerSelector, toppingSelector, basketSumSelector, basketSumInputSelector, checkBoxSelectorFiller, checkBoxSelectorTopping) {
+    constructor(storageSumName, storageSchemeName, schemeSelector, fillerSelector, toppingSelector, basketSumSelector, basketSumInputSelector, checkBoxesSelectorFiller, checkBoxesSelectorTopping, checkBoxesSelectorFillerAdd, checkBoxesSelectorToppingAdd) {
         this.storageSumName = storageSumName;
         this.storageSchemeName = storageSchemeName;
         this.schemeSelector = schemeSelector;
@@ -19,8 +19,10 @@ class pokeManager {
         this.toppingSelector = toppingSelector;
         this.basketSumSelector = basketSumSelector;
         this.basketSumInputSelector = basketSumInputSelector;
-        this.checkBoxFiller = document.querySelectorAll(checkBoxSelectorFiller);
-        this.checkBoxTopping = document.querySelectorAll(checkBoxSelectorTopping);
+        this.checkBoxFiller = document.querySelectorAll(checkBoxesSelectorFiller);
+        this.checkBoxTopping = document.querySelectorAll(checkBoxesSelectorTopping);
+        this.checkBoxFillerAdd = document.querySelectorAll(checkBoxesSelectorFillerAdd);
+        this.checkBoxToppingAdd = document.querySelectorAll(checkBoxesSelectorToppingAdd);
 
         this.sumOfPoke = {
             protein: 0,
@@ -48,6 +50,9 @@ class pokeManager {
 
         this.checkboxListener(this.checkBoxFiller, 'filler');
         this.checkboxListener(this.checkBoxTopping, 'topping');
+
+        this.checkboxAddListener(this.checkBoxFillerAdd, 'fillerAdd', '#constructor-poke__add-price--filler');
+        this.checkboxAddListener(this.checkBoxToppingAdd, 'toppingAdd', '#constructor-poke__add-price--topping');
     }
 
     setLocalStorageValue(name, value) {
@@ -57,7 +62,6 @@ class pokeManager {
     getLocalStorageValue(value) {
         return localStorage.getItem(value);
     }
-
 
     countCheckedItem(list) {
         let checked = 0;
@@ -210,28 +214,32 @@ class pokeManager {
     }
 
 
+    handleCheckboxAddChange(list, type, labelCheckBox) {
+        let fillerAddSum = 0;
 
+        list.forEach(item => {
+            if (item.checked) {
+                fillerAddSum += Number(item.dataset.price);
+            }
+        });
 
-    // checkCheckboxList(list, type) {
-    //     this.topingSelector = document.querySelectorAll('.constructor-poke-item-checkbox--filler');
-    //     this.topingSelector = document.querySelectorAll('.constructor-poke-item-checkbox--topping');
+        // Обновляем цену в объекте sumOfPoke и обновляем сумму в корзине
+        this.sumOfPoke[type] = Number(fillerAddSum) || 0;
+        this.updateBasketSum();
 
-    //     let checkedList = 0;
+        // Обновляем метку цены для добавок
+        const labelPrice = document.querySelector(labelCheckBox);
+        if (labelPrice) {
+            labelPrice.textContent = fillerAddSum ? `+ ${fillerAddSum} руб` : '';
+        }
+    }
 
-    //     list.forEach(item => {
-    //         if (item.checked) {
-    //             checkedList++;
-    //         }
-    //     });
+    checkboxAddListener(list, type, labelCheckBox) {
+        list.forEach(item => {
+            item.addEventListener('change', () => this.handleCheckboxAddChange(list, type, labelCheckBox));
+        });
+    }
 
-    //     const number = this.getLocalStorageValue(this.storageSchemeName);
-
-    //     list.forEach(item => {
-    //         if (checkedList > shemaPokeNumber[number][type]) {
-    //             item.checked = false;
-    //         }
-    //     });
-    // }
 
 }
 
@@ -250,6 +258,7 @@ class pokeManager {
 
 // const checkboxTopingList = document.querySelectorAll('.constructor-poke-item-checkbox--toping');
 
+// constructor-poke__add-price--filler
 
 if (pagePoke) {
     // console.log('ds');
@@ -264,6 +273,8 @@ if (pagePoke) {
         '#total-price',
         '.constructor-poke-item-checkbox--filler',
         '.constructor-poke-item-checkbox--toping',
+        '.constructor-poke-item-checkbox--fillerAdd',
+        '.constructor-poke-item-checkbox--toppingAdd',
     );
 }
 
