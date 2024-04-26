@@ -29,6 +29,7 @@
     <script src="./js/basket.js"></script>
     <script src="./js/address.js"></script>
     <script src="./js/delivery-type.js"></script>
+    <script src="./js/schema-poke.js"></script>
     
 
 </body>
