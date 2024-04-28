@@ -1,58 +1,44 @@
-const shemaPokeNumber = {
-    1: {
-        'filler': 5,
-        'topping': 1,
-    },
-    2: {
-        'filler': 3,
-        'topping': 2,
-    },
+const schemaPokeNumber = {
+    1: { 'filler': 5, 'topping': 1 },
+    2: { 'filler': 3, 'topping': 2 },
 };
 
 
-class pokeManager {
-    constructor(storageSumName, storageSchemeName, schemeSelector, fillerSelector, toppingSelector, basketSumSelector, basketSumInputSelector, checkBoxesSelectorFiller, checkBoxesSelectorTopping, checkBoxesSelectorFillerAdd, checkBoxesSelectorToppingAdd) {
-        this.storageSumName = storageSumName;
-        this.storageSchemeName = storageSchemeName;
-        this.schemeSelector = schemeSelector;
-        this.fillerSelector = fillerSelector;
-        this.toppingSelector = toppingSelector;
-        this.basketSumSelector = basketSumSelector;
-        this.basketSumInputSelector = basketSumInputSelector;
-        this.checkBoxFiller = document.querySelectorAll(checkBoxesSelectorFiller);
-        this.checkBoxTopping = document.querySelectorAll(checkBoxesSelectorTopping);
-        this.checkBoxFillerAdd = document.querySelectorAll(checkBoxesSelectorFillerAdd);
-        this.checkBoxToppingAdd = document.querySelectorAll(checkBoxesSelectorToppingAdd);
-
-        this.sumOfPoke = {
-            protein: 0,
-            proteinAdd: 0,
-            fillerAdd: 0,
-            toppingAdd: 0,
-            sauceAdd: 0,
-            crunchAdd: 0,
-        };
-
-        this.setLocalStorageValue(this.storageSumName, JSON.stringify(this.sumOfPoke));
-        this.setLocalStorageValue(this.storageSchemeName, 1);
+class PokeManager {
+    constructor(config) {
+        this.config = config;
+        this.selectors = config.selectors;
+        this.basketPrice = document.querySelector(config.selectors.basketSum);
+        this.basketInputPrice = document.querySelector(config.selectors.basketSumInput);
+        this.storage = { protein: 0, proteinAdd: 0, fillerAdd: 0, toppingAdd: 0, sauceAdd: 0, crunchAdd: 0 };
+        localStorage.setItem(config.storageNames.sum, JSON.stringify(this.storage));
+        localStorage.setItem(config.storageNames.scheme, 1);
 
         this.init();
     }
 
-
     init() {
         this.updateSchemePoke();
+        this.setupSelectListeners();
+        this.setupCheckboxListeners();
+        this.setupCheckboxAddListeners();
+    }
 
+    setupSelectListeners() {
         this.setupSelectListener('#constructor-poke__select--protein', null);
         this.setupSelectListener('#constructor-poke__select-proteinAdd', '#constructor-poke__add-price--protein');
         this.setupSelectListener('#constructor-poke__select-sauceAdd', '#constructor-poke__add-price--sauce');
         this.setupSelectListener('#constructor-poke__select-crunchAdd', '#constructor-poke__add-price--crunch');
+    }
 
-        this.checkboxListener(this.checkBoxFiller, 'filler');
-        this.checkboxListener(this.checkBoxTopping, 'topping');
+    setupCheckboxListeners() {
+        this.checkboxListener(this.selectors.checkBoxFiller, 'filler');
+        this.checkboxListener(this.selectors.checkBoxTopping, 'topping');
+    }
 
-        this.checkboxAddListener(this.checkBoxFillerAdd, 'fillerAdd', '#constructor-poke__add-price--filler');
-        this.checkboxAddListener(this.checkBoxToppingAdd, 'toppingAdd', '#constructor-poke__add-price--topping');
+    setupCheckboxAddListeners() {
+        this.checkboxAddListener(this.selectors.checkBoxFillerAdd, 'fillerAdd', '#constructor-poke__add-price--filler');
+        this.checkboxAddListener(this.selectors.checkBoxToppingAdd, 'toppingAdd', '#constructor-poke__add-price--topping');
     }
 
     setLocalStorageValue(name, value) {
@@ -63,38 +49,36 @@ class pokeManager {
         return localStorage.getItem(value);
     }
 
-    countCheckedItem(list) {
-        let checked = 0;
-
-        list.forEach(item => {
-            if (item.checked) {
-                checked++;
-            }
-        });
-        return checked;
+    countCheckedItem(selector) {
+        const checkboxes = document.querySelectorAll(selector);
+        return Array.from(checkboxes).filter(cb => cb.checked).length;
     }
 
-    clearCheckbox(list, fillerNumber, number, type) {
+    getScheme() {
+        return localStorage.getItem(this.config.storageNames.scheme);
+    }
+
+    clearCheckbox(selector, fillerNumber, type) {
+        const list = document.querySelectorAll(selector);
+
         list.forEach(item => {
-            if (fillerNumber > shemaPokeNumber[number][type]) {
+            if (fillerNumber > schemaPokeNumber[this.getScheme()][type]) {
                 item.checked = false;
             }
         });
     }
 
     clearCheckboxList() {
-        const fillerChecked = this.countCheckedItem(this.checkBoxFiller);
-        const toppingChecked = this.countCheckedItem(this.checkBoxTopping);
+        const fillerChecked = this.countCheckedItem(this.selectors.checkBoxFiller);
+        const toppingChecked = this.countCheckedItem(this.selectors.checkBoxTopping);
 
-        const number = this.getLocalStorageValue(this.storageSchemeName);
-
-        this.clearCheckbox(this.checkBoxFiller, fillerChecked, number, 'filler');
-        this.clearCheckbox(this.checkBoxTopping, toppingChecked, number, 'topping');
+        this.clearCheckbox(this.selectors.checkBoxFiller, fillerChecked, 'filler');
+        this.clearCheckbox(this.selectors.checkBoxTopping, toppingChecked, 'topping');
     }
 
     setSchemePokeDescription(schemaValue) {
-        const fillerPokeItem = document.querySelector(this.fillerSelector);
-        const toppingPokeItem = document.querySelector(this.toppingSelector);
+        const fillerPokeItem = document.querySelector(this.selectors.fillerCount);
+        const toppingPokeItem = document.querySelector(this.selectors.toppingCount);
 
         const fillerPokeItemText = schemaValue === '1' ? `/ Осталось 5 из 5` : `/ Осталось 3 из 3`;
         const toppingPokeItemText = schemaValue === '1' ? `/ Осталось 1 из 1` : `/ Осталось 2 из 2`;
@@ -102,13 +86,13 @@ class pokeManager {
         fillerPokeItem.textContent = fillerPokeItemText;
         toppingPokeItem.textContent = toppingPokeItemText;
 
-        this.setLocalStorageValue(this.storageSchemeName, schemaValue);
+        this.setLocalStorageValue(this.config.storageNames.scheme, schemaValue);
 
         this.clearCheckboxList();
     }
 
     updateSchemePoke() {
-        const schemaPoke = document.querySelector(this.schemeSelector);
+        const schemaPoke = document.querySelector(this.selectors.scheme);
 
         schemaPoke.addEventListener('click', (evt) => {
             const target = evt.target;
@@ -120,22 +104,11 @@ class pokeManager {
         });
     }
 
-    calcAmountPrice() {
-        let result = 0;
-        Object.values(this.sumOfPoke).forEach(value => {
-            result += value;
-        });
-        return result;
-    }
-
     updateBasketSum() {
-        const basketSum = document.querySelector(this.basketSumSelector);
-        const basketSumInput = document.querySelector(this.basketSumInputSelector);
+        const sum = Object.values(this.storage).reduce((a, b) => a + b, 0);
 
-        const result = this.calcAmountPrice();
-
-        basketSum.textContent = `${result} руб`;
-        basketSumInput.value = result;
+        this.basketPrice.textContent = `${sum} руб`;
+        this.basketInputPrice.value = sum;
     }
 
     handleSelectChange(evt, key, priceLabel) {
@@ -148,10 +121,10 @@ class pokeManager {
         }
 
         // Обновляем цену в объекте sumOfPoke и обновляем сумму в корзине
-        this.sumOfPoke[key] = Number(price) || 0;
+        this.storage[key] = Number(price) || 0;
         this.updateBasketSum();
 
-        console.log(this.sumOfPoke);
+        console.log(this.storage);
     }
 
     setupSelectListener(selector, labelSelector) {
@@ -164,8 +137,8 @@ class pokeManager {
     }
 
     changeCountValue(number, diff, type) {
-        const fillerPokeItem = document.querySelector(this.fillerSelector);
-        const toppingPokeItem = document.querySelector(this.toppingSelector);
+        const fillerPokeItem = document.querySelector(this.selectors.fillerCount);
+        const toppingPokeItem = document.querySelector(this.selectors.toppingCount);
 
         // Заполняет данные об оставшемся кол-ве ингредиентов
         if (diff < 0) {
@@ -187,94 +160,90 @@ class pokeManager {
         }
     }
 
-    handleCheckboxChange(evt, list, type) {
-        const number = this.getLocalStorageValue(this.storageSchemeName);
-        let checkedCount = 0;
+    handleCheckboxChange(evt, checkboxes, type) {
+        const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+        const allowedCount = schemaPokeNumber[this.getScheme()][type];
 
-        list.forEach(item => {
-            if (item.checked) {
-                checkedCount++;
-            }
-        });
-
-        const diff = shemaPokeNumber[number][type] - checkedCount;
-        this.changeCountValue(number, diff, type);
-
-        if (checkedCount > shemaPokeNumber[number][type]) {
+        if (checkedCount > allowedCount) {
             evt.preventDefault();
             evt.target.checked = false;
-            return;
         }
+
+        const diff = allowedCount - checkedCount;
+        this.changeCountValue(this.getScheme(), diff, type);
     }
 
-    checkboxListener(list, type) {
-        list.forEach(item => {
-            item.addEventListener('change', (evt) => this.handleCheckboxChange(evt, list, type));
+    checkboxListener(selector, type) {
+        const checkboxList = document.querySelectorAll(selector);
+
+        checkboxList.forEach(item => {
+            item.addEventListener('change', (evt) => this.handleCheckboxChange(evt, checkboxList, type));
         });
     }
 
+    calculateAdditions(checkboxes) {
+        return Array.from(checkboxes).reduce((sum, cb) => cb.checked ? sum + Number(cb.dataset.price) : sum, 0);
+    }
 
     handleCheckboxAddChange(list, type, labelCheckBox) {
-        let fillerAddSum = 0;
-
-        list.forEach(item => {
-            if (item.checked) {
-                fillerAddSum += Number(item.dataset.price);
-            }
-        });
+        const sum = this.calculateAdditions(list);
 
         // Обновляем цену в объекте sumOfPoke и обновляем сумму в корзине
-        this.sumOfPoke[type] = Number(fillerAddSum) || 0;
+        this.storage[type] = Number(sum) || 0;
         this.updateBasketSum();
 
         // Обновляем метку цены для добавок
         const labelPrice = document.querySelector(labelCheckBox);
         if (labelPrice) {
-            labelPrice.textContent = fillerAddSum ? `+ ${fillerAddSum} руб` : '';
+            labelPrice.textContent = sum ? `+ ${sum} руб` : '';
         }
     }
 
-    checkboxAddListener(list, type, labelCheckBox) {
-        list.forEach(item => {
-            item.addEventListener('change', () => this.handleCheckboxAddChange(list, type, labelCheckBox));
+    checkboxAddListener(selector, type, labelCheckBox) {
+        const checkboxList = document.querySelectorAll(selector);
+
+        checkboxList.forEach(item => {
+            item.addEventListener('change', () => this.handleCheckboxAddChange(checkboxList, type, labelCheckBox));
         });
     }
-
-
 }
 
 
-// const option = [
-//     'constructorPokeSum',
-//     'shemaPoke',
-//     '.constructor-poke-shema',
-//     // '.basket__order-number',
-//     // '#total-price',
-//     // '#fillerCounter',
-//     // '#topingCounter',
-//     // '.constructor-poke-item-checkbox--filler',
-//     // '.constructor-poke-item-checkbox--topping',
-// ];
-
-// const checkboxTopingList = document.querySelectorAll('.constructor-poke-item-checkbox--toping');
-
-// constructor-poke__add-price--filler
+const pokePageConfig = {
+    storageNames: {
+        sum: 'constructorPokeSum',
+        scheme: 'shemaPoke'
+    },
+    selectors: {
+        scheme: '.constructor-poke-shema',
+        fillerCount: '#fillerCounter',
+        toppingCount: '#topingCounter',
+        basketSum: '.basket__order-number',
+        basketSumInput: '#total-price',
+        checkBoxFiller: '.constructor-poke-item-checkbox--filler',
+        checkBoxTopping: '.constructor-poke-item-checkbox--toping',
+        checkBoxFillerAdd: '.constructor-poke-item-checkbox--fillerAdd',
+        checkBoxToppingAdd: '.constructor-poke-item-checkbox--toppingAdd',
+    }
+};
 
 if (pagePoke) {
-    // console.log('ds');
-
-    new pokeManager(
-        'constructorPokeSum',
-        'shemaPoke',
-        '.constructor-poke-shema',
-        '#fillerCounter',
-        '#topingCounter',
-        '.basket__order-number',
-        '#total-price',
-        '.constructor-poke-item-checkbox--filler',
-        '.constructor-poke-item-checkbox--toping',
-        '.constructor-poke-item-checkbox--fillerAdd',
-        '.constructor-poke-item-checkbox--toppingAdd',
-    );
+    new PokeManager(pokePageConfig);
 }
+
+// if (pagePoke) {
+//     new pokeManager(
+//         'constructorPokeSum',
+//         'shemaPoke',
+//         '.constructor-poke-shema',
+//         '#fillerCounter',
+//         '#topingCounter',
+//         '.basket__order-number',
+//         '#total-price',
+//         '.constructor-poke-item-checkbox--filler',
+//         '.constructor-poke-item-checkbox--toping',
+//         '.constructor-poke-item-checkbox--fillerAdd',
+//         '.constructor-poke-item-checkbox--toppingAdd',
+//     );
+// }
 
