@@ -48,6 +48,8 @@ const dsds = 'dsds';
 //         this.checkboxAddListener(this.selectors.checkBoxToppingAdd, 'toppingAdd', '#constructor-poke__add-price--topping');
 //     }
 
+
+
 //     setLocalStorageValue(name, value) {
 //         localStorage.setItem(name, value);
 //     }
@@ -60,6 +62,9 @@ const dsds = 'dsds';
 //     getScheme() {
 //         return localStorage.getItem(this.config.storageNames.scheme);
 //     }
+
+
+
 
 //     clearCheckbox(selector, fillerNumber, type) {
 //         const list = document.querySelectorAll(selector);
@@ -81,6 +86,9 @@ const dsds = 'dsds';
 //         this.clearCheckbox(this.selectors.checkBoxFiller, fillerChecked, 'filler');
 //         this.clearCheckbox(this.selectors.checkBoxTopping, toppingChecked, 'topping');
 //     }
+
+
+
 
 //     setSchemePokeDescription(schemaValue) {
 //         const fillerPokeItem = document.querySelector(this.selectors.fillerCount);
@@ -319,6 +327,7 @@ class SchemeManager {
         this.scheme = schemeValue;
         this.updateSchemeDescription();
         this.initSchemeState();
+        this.clearCheckboxList();
     }
 
     getScheme() {
@@ -357,6 +366,29 @@ class SchemeManager {
             }
         });
     }
+
+    countCheckedItem(selector) {
+        const checkboxes = document.querySelectorAll(selector);
+        return Array.from(checkboxes).filter(cb => cb.checked).length;
+    }
+
+    clearCheckbox(selector, fillerNumber, type) {
+        const list = document.querySelectorAll(selector);
+
+        list.forEach(item => {
+            if (fillerNumber > schemaPokeNumber[this.getScheme()][type]) {
+                item.checked = false;
+            }
+        });
+    }
+
+    clearCheckboxList() {
+        const fillerChecked = this.countCheckedItem(this.selectors.checkBoxFiller);
+        const toppingChecked = this.countCheckedItem(this.selectors.checkBoxTopping);
+
+        this.clearCheckbox(this.selectors.checkBoxFiller, fillerChecked, 'filler');
+        this.clearCheckbox(this.selectors.checkBoxTopping, toppingChecked, 'topping');
+    }
 }
 
 
@@ -378,80 +410,87 @@ class BasketSumManager {
         this.updateBasketSum();
     }
 
-    getStorageData() {
-        return this.storage;
-    }
+    // getStorageData() {
+    //     return this.storage;
+    // }
 }
 
+
 class CheckboxManager {
-    constructor(selectors, schemeManager, basketManager) {
+    constructor(selectors, schemeManager, basketManager, formManager) {
         this.selectors = selectors;
         this.schemeManager = schemeManager;
         this.basketManager = basketManager;
-        this.fillerCheckboxes = document.querySelectorAll(this.selectors.checkBoxFiller);
-        this.toppingCheckboxes = document.querySelectorAll(this.selectors.checkBoxTopping);
-        this.fillerAddCheckboxes = document.querySelectorAll(this.selectors.checkBoxFillerAdd);
-        this.toppingAddCheckboxes = document.querySelectorAll(this.selectors.checkBoxToppingAdd);
+        this.formManager = formManager;
+        this.fillerCheckboxes = document.querySelectorAll(selectors.checkBoxFiller);
+        this.toppingCheckboxes = document.querySelectorAll(selectors.checkBoxTopping);
+        this.fillerAddCheckboxes = document.querySelectorAll(selectors.checkBoxFillerAdd);
+        this.toppingAddCheckboxes = document.querySelectorAll(selectors.checkBoxToppingAdd);
+        this.fillerPokeItem = document.querySelector(selectors.fillerCount);
+        this.toppingPokeItem = document.querySelector(selectors.toppingCount);
     }
 
     setupListeners() {
-        this.setupListener(this.fillerCheckboxes, 'filler');
-        this.setupListener(this.toppingCheckboxes, 'topping');
-        this.setupListener(this.fillerAddCheckboxes, 'fillerAdd');
-        this.setupListener(this.toppingAddCheckboxes, 'toppingAdd');
+        this.setupListener(this.fillerCheckboxes, 'filler', null);
+        this.setupListener(this.toppingCheckboxes, 'topping', null);
+        this.setupListener(this.fillerAddCheckboxes, 'fillerAdd', this.selectors.labelFillerAdd);
+        this.setupListener(this.toppingAddCheckboxes, 'toppingAdd', this.selectors.labelToppingAdd);
     }
 
-    setupListener(checkboxes, type) {
+    setupListener(checkboxes, type, label) {
         checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', (evt) => this.handleCheckboxChange(evt, type));
+            checkbox.addEventListener('change', (evt) => this.handleCheckboxChange(evt, type, label));
         });
     }
 
-    handleCheckboxChange(evt, type) {
-        const target = evt.target;
-        let checkboxes = null;
+    handleCheckboxChange(evt, type, label = null) {
+        const checkboxes = this.getCheckboxes(type);
+        let checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
 
-        switch (type) {
-            case 'filler':
-                checkboxes = this.fillerCheckboxes;
-                break;
-            case 'topping':
-                checkboxes = this.toppingCheckboxes;
-                break;
-            case 'fillerAdd':
-                checkboxes = this.fillerAddCheckboxes;
-                break;
-            case 'toppingAdd':
-                checkboxes = this.toppingAddCheckboxes;
-                break;
-        }
-
-        if (type === 'filler' || type === 'topping') {
-            let checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+        if (['filler', 'topping'].includes(type)) {
             const allowedCount = schemaPokeNumber[this.schemeManager.getScheme()][type];
 
-            // console.log(`${type} checked: ${checkedCount} allowed: ${allowedCount}`);
-
             if (checkedCount > allowedCount) {
-                target.checked = false;
+                evt.target.checked = false;
                 evt.preventDefault();
+                checkedCount = allowedCount;
 
                 this.alertOverLimit(type, allowedCount);
+            } else {
+                this.changeCountValue(type, allowedCount - checkedCount);
             }
-        } else if (type === 'fillerAdd' || type === 'toppingAdd') {
-            const sum = this.calculateAdditions(checkboxes);
-            console.log(sum);
+            console.log(checkedCount);
 
+            this.formManager.accessSendForm(checkedCount, allowedCount, type, null);
+        } else if (['fillerAdd', 'toppingAdd'].includes(type)) {
+            const sum = this.calculateAdditions(checkboxes);
+
+            // Обновляет сумму Поке
             this.basketManager.updateStorageItem(type, sum);
 
-            // Обновляем метку цены для добавок
-            const labelPrice = document.querySelector(labelCheckBox);
-            if (labelPrice) {
+            if (label) {
+                const labelPrice = document.querySelector(label);
                 labelPrice.textContent = sum ? `+ ${sum} руб` : '';
             }
         }
     }
 
+    changeCountValue(type, diff) {
+        const item = type === 'filler' ? this.fillerPokeItem : this.toppingPokeItem;
+        const maxCount = schemaPokeNumber[this.schemeManager.getScheme()][type];
+        const text = `/ Осталось ${diff} из ${maxCount}`;
+        item.textContent = text;
+    }
+
+    getCheckboxes(type) {
+        const checkboxMap = {
+            'filler': this.fillerCheckboxes,
+            'topping': this.toppingCheckboxes,
+            'fillerAdd': this.fillerAddCheckboxes,
+            'toppingAdd': this.toppingAddCheckboxes
+        };
+        return checkboxMap[type];
+    }
 
     calculateAdditions(checkboxes) {
         return Array.from(checkboxes).reduce((sum, cb) => cb.checked ? sum + Number(cb.dataset.price) : sum, 0);
@@ -462,20 +501,98 @@ class CheckboxManager {
     }
 }
 
-// class SelectManager {
-//     constructor(selectors, schemeManager) {
-//         this.selectors = selectors;
-//         this.schemeManager = schemeManager;
-//     }
 
-// }
+class SelectManager {
+    constructor(selectors, basketManager, formManager) {
+        this.selectors = selectors;
+        this.formManager = formManager;
+        this.basketManager = basketManager;
+    }
+
+    setupListeners() {
+        this.setupSelectListener('#constructor-poke__select--protein', null);
+        this.setupSelectListener('#constructor-poke__select-proteinAdd', '#constructor-poke__add-price--protein');
+        this.setupSelectListener('#constructor-poke__select-sauceAdd', '#constructor-poke__add-price--sauce');
+        this.setupSelectListener('#constructor-poke__select-crunchAdd', '#constructor-poke__add-price--crunch');
+    }
+
+    setupSelectListener(selector, labelSelector) {
+        const select = document.querySelector(selector);
+        const selectType = select.getAttribute('name');
+
+        if (select) {
+            select.addEventListener('change', (evt) => this.handleSelectChange(evt, selectType, labelSelector));
+        }
+    }
+
+    handleSelectChange(evt, key, priceLabel) {
+        const price = evt.target.options[evt.target.selectedIndex].getAttribute('data-price');
+
+        const labelPrice = document.querySelector(priceLabel);
+        if (labelPrice) {
+            labelPrice.textContent = price ? `+ ${price} руб` : '';
+        }
+
+        this.basketManager.updateStorageItem(key, price);
+
+        this.formManager.accessSendForm(null, null, key, price);
+    }
+}
+
+
+class FormManager {
+    constructor(selectors, schemeManager) {
+        this.selectors = selectors;
+        this.schemeManager = schemeManager;
+        this.access = {};
+    }
+
+    accessSendForm(checkboxes = null, number = null, type, price) {
+        if (['filler', 'topping'].includes(type)) {
+            this.access[type] = checkboxes === number;
+        } else if (['protein', 'base', 'sauce', 'crunch'].includes(type)) {
+            this.access[type] = price !== null;
+        }
+
+        console.log(this.access);
+    }
+
+    submitForm() {
+        const form = document.querySelector(this.selectors.form);
+
+        form.addEventListener('submit', event => {
+            event.preventDefault(); // Предотвращаем стандартную отправку формы
+
+            let isSend = true;
+            let alertMessage = "";
+
+            for (const key in this.access) {
+                if (!this.access[key]) {
+                    isSend = false;
+                    const requiredCount = schemaPokeNumber[this.schemeManager.getScheme()][key];
+                    alertMessage += `Выберите в категории ${key} ${requiredCount} чекбокса(ов).\n`;
+                }
+            }
+
+            if (!isSend) {
+                alert(alertMessage); // Показываем все сообщения сразу
+            } else {
+                console.log("Форма отправлена:", isSend);
+                // Здесь может быть код для фактической отправки данных формы, если isSend === true
+            }
+        });
+    }
+}
+
 
 class PokeManager {
     constructor(config) {
         this.config = config;
         this.schemeManager = new SchemeManager(config, config.selectors);
         this.basketManager = new BasketSumManager(config.selectors);
-        this.checkboxManager = new CheckboxManager(config.selectors, this.schemeManager, this.basketManager);
+        this.formManager = new FormManager(config.selectors, this.schemeManager);
+        this.checkboxManager = new CheckboxManager(config.selectors, this.schemeManager, this.basketManager, this.formManager);
+        this.selectManager = new SelectManager(config.selectors, this.basketManager, this.formManager);
 
         this.init();
     }
@@ -484,6 +601,7 @@ class PokeManager {
         this.schemeManager.updateSchemeDescription();
         this.schemeManager.updateSchemePoke();
         this.checkboxManager.setupListeners();
+        this.selectManager.setupListeners();
 
         // Добавить другие инициализации и слушатели событий
     }
@@ -507,6 +625,8 @@ const pokePageConfig = {
         checkBoxTopping: '.constructor-poke-item-checkbox--toping',
         checkBoxFillerAdd: '.constructor-poke-item-checkbox--fillerAdd',
         checkBoxToppingAdd: '.constructor-poke-item-checkbox--toppingAdd',
+        labelFillerAdd: '#constructor-poke__add-price--filler',
+        labelToppingAdd: '#constructor-poke__add-price--topping'
     }
 };
 
