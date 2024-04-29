@@ -142,6 +142,10 @@ const dsds = 'dsds';
 //         }
 //     }
 
+
+
+
+
 //     changeCountValue(number, diff, type) {
 //         const fillerPokeItem = document.querySelector(this.selectors.fillerCount);
 //         const toppingPokeItem = document.querySelector(this.selectors.toppingCount);
@@ -215,6 +219,9 @@ const dsds = 'dsds';
 //             item.addEventListener('change', () => this.handleCheckboxAddChange(checkboxList, type, labelCheckBox));
 //         });
 //     }
+
+
+
 
 //     accessSendForm(checkboxes = null, number = null, type, price) {
 //         if (type === 'filler' || type === 'topping') {
@@ -293,29 +300,62 @@ const dsds = 'dsds';
 
 // ============ Новое ============
 
+// Готова
 class SchemeManager {
-    constructor(config) {
+    constructor(config, selectors) {
         this.config = config;
+        this.selectors = selectors; // Добавлено для доступа к селекторам
         this.scheme = localStorage.getItem(config.storageNames.scheme) || 1;
-        this.fillerPokeItem = document.querySelector(config.selectors.fillerCount);
-        this.toppingPokeItem = document.querySelector(config.selectors.toppingCount);
-        this.updateSchemeDescription(); // Обновляем UI при инициализации
+        this.fillerPokeItem = document.querySelector(selectors.fillerCount);
+        this.toppingPokeItem = document.querySelector(selectors.toppingCount);
+
+        this.initSchemeState();
+        this.updateSchemeDescription();
+        this.updateSchemePoke();
+    }
+
+    setScheme(schemeValue) {
+        localStorage.setItem(this.config.storageNames.scheme, schemeValue);
+        this.scheme = schemeValue;
+        this.updateSchemeDescription();
+        this.initSchemeState();
+    }
+
+    getScheme() {
+        return this.scheme;
     }
 
     updateSchemeDescription() {
         const schemeData = schemaPokeNumber[this.scheme];
-        this.fillerPokeItem.textContent = `/ Осталось ${schemeData.filler} из ${schemeData.filler}`;
-        this.toppingPokeItem.textContent = `/ Осталось ${schemeData.topping} из ${schemeData.topping}`;
+        const fillerText = `/ Осталось ${schemeData.filler} из ${schemeData.filler}`;
+        const toppingText = `/ Осталось ${schemeData.topping} из ${schemeData.topping}`;
+
+        this.fillerPokeItem.textContent = fillerText;
+        this.toppingPokeItem.textContent = toppingText;
     }
 
-    setScheme(newScheme) {
-        this.scheme = newScheme;
-        localStorage.setItem(this.config.storageNames.scheme, newScheme);
-        this.updateSchemeDescription();
+    initSchemeState() {
+        const radioButtons = document.querySelectorAll(this.selectors.schemeRadio);
+
+        radioButtons.forEach(radio => {
+            if (radio.value === this.scheme) {
+                radio.checked = true;
+            }
+        });
     }
 
-    getSchemeData() {
-        return schemaPokeNumber[this.scheme];
+    updateSchemePoke() {
+        const schemaPoke = document.querySelector(this.selectors.scheme);
+
+        schemaPoke.addEventListener('click', (evt) => {
+            const target = evt.target;
+            const schemaItem = target.closest('.constructor-poke-shema-item');
+
+            if (schemaItem) {
+                const schemaItemValue = schemaItem.dataset.shemaPoke;
+                this.setScheme(schemaItemValue);
+            }
+        });
     }
 }
 
@@ -344,47 +384,107 @@ class BasketSumManager {
 }
 
 class CheckboxManager {
-    constructor(selectors, schemeManager) {
+    constructor(selectors, schemeManager, basketManager) {
         this.selectors = selectors;
         this.schemeManager = schemeManager;
+        this.basketManager = basketManager;
+        this.fillerCheckboxes = document.querySelectorAll(this.selectors.checkBoxFiller);
+        this.toppingCheckboxes = document.querySelectorAll(this.selectors.checkBoxTopping);
+        this.fillerAddCheckboxes = document.querySelectorAll(this.selectors.checkBoxFillerAdd);
+        this.toppingAddCheckboxes = document.querySelectorAll(this.selectors.checkBoxToppingAdd);
     }
 
     setupListeners() {
-        document.querySelectorAll(this.selectors.checkBoxFiller).forEach(checkbox => {
-            checkbox.addEventListener('change', this.handleCheckboxChange.bind(this, 'filler'));
-        });
-        document.querySelectorAll(this.selectors.checkBoxTopping).forEach(checkbox => {
-            checkbox.addEventListener('change', this.handleCheckboxChange.bind(this, 'topping'));
+        this.setupListener(this.fillerCheckboxes, 'filler');
+        this.setupListener(this.toppingCheckboxes, 'topping');
+        this.setupListener(this.fillerAddCheckboxes, 'fillerAdd');
+        this.setupListener(this.toppingAddCheckboxes, 'toppingAdd');
+    }
+
+    setupListener(checkboxes, type) {
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', (evt) => this.handleCheckboxChange(evt, type));
         });
     }
 
-    handleCheckboxChange(type, event) {
-        const target = event.target;
-        const checkboxes = document.querySelectorAll(this.selectors[`checkBox${type}`]);
-        const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
-        const allowedCount = schemaPokeNumber[this.schemeManager.getScheme()][type];
+    handleCheckboxChange(evt, type) {
+        const target = evt.target;
+        let checkboxes = null;
 
-        if (checkedCount > allowedCount) {
-            target.checked = false;
-            event.preventDefault();
-            // Update user interface or alert the user
+        switch (type) {
+            case 'filler':
+                checkboxes = this.fillerCheckboxes;
+                break;
+            case 'topping':
+                checkboxes = this.toppingCheckboxes;
+                break;
+            case 'fillerAdd':
+                checkboxes = this.fillerAddCheckboxes;
+                break;
+            case 'toppingAdd':
+                checkboxes = this.toppingAddCheckboxes;
+                break;
+        }
+
+        if (type === 'filler' || type === 'topping') {
+            let checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+            const allowedCount = schemaPokeNumber[this.schemeManager.getScheme()][type];
+
+            // console.log(`${type} checked: ${checkedCount} allowed: ${allowedCount}`);
+
+            if (checkedCount > allowedCount) {
+                target.checked = false;
+                evt.preventDefault();
+
+                this.alertOverLimit(type, allowedCount);
+            }
+        } else if (type === 'fillerAdd' || type === 'toppingAdd') {
+            const sum = this.calculateAdditions(checkboxes);
+            console.log(sum);
+
+            this.basketManager.updateStorageItem(type, sum);
+
+            // Обновляем метку цены для добавок
+            const labelPrice = document.querySelector(labelCheckBox);
+            if (labelPrice) {
+                labelPrice.textContent = sum ? `+ ${sum} руб` : '';
+            }
         }
     }
+
+
+    calculateAdditions(checkboxes) {
+        return Array.from(checkboxes).reduce((sum, cb) => cb.checked ? sum + Number(cb.dataset.price) : sum, 0);
+    }
+
+    alertOverLimit(type, allowedCount) {
+        alert(`Выберите в категории ${type} ${allowedCount} чекбокса(ов).`);
+    }
 }
+
+// class SelectManager {
+//     constructor(selectors, schemeManager) {
+//         this.selectors = selectors;
+//         this.schemeManager = schemeManager;
+//     }
+
+// }
 
 class PokeManager {
     constructor(config) {
         this.config = config;
-        this.schemeManager = new SchemeManager(config);
+        this.schemeManager = new SchemeManager(config, config.selectors);
         this.basketManager = new BasketSumManager(config.selectors);
-        this.checkboxManager = new CheckboxManager(config.selectors, this.schemeManager);
+        this.checkboxManager = new CheckboxManager(config.selectors, this.schemeManager, this.basketManager);
 
         this.init();
     }
 
     init() {
         this.schemeManager.updateSchemeDescription();
+        this.schemeManager.updateSchemePoke();
         this.checkboxManager.setupListeners();
+
         // Добавить другие инициализации и слушатели событий
     }
 }
@@ -402,6 +502,7 @@ const pokePageConfig = {
         toppingCount: '#topingCounter',
         basketSum: '.basket__order-number',
         basketSumInput: '#total-price',
+        schemeRadio: '.constructor-poke-item-radio',
         checkBoxFiller: '.constructor-poke-item-checkbox--filler',
         checkBoxTopping: '.constructor-poke-item-checkbox--toping',
         checkBoxFillerAdd: '.constructor-poke-item-checkbox--fillerAdd',

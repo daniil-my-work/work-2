@@ -116,7 +116,7 @@
 
                         <fieldset class="constructor-poke-shema">
                             <div class="constructor-poke-shema-item" data-shema-poke="1">
-                                <input type="radio" class="constructor-poke-item-radio" id="shema1" name="shema" value="1" checked>
+                                <input type="radio" class="constructor-poke-item-radio" id="shema1" name="shema" value="1">
                                 <label for="shema1">
                                     5 наполнителей + 1 топинг
                                 </label>
