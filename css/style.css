@@ -984,11 +984,14 @@ textarea {
 }
 
 .basket__order-text {
+    display: flex;
+    flex-direction: column;
     margin: 0;
     font-size: 20px;
 }
 
 .basket__order-number {
+    margin-top: 4px;
     color: #999;
 }
 
@@ -1424,7 +1427,7 @@ textarea {
 
 .constructor-poke__button {
     display: block;
-    padding: 13px 30px;
+    /* padding: 13px 20px; */
     margin-left: auto;
 }
 

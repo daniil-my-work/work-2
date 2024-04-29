@@ -1,39 +1,5 @@
 // localStorage.clear();
 
-// Обработчик отправки формы
-const constructorPokeForm = document.querySelector('.constructor-poke__form');
-
-if (constructorPokeForm) {
-    constructorPokeForm.addEventListener('submit', function (event) {
-        const number = localStorage.getItem('shemaPoke');
-        let checkedFillerCheckbox = 0;
-        let checkedToppingCheckbox = 0;
-
-        checkboxFillerList.forEach(fillerItem => {
-            if (fillerItem.checked) {
-                checkedFillerCheckbox++;
-            }
-        });
-
-        checkboxTopingList.forEach(toppingItem => {
-            if (toppingItem.checked) {
-                checkedToppingCheckbox++;
-            }
-        })
-
-        if (checkedFillerCheckbox !== shemaPokeNumber[number]['filler']) {
-            event.preventDefault(); // Предотвращаем отправку формы
-            alert(`Выберите в категории наполнитель ${shemaPokeNumber[number]['filler']} чекбокса(ов)`);
-        }
-
-        if (checkedToppingCheckbox !== shemaPokeNumber[number]['toping']) {
-            event.preventDefault(); // Предотвращаем отправку формы
-            alert(`Выберите в категории топпинг ${shemaPokeNumber[number]['toping']} чекбокса(ов)`);
-        }
-    });
-}
-
-
 
 // Отправляет данные на сервер для сохранения в сессии
 async function apiUpdateOrderStatus(params) {
