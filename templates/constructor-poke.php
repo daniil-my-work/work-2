@@ -79,7 +79,7 @@
                             Выберите основу
                         </h3>
 
-                        <select class="form-select constructor-poke__select" aria-label="" name="base" required>
+                        <select class="form-select constructor-poke__select constructor-poke__select--required" aria-label="" name="base" required>
                             <option value="" selected>
                                 Не выбран
                             </option>
@@ -218,7 +218,7 @@
                             Соус
                         </h3>
 
-                        <select class="form-select constructor-poke__select" aria-label="" name="sauce" required>
+                        <select class="form-select constructor-poke__select constructor-poke__select--required" aria-label="" name="sauce" required>
                             <option value="" selected>
                                 Не выбран
                             </option>
@@ -252,7 +252,7 @@
                             Хруст
                         </h3>
 
-                        <select class="form-select constructor-poke__select" aria-label="" name="crunch" required>
+                        <select class="form-select constructor-poke__select constructor-poke__select--required" aria-label="" name="crunch" required>
                             <option value="" selected>
                                 Не выбран
                             </option>

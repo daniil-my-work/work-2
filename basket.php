@@ -8,8 +8,13 @@ require_once('./functions/formatter.php');
 require_once('./data/data.php');
 
 
-// print_r($_SESSION['order']);
-// unset($_SESSION['order']);
+// Проверка прав доступа
+$sessionRole = $_SESSION['user_role'] ?? null;
+
+// Список ролей
+$userRole = $appData['userRoles'];
+$allowedRoles = [$userRole['client']];
+checkAccess($isAuth, $sessionRole, $allowedRoles);
 
 // Список ролей
 $userRole = $appData['userRoles'];

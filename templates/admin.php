@@ -1,5 +1,5 @@
 <!-- Страница Аккаунт -->
-<div class="page__account">
+<div class="page__account" id="page-admin">
     <div class="account">
         <!-- Общая инфа для всех кабинетов -->
         <div class="account__info">

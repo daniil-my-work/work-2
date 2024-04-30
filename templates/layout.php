@@ -30,6 +30,7 @@
     <script src="./js/address.js"></script>
     <script src="./js/delivery-type.js"></script>
     <script src="./js/schema-poke.js"></script>
+    <script src="./js/change-order-status.js"></script>
     
 
 </body>

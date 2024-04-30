@@ -15,7 +15,6 @@ $userRole = $appData['userRoles'];
 $allowedRoles = [$userRole['client']];
 checkAccess($isAuth, $sessionRole, $allowedRoles);
 
-
 // Текущая страница
 $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
 $startIndex = ($currentPage == 1) ? 1 : ($currentPage - 1) * MAX_ROW;
