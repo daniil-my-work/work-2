@@ -46,13 +46,14 @@
                         </h3>
 
                         <select class="form-select constructor-poke__select" id="constructor-poke__select--protein" aria-label="" name="protein" required>
-                            <option value="" selected>
+                            <option value="">
                                 Не выбран
                             </option>
 
                             <?php if (!is_null($proteinList)) : ?>
                                 <?php foreach ($proteinList as $proteinItem) : ?>
-                                    <option value="<?= $proteinItem['id']; ?>" data-price="<?= $proteinItem['price']; ?>">
+                                    <?php $isSelected = !empty($createdPoke['protein']) && $proteinItem['id'] === $createdPoke['protein'] ? 'selected' : ''; ?>
+                                    <option value="<?= $proteinItem['id']; ?>" data-price="<?= $proteinItem['price']; ?>" <?= $isSelected; ?>>
                                         <?= $proteinItem['title']; ?>
                                     </option>
                                 <?php endforeach; ?>
@@ -86,7 +87,8 @@
 
                             <?php if (!is_null($baseList)) : ?>
                                 <?php foreach ($baseList as $baseItem) : ?>
-                                    <option value="<?= $baseItem['id']; ?>">
+                                    <?php $isSelected = !empty($createdPoke['base']) && $baseItem['id'] === $createdPoke['base'] ? 'selected' : ''; ?>
+                                    <option value="<?= $baseItem['id']; ?>" <?= $isSelected; ?>>
                                         <?= $baseItem['title']; ?>
                                     </option>
                                 <?php endforeach; ?>
@@ -149,7 +151,8 @@
                             <?php if (!is_null($fillerList)) : ?>
                                 <?php foreach ($fillerList as $fillerItem) : ?>
                                     <li class="constructor-poke-item">
-                                        <input type="checkbox" class="constructor-poke-item-checkbox constructor-poke-item-checkbox--filler" id="<?= $fillerItem['title']; ?>" name="filler[]" value="<?= $fillerItem['id']; ?>">
+                                        <?php $isChecked = !empty($createdPoke['filler']) && in_array($fillerItem['id'], $createdPoke['filler']) ? 'checked' : ''; ?>
+                                        <input type="checkbox" class="constructor-poke-item-checkbox constructor-poke-item-checkbox--filler" id="<?= $fillerItem['title']; ?>" name="filler[]" value="<?= $fillerItem['id']; ?>" <?= $isChecked; ?>>
 
                                         <label for="<?= $fillerItem['title']; ?>">
                                             <?= $fillerItem['title']; ?>
@@ -193,7 +196,8 @@
                             <?php if (!is_null($toppingList)) : ?>
                                 <?php foreach ($toppingList as $toppingItem) : ?>
                                     <li class="constructor-poke-item">
-                                        <input type="checkbox" class="constructor-poke-item-checkbox constructor-poke-item-checkbox--toping" id="<?= $toppingItem['title']; ?>" name="topping[]" value="<?= $toppingItem['id']; ?>">
+                                        <?php $isChecked = !empty($createdPoke['topping']) && in_array($toppingItem['id'], $createdPoke['topping']) ? 'checked' : ''; ?>
+                                        <input type="checkbox" class="constructor-poke-item-checkbox constructor-poke-item-checkbox--toping" id="<?= $toppingItem['title']; ?>" name="topping[]" value="<?= $toppingItem['id']; ?>" <?= $isChecked; ?>>
 
                                         <label for="<?= $toppingItem['title']; ?>">
                                             <?= $toppingItem['title']; ?>
@@ -225,7 +229,8 @@
 
                             <?php if (!is_null($sauceList)) : ?>
                                 <?php foreach ($sauceList as $sauceItem) : ?>
-                                    <option value="<?= $sauceItem['id']; ?>">
+                                    <?php $isSelected = !empty($createdPoke['sauce']) && $sauceItem['id'] === $createdPoke['sauce'] ? 'selected' : ''; ?>
+                                    <option value="<?= $sauceItem['id']; ?>" <?= $isSelected; ?>>
                                         <?= $sauceItem['title']; ?>
                                     </option>
                                 <?php endforeach; ?>
@@ -259,7 +264,8 @@
 
                             <?php if (!is_null($crunchList)) : ?>
                                 <?php foreach ($crunchList as $crunchItem) : ?>
-                                    <option value="<?= $crunchItem['id']; ?>">
+                                    <?php $isSelected = !empty($createdPoke['crunch']) && $crunchItem['id'] === $createdPoke['crunch'] ? 'selected' : ''; ?>
+                                    <option value="<?= $crunchItem['id']; ?>" <?= $isSelected; ?>>
                                         <?= $crunchItem['title']; ?>
                                     </option>
                                 <?php endforeach; ?>

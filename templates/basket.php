@@ -32,7 +32,8 @@
                         </span>
 
                         <div class="basket__delivery-wrapper w-100">
-                            <input type="text" id="user_address" name="user_address" class="input basket__input mb-0" placeholder="Введите адрес" value="" autocomplete="off">
+                            <?php $userCity = $userCity === null ? "" : "г " . $userCity; ?>
+                            <input type="text" id="user_address" name="user_address" class="input basket__input mb-0" placeholder="Введите адрес" value="<?= $userCity; ?>" autocomplete="off">
 
                             <!-- Список адресов -->
                             <ul class="basket__delivery-list">

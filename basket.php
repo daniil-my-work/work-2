@@ -57,6 +57,7 @@ $page_body = include_template(
         'productLength' => $productLength,
         'fullPrice' => $fullPrice,
         'cafeList' => $cafeList,
+        'userCity' => $userCity,
     ]
 );
 

@@ -103,6 +103,10 @@ function validate_component($con, $componentType, $value)
 
         return null;
     } else {
+        // if ($value === '') {
+        //     return "Выберите $componentName.";
+        // }
+
         $sql = get_query_check_component($value, $componentType);
         $result = mysqli_query($con, $sql);
 
@@ -136,25 +140,25 @@ function validate_component_length($name, $value, $shema)
     if ($shema == 1) {
         if ($name === 'filler') {
             if ($len != 5) {
-                return "Для выбора доступно 5 наполнителей";
+                return "Выберите 5 наполнителей";
             }
         }
 
         if ($name === 'topping') {
             if ($len != 1) {
-                return "Для выбора доступен 1 топпинг";
+                return "Выберите 1 топпинг";
             }
         }
     } else {
         if ($name === 'filler') {
             if ($len != 3) {
-                return "Для выбора доступно 3 наполнителя";
+                return "Выберите 3 наполнителя";
             }
         }
 
         if ($name === 'topping') {
             if ($len != 2) {
-                return "Для выбора доступно 2 топпинга";
+                return "Выберите 2 топпинга";
             }
         }
     }

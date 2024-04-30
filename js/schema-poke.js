@@ -220,7 +220,6 @@ class SelectManager {
 
     handleSelectChange(evt, key, priceLabel) {
         const price = evt.target.options[evt.target.selectedIndex].getAttribute('data-price');
-        const value = evt.target.options[evt.target.selectedIndex].value;
 
         const labelPrice = document.querySelector(priceLabel);
         if (labelPrice) {
@@ -228,6 +227,22 @@ class SelectManager {
         }
 
         this.basketManager.updateStorageItem(key, price);
+    }
+
+    getCurrentSelectedValues() {
+        const selects = [
+            document.querySelector('#constructor-poke__select--protein'),
+            document.querySelector('#constructor-poke__select-proteinAdd'),
+            document.querySelector('#constructor-poke__select-sauceAdd'),
+            document.querySelector('#constructor-poke__select-crunchAdd')
+        ];
+
+        selects.forEach(select => {
+            const name = select.getAttribute('name');
+            const price = select.options[select.selectedIndex].getAttribute('data-price');
+
+            this.basketManager.updateStorageItem(name, price);
+        });
     }
 }
 
@@ -246,6 +261,7 @@ class PokeManager {
         this.schemeManager.updateSchemeDescription();
         this.schemeManager.updateSchemePoke();
         this.checkboxManager.setupListeners();
+        this.selectManager.getCurrentSelectedValues();
         this.selectManager.setupListeners();
 
         // Добавить другие инициализации и слушатели событий

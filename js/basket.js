@@ -25,6 +25,8 @@ class BasketManager {
             if (menuList) {
                 menuList.addEventListener("click", this.handleBasketOperationsOnMain.bind(this));
             }
+
+            this.updateBasketDisplay();
         }
     }
 

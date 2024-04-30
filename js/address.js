@@ -37,13 +37,13 @@ class AddressAutocomplete {
 }
 
 class AddressInputHandler {
-    constructor(addressInputSelector, city, addressAutocomplete) {
+    constructor(addressInputSelector, addressAutocomplete) {
         this.userAddress = document.querySelector(addressInputSelector);
         this.autocomplete = addressAutocomplete;
         this.basketDeliveryList = document.querySelector('.basket__delivery-list');
 
         // Устанавливает город по умолчанию
-        this.userAddress.value = city;
+        // this.userAddress.value = city;
         
         // Ставит слушатель на ввод символов в инпут
         this.inputEventListener();
@@ -98,8 +98,7 @@ class AddressInputHandler {
 
 
 const addressAutocomplete = new AddressAutocomplete("dedcff8224572325aafcec43188c29827f93a657");
-const city = 'г Ярославль'; // Задайте нужный город здесь
 
 if (pageBasket) {
-    new AddressInputHandler('#user_address', city, addressAutocomplete);
+    new AddressInputHandler('#user_address', addressAutocomplete);
 }

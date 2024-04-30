@@ -99,25 +99,32 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     // Список полей содеражащих массив
     $inputList = ['filler', 'topping', 'fillerAdd', 'toppingAdd'];
 
+
+    // var_dump($createdPoke['protein']);
+
     // Форматирует поля в объекте $createdPoke
     foreach ($createdPoke as $key => $value) {
         if (in_array($key, $inputList)) {
             $createdPokeItem = $_POST[$key] ?? null;
 
             // Если значение отсутствует, удаляем поле из $createdPoke
-            if (is_null($createdPokeItem)) {
+            if (is_null($createdPokeItem) && ($key == 'fillerAdd' || $key == 'toppingAdd')) {
                 unset($createdPoke[$key]);
+            } else if (is_null($createdPokeItem) && ($key == 'filler' || $key == 'topping')) {
+                $createdPoke[$key] = [];
             } else {
                 // Иначе, заменяем значение в $createdPoke на значение из $_POST
                 $createdPoke[$key] = $createdPokeItem;
             }
         } else {
             // Если значение пустое, удаляем поле из $createdPoke
-            if ($value == '') {
+            if ($value === '' && $key !== 'protein' && $key !== 'base' && $key !== 'sauce' && $key !== 'crunch') {
                 unset($createdPoke[$key]);
             }
         }
     }
+
+    // var_dump($createdPoke);
 
     // Проверка на валидность полей формы 
     foreach ($createdPoke as $key => $value) {
@@ -165,7 +172,9 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
     // Фильтрует массив ошибок
     $errors = array_filter($errors);
+    print_r($errors);
 
+    // print_r($createdPoke);
 
     // Проверяет на наличие ошибок
     if (!empty($errors)) {
@@ -180,6 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 'sauceList' => $sauceList,
                 'crunchList' => $crunchList,
                 'errors' => $errors,
+                'createdPoke' => $createdPoke,
             ]
         );
     } else {
