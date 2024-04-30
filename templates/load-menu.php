@@ -1,5 +1,5 @@
 <!-- Cтраница загрузки Меню -->
-<div class="page__load">
+<div class="page__load" id="page-load">
 
     <!-- Загрузка меню -->
     <div class="load">

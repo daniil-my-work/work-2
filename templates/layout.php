@@ -32,6 +32,7 @@
     <script src="./js/schema-poke.js"></script>
     <script src="./js/change-order-status.js"></script>
     <script src="./js/toast.js"></script>
+    <script src="./js/load-file.js"></script>
 
 
 </body>

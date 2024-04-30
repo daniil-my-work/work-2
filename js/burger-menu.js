@@ -47,7 +47,6 @@ class Burger {
      */
     _closeMenu(evt) {
         const target = evt.target;
-        console.log(target);
         if (target.closest('.header__burger') || target.closest('.header__nav')) {
             return;
         }
@@ -68,5 +67,5 @@ class Burger {
 
 // Добавляет слушатель после загрузки страницы
 document.addEventListener('DOMContentLoaded', function() {
-    const burgerMenu = new Burger('.header__burger', '.header__nav', '.page__body');
+    new Burger('.header__burger', '.header__nav', '.page__body');
 });
