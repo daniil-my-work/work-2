@@ -18,8 +18,8 @@
             <div class="basket__selects">
                 <!-- Селект: способ доставки -->
                 <select class="form-select" id="delivery-type" name="delivery-type" aria-label="способ доставки">
-                    <option value="default" selected>Выберите способ доставки</option>
-                    <option value="pickup">Самовывоз</option>
+                    <option value="default">Выберите способ доставки</option>
+                    <option value="pickup" selected>Самовывоз</option>
                     <option value="delivery">Доставка</option>
                 </select>
 

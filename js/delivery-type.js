@@ -26,6 +26,7 @@ class DeliveryManager {
     getDeliveryType() {
         const deliveryMethod = localStorage.getItem('deliveryMethod');
 
+        console.log(deliveryMethod);
         if (deliveryMethod) {
             this.deliveryType.value = deliveryMethod;
             this.toggleVisibility(deliveryMethod === 'delivery');
@@ -33,8 +34,8 @@ class DeliveryManager {
     }
 
     toggleVisibility(isDelivery) {
-        addressList.classList.toggle('hidden', !isDelivery);
-        basketCafe.classList.toggle('hidden', isDelivery);
+        this.addressList.classList.toggle('hidden', !isDelivery);
+        this.basketCafe.classList.toggle('hidden', isDelivery);
     }
 }
 
