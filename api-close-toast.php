@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Получите данные из запроса
     $toastId = $_POST['toastId'] ?? null;
 
-    // Добавляет блюдо в сессию
+    // Удаляет тост
     deleteToastFromSession($toastId);
 
     // Удаляет данные из сессии

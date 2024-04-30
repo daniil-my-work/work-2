@@ -27,6 +27,11 @@ $categoryList = getCategories($con);
 $userInfo = getUserInfo($con);
 // $userInfo = null;
 
+// Город пользователя
+$userCity = getUserCity();
+// $userCity = null;
+
+
 // Получает данные о заказах пользователя
 $userId = $userInfo['id'] ?? null;
 
@@ -80,6 +85,14 @@ if (is_null($categoryList)) {
 if (is_null($userInfo)) {
     $option = ['value' => 'данных пользователя'];
     $toast = getModalToast(null, $option);
+
+    $_SESSION['toasts'][] = $toast;
+}
+
+// Записывает город в сессию 
+// $userCity = null;
+if (is_null($userCity)) {
+    $toast = getModalToast('city', $optionCity);
 
     $_SESSION['toasts'][] = $toast;
 }

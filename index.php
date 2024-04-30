@@ -21,6 +21,10 @@ $productList = getProductList($con);
 $categoryList = getCategories($con);
 // $categoryList = null;
 
+// Город пользователя
+$userCity = getUserCity();
+// $userCity = null;
+
 
 // ==== Вывод ошибок ====
 // Записывает ошибку в сессию: Не загрузился список продуктов 
@@ -37,6 +41,14 @@ if (is_null($productList)) {
 if (is_null($categoryList)) {
     $option = ['value' => 'категорий меню'];
     $toast = getModalToast(null, $option);
+
+    $_SESSION['toasts'][] = $toast;
+}
+
+// Записывает город в сессию 
+// $userCity = null;
+if (is_null($userCity)) {
+    $toast = getModalToast('city', $optionCity);
 
     $_SESSION['toasts'][] = $toast;
 }

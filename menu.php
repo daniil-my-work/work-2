@@ -23,6 +23,11 @@ if (isset($productsData['menu'])) {
 $categoryList = getCategories($con);
 // $categoryList = null;
 
+// Город пользователя
+$userCity = getUserCity();
+// $userCity = null;
+
+
 // Получает активную категорию
 $activeCategory = isset($_GET['category']) ? $_GET['category'] : 'rolls';
 
@@ -52,6 +57,15 @@ if (is_null($categoryList)) {
 
     $_SESSION['toasts'][] = $toast;
 }
+
+// Записывает город в сессию 
+// $userCity = null;
+if (is_null($userCity)) {
+    $toast = getModalToast('city', $optionCity);
+
+    $_SESSION['toasts'][] = $toast;
+}
+
 
 // Модальное окно со списком ошибок
 $modalList = $_SESSION['toasts'] ?? [];

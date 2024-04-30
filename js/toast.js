@@ -54,10 +54,10 @@ class ModalManager {
         const params = new URLSearchParams();
         const categoryToast = toast.getAttribute('data-set-category');
         const toastId = toast.getAttribute('data-set-popup-id');
+        params.append("toastId", toastId);
 
         if (target && target.classList.contains('btn-close')) {
             this.removeToast(toast);
-            params.append("toastId", toastId);
 
             await this.apiCloseToast(params);
         }

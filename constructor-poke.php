@@ -20,6 +20,11 @@ $categoryList = getCategories($con);
 $componentList = getComponentList($con) ?? [];
 // $componentList = [];
 
+// Город пользователя
+$userCity = getUserCity();
+// $userCity = null;
+
+
 // Извлекаем уникальные значения ключа component_type, только если список не пуст
 if (!is_null($componentList)) {
     $uniqueComponentTypes = array_unique(array_column($componentList, 'component_type'));
@@ -304,6 +309,14 @@ if (is_null($categoryList)) {
 if (empty($componentList)) {
     $option = ['value' => 'список компонентов'];
     $toast = getModalToast(null, $option);
+
+    $_SESSION['toasts'][] = $toast;
+}
+
+// Записывает город в сессию 
+// $userCity = null;
+if (is_null($userCity)) {
+    $toast = getModalToast('city', $optionCity);
 
     $_SESSION['toasts'][] = $toast;
 }

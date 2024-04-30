@@ -21,15 +21,17 @@
                         <?php
                         switch ($categoryName) {
                             case 'city':
-                                foreach ($modalItem['button'] as $modalButtonItem) {
-                                    echo "<button type='button' class='{$modalButtonItem['class']} me-2'>{$modalButtonItem['text']}</button>";
+                                if (!empty($modalItem['button'])) {
+                                    foreach ($modalItem['button'] as $modalButtonItem) {
+                                        echo "<button type='button' class='{$modalButtonItem['class']} me-2'>{$modalButtonItem['text']}</button>";
+                                    }
                                 }
                                 break;
 
                             case 'error':
                                 echo $modalItem['text'];
                                 break;
-                            
+
                             case 'message':
                                 echo $modalItem['text'];
                                 break;

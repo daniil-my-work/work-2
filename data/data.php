@@ -6,8 +6,19 @@ define("MAX_ROW", 5);
 // Длина пагинации 
 define("PAGINATION_LENGTH", 3);
 
-// $cities = ['Ярославль', 'Рыбинск'];
-
+// Список городов 
+$optionCity = [
+    'cities' => [
+        [
+            'name' => 'Ярославль',
+            'class' => 'btn btn-primary btn-sm'
+        ],
+        [
+            'name' => 'Рыбинск',
+            'class' => 'btn btn-secondary btn-sm'
+        ],
+    ]
+];
 
 // Описание полей для проверки Логин/Авторизация
 $fieldDescriptions = [

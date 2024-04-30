@@ -576,3 +576,10 @@ function deleteToastFromSession($toastId)
         }
     }
 }
+
+
+// Функция для получения города пользователя
+function getUserCity() {
+    // Проверяем, установлен ли город в сессии и возвращаем его
+    return isset($_SESSION['city']) ? $_SESSION['city'] : null;
+}

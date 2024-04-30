@@ -27,6 +27,11 @@ $categoryList = getCategories($con);
 $cafeList = getCafeList($con);
 // $cafeList = null;
 
+// Город пользователя
+$userCity = getUserCity();
+// $userCity = null;
+
+
 // Получение данных из сессии
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
 // $productsData = [];
@@ -244,6 +249,14 @@ if (is_null($categoryList)) {
 if (is_null($cafeList)) {
     $option = ['value' => 'список кафе'];
     $toast = getModalToast(null, $option);
+
+    $_SESSION['toasts'][] = $toast;
+}
+
+// Записывает город в сессию 
+// $userCity = null;
+if (is_null($userCity)) {
+    $toast = getModalToast('city', $optionCity);
 
     $_SESSION['toasts'][] = $toast;
 }

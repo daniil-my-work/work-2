@@ -14,6 +14,11 @@ $userRole = $appData['userRoles'];
 $categoryList = getCategories($con);
 // $categoryList = null;
 
+// Город пользователя
+$userCity = getUserCity();
+// $userCity = null;
+
+
 // Данные об айди заказа
 $orderId = $_GET['orderId'] ?? null;
 $nameLink = $_GET['prevLink'] ?? null;
@@ -72,6 +77,15 @@ if (is_null($categoryList)) {
 
     $_SESSION['toasts'][] = $toast;
 }
+
+// Записывает город в сессию 
+// $userCity = null;
+if (is_null($userCity)) {
+    $toast = getModalToast('city', $optionCity);
+
+    $_SESSION['toasts'][] = $toast;
+}
+
 
 // Модальное окно со списком ошибок
 $modalList = $_SESSION['toasts'] ?? [];
