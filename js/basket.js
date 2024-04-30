@@ -27,7 +27,7 @@ class BasketManager {
             }
 
             this.updateBasketDisplay();
-        }
+        } 
     }
 
     async updateBasketDisplay() {
@@ -66,7 +66,7 @@ class BasketManager {
             if (pageSelector == '#page-main') {
                 await this.updateBasketDisplay();
             } else if (pageSelector == '#page-basket') {
-                location.reload();
+                // location.reload();
             }
         } catch (error) {
             console.error("There has been a problem with your fetch operation:", error);
@@ -79,8 +79,6 @@ class BasketManager {
 
         if (!productItem) return;
 
-        console.log(element);
-        
         const { productCounterButton, productCounterWrapper, productCounterInput, productCounterNumber } = this.#getDOMElements(productItem, this.selector);
         const counterValue = Number(productCounterInput.value);
 
@@ -167,6 +165,7 @@ class BasketManager {
 
         const params = this.#createParamsOnBasket(productItem, element, counterValue);
 
+        console.log(params);
         await this.updateProductList(params, this.selector);
     }
 

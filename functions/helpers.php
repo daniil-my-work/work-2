@@ -459,7 +459,7 @@ function getModalToast($category, $options)
 
         case 'link':
             return getModalLink($id, $options['title'], $options['linkTitle'], $options['linkAdress']);
-        
+
         case 'message':
             return getModalMessage($id, $options['title'], $options['text']);
 
@@ -549,7 +549,7 @@ function getModalMessage($id, $title, $text)
     $message = [
         'id' => $id,
         'title' => $title,
-        'text' => $text, 
+        'text' => $text,
         'category' => 'message',
     ];
 
@@ -579,7 +579,24 @@ function deleteToastFromSession($toastId)
 
 
 // Функция для получения города пользователя
-function getUserCity() {
+function getUserCity()
+{
     // Проверяем, установлен ли город в сессии и возвращаем его
     return isset($_SESSION['city']) ? $_SESSION['city'] : null;
+}
+
+
+function getBasketList()
+{
+    $sessionData = $_SESSION['order'] ?? [];
+    $menuArr = $sessionData['menu'] ?? [];
+    $pokeArr = $sessionData['poke'] ?? [];
+
+    // Объединение двух подмассивов
+    $combinedArray = array_merge($menuArr, $pokeArr);
+
+    // Получение общей длины объединенного массива
+    $totalLength = count($combinedArray);
+
+    return $totalLength;
 }

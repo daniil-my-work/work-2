@@ -24,6 +24,9 @@ $componentList = getComponentList($con) ?? [];
 $userCity = getUserCity();
 // $userCity = null;
 
+// Кол-во блюд в корзине
+$totalLength = getBasketList();
+
 
 // Извлекаем уникальные значения ключа component_type, только если список не пуст
 if (!is_null($componentList)) {
@@ -77,6 +80,7 @@ $page_body = include_template(
         'toppingList' => $toppingList,
         'sauceList' => $sauceList,
         'crunchList' => $crunchList,
+        'totalLength' => $totalLength,
     ]
 );
 
@@ -124,8 +128,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         }
     }
 
-    // var_dump($createdPoke);
-
     // Проверка на валидность полей формы 
     foreach ($createdPoke as $key => $value) {
         if (in_array($key, $required) && empty($value)) {
@@ -172,9 +174,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
     // Фильтрует массив ошибок
     $errors = array_filter($errors);
-    print_r($errors);
-
-    // print_r($createdPoke);
 
     // Проверяет на наличие ошибок
     if (!empty($errors)) {
@@ -301,7 +300,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         }
     }
 }
-
 
 
 // ==== Вывод ошибок ====

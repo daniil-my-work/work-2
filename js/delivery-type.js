@@ -26,7 +26,6 @@ class DeliveryManager {
     getDeliveryType() {
         const deliveryMethod = localStorage.getItem('deliveryMethod');
 
-        console.log(deliveryMethod);
         if (deliveryMethod) {
             this.deliveryType.value = deliveryMethod;
             this.toggleVisibility(deliveryMethod === 'delivery');
