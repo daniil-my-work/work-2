@@ -1,12 +1,4 @@
 
-
-
-// const tabGroup = document.querySelector('.load__update-tab');
-// tabGroup.addEventListener('click', )
-
-
-
-
 // Функция для скачивания таблицы csv
 async function apiGetInfoFromMenu(tabGroup) {
     try {
