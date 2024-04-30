@@ -103,10 +103,6 @@ function validate_component($con, $componentType, $value)
 
         return null;
     } else {
-        // if ($value === '') {
-        //     return "Выберите $componentName.";
-        // }
-
         $sql = get_query_check_component($value, $componentType);
         $result = mysqli_query($con, $sql);
 
