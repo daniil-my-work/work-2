@@ -453,20 +453,18 @@ function getModalToast($category, $options)
 {
     $id = uniqid();
 
-    switch ($category) {
-        case 'city':
-            $isOpen = false;
-
-            foreach ($_SESSION['toasts'] as $key => $toast) {
-                if ($toast['category'] === 'city') {
-                    $isOpen = true;
-                }
-            }
-
-            if ($isOpen) {
+     // Проверяем, открыт ли уже тост с категорией 'city'
+     if ($category === 'city') {
+        foreach ($_SESSION['toasts'] as $toast) {
+            if ($toast['category'] === 'city') {
+                // Тост с категорией 'city' уже существует
                 return null;
             }
+        }
+    }
 
+    switch ($category) {
+        case 'city':
             return getModalCity($id, $options['cities']);
 
         case 'link':
