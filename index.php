@@ -25,6 +25,7 @@ $categoryList = getCategories($con);
 $userCity = getUserCity();
 // $userCity = null;
 
+print_r($_SESSION['toasts']);
 
 // ==== Вывод ошибок ====
 // Записывает ошибку в сессию: Не загрузился список продуктов 
@@ -46,7 +47,7 @@ if (is_null($categoryList)) {
 }
 
 // Записывает город в сессию 
-// $userCity = null;
+$userCity = null;
 if (is_null($userCity)) {
     $toast = getModalToast('city', $optionCity);
 

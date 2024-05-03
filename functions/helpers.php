@@ -455,6 +455,18 @@ function getModalToast($category, $options)
 
     switch ($category) {
         case 'city':
+            $isOpen = false;
+
+            foreach ($_SESSION['toasts'] as $key => $toast) {
+                if ($toast['category'] === 'city') {
+                    $isOpen = true;
+                }
+            }
+
+            if ($isOpen) {
+                return null;
+            }
+
             return getModalCity($id, $options['cities']);
 
         case 'link':
