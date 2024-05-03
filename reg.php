@@ -130,7 +130,9 @@ if (is_null($categoryList)) {
     $option = ['value' => 'категорий меню'];
     $toast = getModalToast(null, $option);
 
-    $_SESSION['toasts'][] = $toast;
+    if (!is_null($toast)) {
+        $_SESSION['toasts'][] = $toast;
+    }
 }
 
 // Модальное окно со списком ошибок

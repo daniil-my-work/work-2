@@ -74,13 +74,17 @@
 
                 <!-- Самовывоз -->
                 <div class="basket__pickup hidden" id="basket-cafe-list">
-                    <div class="basket__cafe mb-3">
+                <?php $classHidden = isset($errors['cafe_address']) ? '' : 'hidden'; ?>
+                    <div class="basket__cafe <?= $classHidden === 'hidden' ? 'mb-3' : 'mb-0'; ?> ">
                         Адресс:
+
+                        <!-- cafe_address -->
 
                         <select class="form-select basket__cafe-select" name="cafe_address" aria-label="ресторан получения">
                             <option value="default" selected>Выберите ресторан получения</option>
 
                             <?php if (!is_null($cafeList)) : ?>
+                                ''
                             <?php endif; ?>
                             <?php foreach ($cafeList as $cafe) : ?>
                                 <option value="<?= $cafe['id']; ?>">
@@ -89,6 +93,11 @@
                             <?php endforeach; ?>
                         </select>
                     </div>
+
+                    <span class="reg__form-input-wrapper-error mb-3 <?= $classHidden; ?>">
+                        <?= $errors['cafe_address'] ?? ''; ?>
+                    </span>
+
 
                     <div class="form-floating">
                         <textarea class="form-control basket__cafe-textArea" placeholder="Комметарий" id="basket__cafe-textArea" name="order_comment-cafe"></textarea>

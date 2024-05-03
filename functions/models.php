@@ -316,12 +316,12 @@ function get_query_order_items_from_menu($productId, $orderId)
 }
 
 /**
- * Формирует SQL-запрос для получения данных о товаре из таблицы Меню 
+ * Формирует SQL-запрос для получения данных о товаре из таблицы Поке 
  * @return string SQL-запрос
  */
 function get_query_order_items_from_poke($productId, $orderId)
 {
-    $sql = "SELECT order_items.product_id, order_items.quantity, order_items.unit_price, poke.title, menu.img, poke.description, poke.category_id 
+    $sql = "SELECT order_items.product_id, order_items.quantity, order_items.unit_price, poke.title, poke.img, poke.description, poke.category_id 
         FROM order_items
         LEFT JOIN poke ON order_items.product_id = poke.id
         WHERE order_items.product_id = '$productId' AND order_items.order_id = '$orderId'";

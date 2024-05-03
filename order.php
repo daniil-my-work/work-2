@@ -63,7 +63,8 @@ if (is_array($orderItems)) {
         }
 
         $result = mysqli_query($con, $sql);
-        $productList = fetchResultAsArray($result);
+        $newProducts = fetchResultAsArray($result);
+        $productList = array_merge($productList, $newProducts);
     }
 }
 
@@ -75,7 +76,9 @@ if (is_null($categoryList)) {
     $option = ['value' => 'категорий меню'];
     $toast = getModalToast(null, $option);
 
-    $_SESSION['toasts'][] = $toast;
+    if (!is_null($toast)) {
+        $_SESSION['toasts'][] = $toast;
+    }
 }
 
 // Записывает город в сессию 
@@ -83,7 +86,9 @@ if (is_null($categoryList)) {
 if (is_null($userCity)) {
     $toast = getModalToast('city', $optionCity);
 
-    $_SESSION['toasts'][] = $toast;
+    if (!is_null($toast)) {
+        $_SESSION['toasts'][] = $toast;
+    }
 }
 
 

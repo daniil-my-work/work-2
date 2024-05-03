@@ -8,7 +8,6 @@ require_once('./functions/formatter.php');
 require_once('./data/data.php');
 
 
-print_r($_SESSION['order']);
 
 // Проверка прав доступа
 $sessionRole = $_SESSION['user_role'] ?? null;
@@ -89,12 +88,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'order_id' => $order_id
     ];
 
-
     // Определяем обязательные поля в зависимости от типа доставки
     $required = ($_POST['delivery-type'] === 'delivery') ? ['user_address', 'entrance', 'apartment', 'floor'] : ['cafe_address'];
 
     // Создаем массив с фильтрами по умолчанию
-    $filters = array_merge(['delivery-type' => FILTER_DEFAULT], array_fill_keys($required, FILTER_DEFAULT));
+    $filters = array_merge(['delivery-type' => FILTER_SANITIZE_SPECIAL_CHARS], array_fill_keys($required, FILTER_DEFAULT));
 
     // Добавляем поле order_comment-user или order_comment-cafe в массив фильтров
     if ($_POST['delivery-type'] === 'delivery') {
@@ -105,7 +103,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Получаем данные из формы с применением фильтров
     $address = filter_input_array(INPUT_POST, $filters, true);
-
+    
+    print_r($address);
 
     // Ошибки
     $errors = [];
@@ -121,6 +120,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'delivery-type' => function ($value) {
             return in_array($value, ['pickup', 'delivery'], true) ? '' : 'Неверный тип доставки';
         },
+        'cafe_address' => function ($value) {
+            return $value !== 'default' ? '' : 'Укажите адресс кафе';
+        }
     ];
 
     // Заполняет массив с ошибками
@@ -138,6 +140,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             continue;
         }
 
+        if ($key == 'cafe_address') {
+            $rule = $rules['cafe_address'];
+            $errors['cafe_address'] = $rule($value);
+            continue;
+        }
+
         if ($key == 'entrance' || $key == 'apartment' || $key == 'floor') {
             $rule = $rules['is_number'];
             $errors[$key] = $rule($value);
@@ -146,6 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $errors = array_filter($errors);
+    // print_r($errors);
 
     if (!empty($errors)) {
         $page_body = include_template(
@@ -227,8 +236,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo "Запись успешно добавлена в базу данных.";
 
             // Удаляет данные из сессии и перенапрвляет на страницу аккаунт
-            unset($_SESSION['order']);
-            header("Location: ./order.php?orderId=$order_id&prevLink=basket");
+            // unset($_SESSION['order']);
+            // header("Location: ./order.php?orderId=$order_id&prevLink=basket");
         } else {
             echo "Ошибка при выполнении запроса: " . mysqli_error($con);
             echo "Номер ошибки: " . mysqli_errno($con);
@@ -244,7 +253,9 @@ if (is_null($categoryList)) {
     $option = ['value' => 'категорий меню'];
     $toast = getModalToast(null, $option);
 
-    $_SESSION['toasts'][] = $toast;
+    if (!is_null($toast)) {
+        $_SESSION['toasts'][] = $toast;
+    }
 }
 
 // Записывает ошибку в сессию: Не удалось загрузить ...
@@ -253,7 +264,9 @@ if (is_null($cafeList)) {
     $option = ['value' => 'список кафе'];
     $toast = getModalToast(null, $option);
 
-    $_SESSION['toasts'][] = $toast;
+    if (!is_null($toast)) {
+        $_SESSION['toasts'][] = $toast;
+    }
 }
 
 // Записывает город в сессию 
@@ -261,7 +274,9 @@ if (is_null($cafeList)) {
 if (is_null($userCity)) {
     $toast = getModalToast('city', $optionCity);
 
-    $_SESSION['toasts'][] = $toast;
+    if (!is_null($toast)) {
+        $_SESSION['toasts'][] = $toast;
+    }
 }
 
 // Модальное окно со списком ошибок

@@ -195,7 +195,9 @@ if (is_null($userInfo)) {
     $option = ['value' => 'данные пользователя'];
     $toast = getModalToast(null, $option);
 
-    $_SESSION['toasts'][] = $toast;
+    if (!is_null($toast)) {
+        $_SESSION['toasts'][] = $toast;
+    }
 }
 
 // Записывает ошибку в сессию: Не удалось загрузить ...
@@ -204,7 +206,9 @@ if (is_null($categoryList)) {
     $option = ['value' => 'категорий меню'];
     $toast = getModalToast(null, $option);
 
-    $_SESSION['toasts'][] = $toast;
+    if (!is_null($toast)) {
+        $_SESSION['toasts'][] = $toast;
+    }
 }
 
 // Модальное окно со списком ошибок

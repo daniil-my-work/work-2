@@ -25,7 +25,6 @@ $categoryList = getCategories($con);
 $userCity = getUserCity();
 // $userCity = null;
 
-print_r($_SESSION['toasts']);
 
 // ==== Вывод ошибок ====
 // Записывает ошибку в сессию: Не загрузился список продуктов 
@@ -34,7 +33,11 @@ if (is_null($productList)) {
     $option = ['value' => 'меню'];
     $toast = getModalToast(null, $option);
 
-    $_SESSION['toasts'][] = $toast;
+    if (!is_null($toast)) {
+        if (!is_null($toast)) {
+        $_SESSION['toasts'][] = $toast;
+    }
+    }
 }
 
 // Записывает ошибку в сессию: Не загрузились категории меню 
@@ -43,15 +46,23 @@ if (is_null($categoryList)) {
     $option = ['value' => 'категорий меню'];
     $toast = getModalToast(null, $option);
 
-    $_SESSION['toasts'][] = $toast;
+    if (!is_null($toast)) {
+        if (!is_null($toast)) {
+        $_SESSION['toasts'][] = $toast;
+    }
+    }
 }
 
 // Записывает город в сессию 
-$userCity = null;
+// $userCity = null;
 if (is_null($userCity)) {
     $toast = getModalToast('city', $optionCity);
 
-    $_SESSION['toasts'][] = $toast;
+    if (!is_null($toast)) {
+        if (!is_null($toast)) {
+        $_SESSION['toasts'][] = $toast;
+    }
+    }
 }
 
 // Модальное окно со списком ошибок

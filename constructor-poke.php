@@ -309,7 +309,9 @@ if (is_null($categoryList)) {
     $option = ['value' => 'категорий меню'];
     $toast = getModalToast(null, $option);
 
-    $_SESSION['toasts'][] = $toast;
+    if (!is_null($toast)) {
+        $_SESSION['toasts'][] = $toast;
+    }
 }
 
 // Записывает ошибку в сессию: Не удалось загрузить ...
@@ -318,7 +320,9 @@ if (empty($componentList)) {
     $option = ['value' => 'список компонентов'];
     $toast = getModalToast(null, $option);
 
-    $_SESSION['toasts'][] = $toast;
+    if (!is_null($toast)) {
+        $_SESSION['toasts'][] = $toast;
+    }
 }
 
 // Записывает город в сессию 
@@ -326,7 +330,9 @@ if (empty($componentList)) {
 if (is_null($userCity)) {
     $toast = getModalToast('city', $optionCity);
 
-    $_SESSION['toasts'][] = $toast;
+    if (!is_null($toast)) {
+        $_SESSION['toasts'][] = $toast;
+    }
 }
 
 // Модальное окно со списком ошибок
