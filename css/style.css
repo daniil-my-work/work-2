@@ -371,7 +371,7 @@ textarea {
 
 /* О компании */
 .about__wrapper {
-    padding: 50px 10px;
+    padding: 50px 15px;
 }
 
 .about__img {
@@ -629,8 +629,8 @@ textarea {
 .account__orders-time {
     display: flex;
     align-items: center;
-    padding: 0 10px;
-    margin-bottom: 30px;
+    /* padding: 0 10px; */
+    /* margin-bottom: 30px; */
 }
 
 .account__orders-time .sub-title {
@@ -698,6 +698,11 @@ textarea {
 
 .account__orders--active {
     margin-bottom: 40px;
+    /* overflow-y: scroll !important; */
+}
+
+.account__orders-wrapper {
+    overflow-y: scroll !important;
 }
 
 .account__orders-title {
@@ -710,7 +715,6 @@ textarea {
 
 .account__orders-table {
     max-height: 400px;
-    overflow-y: scroll !important;
 }
 
 .account__orders-nav {
@@ -761,6 +765,27 @@ textarea {
     padding: 0 10px;
 }
 
+
+
+.account__orders-col--big {
+    min-width: 200px;
+}
+
+.account__orders-col--middle {
+    min-width: 120px;
+}
+
+
+.account__orders-check {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.account__orders-checkbox {
+    margin: 0;
+    width: 20px;
+    height: 20px;
+}
 
 
 /* Страница Меню */
@@ -825,18 +850,106 @@ textarea {
     margin-bottom: 0;
 }
 
+.basket__selects {
+    margin-bottom: 44px;
+}
+
+.basket__delivery-name {
+    margin-right: 10px;
+}
+
+.basket__delivery {
+    margin-top: 20px;
+}
+
+.basket__delivery-wrapper {
+    position: relative;
+}
+
+.basket__delivery-list {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    transform: translateY(100%);
+    z-index: 10;
+}
+
+.basket__delivery-item {
+    padding: 8px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 4px;
+}
+
+.basket__cafe {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.basket__cafe--second {
+    display: grid;
+    grid-template-columns: 1fr 100px;
+    margin-top: 10px;
+}
+
+.basket__cafe-select {
+    margin-left: 10px;
+}
+
+.basket__cafe-input {
+    text-align: center;
+}
+
+.basket__cafe-input::placeholder {
+    text-align: center;
+}
+
+.basket__cafe-textArea {
+    min-height: 120px !important;
+}
+
 .basket__list {
     margin-bottom: 40px;
 }
 
-.basket__item {
+.basket__item-wrapper {
     display: flex;
     align-items: center;
-    margin-bottom: 15px;
+}
+
+.basket__item {
+    margin-bottom: 30px;
+}
+
+.basket__item--second {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .basket__item:last-child {
     margin-bottom: 0;
+}
+
+.basket__item-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.basket__item-top {
+    display: flex;
+    align-items: center;
+    padding-right: 10px;
+}
+
+.basket__item-info--second {
+    padding-right: 10px;
 }
 
 .basket__item-img {
@@ -847,17 +960,20 @@ textarea {
     flex-shrink: 0;
 }
 
-.basket__item-info {
-    margin-right: auto;
-}
-
 .basket__item-title {
     margin: 0;
 }
 
-.basket__item-price {
+.basket__item-description {
     font-size: 15px;
     color: #999;
+    margin: 0;
+    margin-bottom: 6px;
+}
+
+.basket__item-price {
+    font-size: 15px;
+    /* color: #999; */
     margin: 0;
 }
 
@@ -868,11 +984,14 @@ textarea {
 }
 
 .basket__order-text {
+    display: flex;
+    flex-direction: column;
     margin: 0;
     font-size: 20px;
 }
 
 .basket__order-number {
+    margin-top: 4px;
     color: #999;
 }
 
@@ -995,6 +1114,10 @@ textarea {
     padding: 0 10px;
     margin-bottom: 20px;
     box-sizing: border-box;
+}
+
+.account__orders-calendar--second {
+    display: block;
 }
 
 .account__orders-calendar .input__date-wrapper {
@@ -1174,7 +1297,7 @@ textarea {
     margin-bottom: 20px;
 }
 
-.constructor-poke-list--second .constructor-poke-item-checkbox + label {
+.constructor-poke-list--second .constructor-poke-item-checkbox+label {
     min-height: 40px;
     margin: 0;
 }
@@ -1304,7 +1427,7 @@ textarea {
 
 .constructor-poke__button {
     display: block;
-    padding: 13px 30px;
+    /* padding: 13px 20px; */
     margin-left: auto;
 }
 
@@ -1326,4 +1449,108 @@ textarea {
 
 .constructor-poke__add-price {
     color: #ffd600;
+}
+
+
+/* Ошибка */
+/* .error {
+} */
+
+.error__text {
+    margin: 0;
+    font-size: 24px;
+    line-height: 1.3;
+    font-weight: 600;
+    text-align: center;
+    color: red;
+}
+
+
+
+/* Модальное окно */
+.alert-modal {
+    position: fixed;
+    /* bottom: 80px; */
+    top: 2px;
+    right: 2px;
+    z-index: 10;
+}
+
+.alert-modal .toast:not(.showing):not(.show) {
+    z-index: -10;
+}
+
+.toast-body {
+    background-color: #FFF5E1;
+}
+
+
+/* 
+.alert-modal .toast {
+    opacity: 1;
+} */
+
+
+
+.page__load {}
+
+.load {
+    /* background-color: #F6F6F6; */
+    padding: 60px 15px;
+    padding-top: 40px;
+}
+
+.load__title {
+    text-align: center;
+}
+
+.load__current-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #999;
+    border-radius: 5px;
+    margin-bottom: 40px;
+}
+
+.load__current-text {
+    margin: 0;
+}
+
+.load__current-button {
+    padding: 8px 20px;
+}
+
+
+
+.load__update-content {
+    position: relative;
+    width: 100%;
+    border: 1px solid #999;
+    border-radius: 5px;
+}
+
+.load__update-input {
+    position: relative;
+    opacity: 0;
+    width: 100%;
+    min-height: 100px;
+    margin: 0;
+    padding: 0;
+    z-index: 2;
+}
+
+.load__update-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    text-align: center;
+    color: #333;
+}
+
+.load__update-button {
+    margin-top: 20px;
 }

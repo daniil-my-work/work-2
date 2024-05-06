@@ -33,32 +33,31 @@
         <form class="reg__form" action="#" method="post" autocomplete="on">
             <div class="reg__form-input-wrapper">
                 <label for="user_name">Имя:</label>
-                <input class="reg__form-input" type="text" id="user_name" name="user_name" placeholder="Даниил" value="<?= isset($_POST['user_name']) ? $_POST['user_name'] : ''; ?>">
+                <input class="reg__form-input" type="text" id="user_name" name="user_name" placeholder="Даниил" value="<?= isset($_POST['user_name']) ? $_POST['user_name'] : ''; ?>" required>
 
                 <?php $classHidden = isset($errors['user_name']) ? '' : 'hidden'; ?>
                 <span class="reg__form-input-wrapper-error <?= $classHidden; ?>">
-                    <?= $errors['user_name']; ?>
-                </span>
-            </div>
-
-            <!-- required -->
-            <div class="reg__form-input-wrapper">
-                <label for="email">Почта:</label>
-                <input class="reg__form-input" type="email" id="email" name="email" placeholder="test@yandex.ru" value="<?= isset($_POST['email']) ? $_POST['email'] : ''; ?>">
-
-                <?php $classHidden = isset($errors['email']) ? '' : 'hidden'; ?>
-                <span class="reg__form-input-wrapper-error <?= $classHidden; ?>">
-                    <?= $errors['email']; ?>
+                    <?= $errors['user_name'] ?? ''; ?>
                 </span>
             </div>
 
             <div class="reg__form-input-wrapper">
-                <label for="phone">Номер телефона:</label>
-                <input class="reg__form-input reg__form-input--tel" type="tel" id="phone" name="phone" placeholder="+7(980) 705 70 02" value="<?= isset($_POST['phone']) ? $_POST['phone'] : ''; ?>">
+                <label for="user_email">Почта:</label>
+                <input class="reg__form-input" type="email" id="user_email" name="user_email" placeholder="test@yandex.ru" value="<?= isset($_POST['user_email']) ? $_POST['user_email'] : ''; ?>" required>
 
-                <?php $classHidden = isset($errors['phone']) ? '' : 'hidden'; ?>
+                <?php $classHidden = isset($errors['user_email']) ? '' : 'hidden'; ?>
                 <span class="reg__form-input-wrapper-error <?= $classHidden; ?>">
-                    <?= $errors['phone']; ?>
+                    <?= $errors['user_email'] ?? ''; ?>
+                </span>
+            </div>
+
+            <div class="reg__form-input-wrapper">
+                <label for="user_telephone">Номер телефона:</label>
+                <input class="reg__form-input reg__form-input--tel" type="tel" id="user_phone" name="user_phone" placeholder="+7(980) 705 70 02" value="<?= isset($_POST['user_phone']) ? $_POST['user_phone'] : ''; ?>">
+
+                <?php $classHidden = isset($errors['user_phone']) ? '' : 'hidden'; ?>
+                <span class="reg__form-input-wrapper-error <?= $classHidden; ?>">
+                    <?= $errors['user_phone'] ?? ''; ?>
                 </span>
             </div>
 
@@ -68,7 +67,7 @@
 
                 <?php $classHidden = isset($errors['user_password']) ? '' : 'hidden'; ?>
                 <span class="reg__form-input-wrapper-error <?= $classHidden; ?>">
-                    <?= $errors['user_password']; ?>
+                    <?= $errors['user_password'] ?? ''; ?>
                 </span>
             </div>
 

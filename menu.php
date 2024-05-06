@@ -1,52 +1,90 @@
 <?php
 
-require_once('./functions/helpers.php');
 require_once('./functions/init.php');
+require_once('./functions/helpers.php');
 require_once('./functions/models.php');
 require_once('./functions/db.php');
 require_once('./functions/formatter.php');
+require_once('./data/data.php');
 
 
+// Список ролей
+$userRole = $appData['userRoles'];
 
 // Получение данных из сессии
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
 
-// Получает список категорий меню 
-$getСategories = get_query_categories();
-$categories = mysqli_query($con, $getСategories);
-
-if ($categories && mysqli_num_rows($categories) > 0) {
-    $categoryList = get_arrow($categories);
-} else {
-    $categoryList = NULL;
+$productsDataMenu = array();
+if (isset($productsData['menu'])) {
+    $productsDataMenu = $productsData['menu'];
 }
+
+// Список категорий меню
+$categoryList = getCategories($con);
+// $categoryList = null;
+
+// Город пользователя
+$userCity = getUserCity();
+// $userCity = null;
 
 
 // Получает активную категорию
 $activeCategory = isset($_GET['category']) ? $_GET['category'] : 'rolls';
 
-
 // Получает данные о выбранной категории
-$getSelectedCategory = get_query_selectedCategory($activeCategory);
-$category = mysqli_query($con, $getSelectedCategory);
-
-if ($category && mysqli_num_rows($category) > 0) {
-    $categoryName = get_arrow($category);
-} else {
-    $categoryName = NULL;
-}
-
+$categoryName = fetchCategoryName($con, $activeCategory);
+// $categoryName = null;
 
 // Получает список продуктов по выбранной категории 
-$getProductsByCategory = get_query_selectedProducts($activeCategory);
-$products = mysqli_query($con, $getProductsByCategory);
+$productList = getProductsByCategory($con, $activeCategory);
 
-if ($products && mysqli_num_rows($products) > 0) {
-    $productList = get_arrow($products);
-} else {
-    $productList = NULL;
+
+// ==== Вывод ошибок ====
+// Записывает ошибку в сессию: Не удалось загрузить ...
+// $categoryList = null;
+if (is_null($categoryName)) {
+    $option = ['value' => 'название активной категории'];
+    $toast = getModalToast(null, $option);
+
+    if (!is_null($toast)) {
+        $_SESSION['toasts'][] = $toast;
+    }
 }
 
+// Записывает ошибку в сессию: Не удалось загрузить ...
+// $categoryList = null;
+if (is_null($categoryList)) {
+    $option = ['value' => 'категорий меню'];
+    $toast = getModalToast(null, $option);
+
+    if (!is_null($toast)) {
+        $_SESSION['toasts'][] = $toast;
+    }
+}
+
+// Записывает город в сессию 
+// $userCity = null;
+if (is_null($userCity)) {
+    $toast = getModalToast('city', $optionCity);
+
+    if (!is_null($toast)) {
+        $_SESSION['toasts'][] = $toast;
+    }
+}
+
+
+// Модальное окно со списком ошибок
+$modalList = $_SESSION['toasts'] ?? [];
+// print_r($_SESSION);
+
+
+// ==== ШАБЛОНЫ ====
+$page_modal = include_template(
+    'modal.php',
+    [
+        'modalList' => $modalList,
+    ]
+);
 
 $page_head = include_template(
     'head.php',
@@ -59,13 +97,14 @@ $page_header = include_template(
     'header.php',
     [
         'isAuth' => $isAuth,
+        'userRole' => $userRole,
     ]
 );
 
 $page_body = include_template(
     'menu.php',
     [
-        'productsData' => $productsData,
+        'productsData' => $productsDataMenu,
         'products' => $productList,
         'categoryList' => $categoryList,
         'activeCategory' => $activeCategory,
@@ -84,6 +123,7 @@ $layout_content = include_template(
     'layout.php',
     [
         'head' => $page_head,
+        'modal' => $page_modal,
         'header' => $page_header,
         'main' => $page_body,
         'footer' => $page_footer,

@@ -1,85 +1,74 @@
 <?php
 
-require_once('./functions/helpers.php');
 require_once('./functions/init.php');
+require_once('./functions/helpers.php');
 require_once('./functions/models.php');
 require_once('./functions/db.php');
 require_once('./functions/validators.php');
+require_once('./data/data.php');
 
 
-// Получает список категорий меню 
-$sql = get_query_components();
-$components = mysqli_query($con, $sql);
-$componentList = get_arrow($components);
+
+// Список ролей
+$userRole = $appData['userRoles'];
+
+// Список категорий меню
+$categoryList = getCategories($con);
+// $categoryList = null;
+
+// Список компонентов Поке
+$componentList = getComponentList($con) ?? [];
+// $componentList = [];
+
+// Город пользователя
+$userCity = getUserCity();
+// $userCity = null;
+
+// Кол-во блюд в корзине
+$totalLength = getBasketList();
 
 
-// Массив для хранения уникальных ключей component_type
-$uniqueComponentTypes = array();
+// Извлекаем уникальные значения ключа component_type, только если список не пуст
+if (!is_null($componentList)) {
+    $uniqueComponentTypes = array_unique(array_column($componentList, 'component_type'));
 
-// Проходим по массиву и извлекаем уникальные значения ключа component_type
-foreach ($componentList as $item) {
-    if (!in_array($item['component_type'], $uniqueComponentTypes)) {
-        $uniqueComponentTypes[] = $item['component_type'];
+    // Создаем массив для хранения отфильтрованных компонентов
+    $sortComponentList = array_reduce($uniqueComponentTypes, function ($carry, $uniqueType) use ($componentList) {
+        // Фильтруем массив $componentList для текущего уникального типа
+        $filteredComponents = array_filter($componentList, function ($item) use ($uniqueType) {
+            return $item['component_type'] === $uniqueType;
+        });
+
+        // Добавляем отфильтрованные компоненты в итоговый массив, используя тип как ключ
+        $carry[$uniqueType] = $filteredComponents;
+
+        return $carry;
+    }, []);
+} else {
+    // Если список компонентов пуст, возвращаем пустой массив или другое подходящее значение
+    $sortComponentList = [];
+}
+
+
+// Списки компонентов
+$proteinList = $sortComponentList['protein'] ?? null;
+$baseList = $sortComponentList['base'] ?? null;
+$fillerList = $sortComponentList['filler'] ?? null;
+$toppingList = $sortComponentList['topping'] ?? null;
+$sauceList = $sortComponentList['sauce'] ?? null;
+$crunchList = $sortComponentList['crunch'] ?? null;
+$proteinAddList = $sortComponentList['protein-add'] ?? null;
+
+
+// Массив для хранения уникальных компонентов
+$uniqueComponentNames = array_reduce($componentList, function ($carry, $item) {
+    if (!isset($carry[$item['component_type']])) {
+        $carry[$item['component_type']] = $item['component_type'];
     }
-}
 
+    return $carry;
+}, []);
 
-// Массив для хранения уникальных ключей component_type
-$sortComponentList = array();
-
-// Функция обратного вызова для фильтрации
-function filterByComponentType($item, $uniqueType)
-{
-    return $item['component_type'] === $uniqueType;
-}
-
-foreach ($uniqueComponentTypes as $uniqueType) {
-    // Фильтрация массива
-    $sortComponentList[$uniqueType] = array_filter($componentList, function ($item) use ($uniqueType) {
-        return filterByComponentType($item, $uniqueType);
-    });
-}
-
-$proteinList = $sortComponentList['protein'];
-$baseList = $sortComponentList['base'];
-$fillerList = $sortComponentList['filler'];
-$toppingList = $sortComponentList['topping'];
-$sauceList = $sortComponentList['sauce'];
-$crunchList = $sortComponentList['crunch'];
-$proteinAddList = $sortComponentList['protein-add'];
-
-
-// Получает список категорий меню 
-$sql = get_query_categories();
-$categories = mysqli_query($con, $sql);
-$categoryList = get_arrow($categories);
-
-
-
-// Массив для хранения уникальных ключей component_type
-$uniqueComponentNames = array();
-
-// Проходим по массиву и извлекаем уникальные значения ключа component_type
-foreach ($componentList as $item) {
-    if (!in_array($item['component_name'], $uniqueComponentNames)) {
-        $uniqueComponentNames[$item['component_type']] = $item['component_name'];
-    }
-}
-
-
-$page_head = include_template(
-    'head.php',
-    [
-        'title' => 'Конструктор «Много рыбы»',
-    ]
-);
-
-$page_header = include_template(
-    'header.php',
-    [
-        'isAuth' => $isAuth,
-    ]
-);
 
 $page_body = include_template(
     'constructor-poke.php',
@@ -91,26 +80,9 @@ $page_body = include_template(
         'toppingList' => $toppingList,
         'sauceList' => $sauceList,
         'crunchList' => $crunchList,
+        'totalLength' => $totalLength,
     ]
 );
-
-
-$pokeTitle = [
-    '1' => 'c кальмаром',
-    '2' => 'c коктельными креветками',
-    '3' => 'c крабом',
-    '4' => 'c курицей',
-    '5' => 'c лососем',
-    '6' => 'c тофу',
-    '7' => 'c тунцом',
-    '8' => 'c угрем',
-    '9' => 'cо свининой',
-    '10' => 'c морским гребешком',
-    '11' => 'c лососем-тунцом',
-    '12' => 'c креветкой',
-    '13' => 'c морским миксом',
-    '14' => 'c телятиной',
-];
 
 
 
@@ -120,18 +92,10 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     $errors = [];
 
     $rules = [
-        'component' => function ($key, $value) use ($con) {
-            return validate_component($con, $key, $value);
-        },
-        'shema' => function ($value) {
-            return !in_array($value, [1, 2]) ? 'Указана неверная схема для наполнителя и топпинга' : null;
-        },
-        'total-price' => function ($value) {
-            return $value < 0 ? 'Вы ничего не выбрали' : null;
-        },
-        'component-length' => function ($name, $value, $shema) {
-            return validate_component_length($name, $value, $shema);
-        },
+        'component' => fn ($key, $value) => validate_component($con, $key, $value),
+        'shema' => fn ($value) => !in_array($value, [1, 2]) ? 'Указана неверная схема для наполнителя и топпинга' : null,
+        'total-price' => fn ($value) => $value < 0 ? 'Вы ничего не выбрали' : null,
+        'component-length' => fn ($name, $value, $shema) => validate_component_length($name, $value, $shema),
     ];
 
     $createdPoke = filter_input_array(INPUT_POST, ['protein' => FILTER_DEFAULT, 'base' => FILTER_DEFAULT, 'shema' => FILTER_DEFAULT, 'filler' => FILTER_DEFAULT, 'topping' => FILTER_DEFAULT, 'sauce' => FILTER_DEFAULT, 'crunch' => FILTER_DEFAULT, 'total-price' => FILTER_DEFAULT, 'proteinAdd' => FILTER_DEFAULT, 'fillerAdd' => FILTER_DEFAULT, 'toppingAdd' => FILTER_DEFAULT, 'sauceAdd' => FILTER_DEFAULT, 'crunchAdd' => FILTER_DEFAULT], true);
@@ -139,94 +103,77 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     // Список полей содеражащих массив
     $inputList = ['filler', 'topping', 'fillerAdd', 'toppingAdd'];
 
+
+    // var_dump($createdPoke['protein']);
+
     // Форматирует поля в объекте $createdPoke
     foreach ($createdPoke as $key => $value) {
         if (in_array($key, $inputList)) {
-            $createdPokeItem = isset($_POST[$key]) ? $_POST[$key] : null;
+            $createdPokeItem = $_POST[$key] ?? null;
 
-            if (is_null($createdPokeItem)) {
+            // Если значение отсутствует, удаляем поле из $createdPoke
+            if (is_null($createdPokeItem) && ($key == 'fillerAdd' || $key == 'toppingAdd')) {
                 unset($createdPoke[$key]);
-                continue;
+            } else if (is_null($createdPokeItem) && ($key == 'filler' || $key == 'topping')) {
+                $createdPoke[$key] = [];
+            } else {
+                // Иначе, заменяем значение в $createdPoke на значение из $_POST
+                $createdPoke[$key] = $createdPokeItem;
             }
-
-            $createdPoke[$key] = $createdPokeItem;
-            continue;
-        }
-
-        if ($value == '') {
-            unset($createdPoke[$key]);
-            continue;
+        } else {
+            // Если значение пустое, удаляем поле из $createdPoke
+            if ($value === '' && $key !== 'protein' && $key !== 'base' && $key !== 'sauce' && $key !== 'crunch') {
+                unset($createdPoke[$key]);
+            }
         }
     }
-
-
 
     // Проверка на валидность полей формы 
     foreach ($createdPoke as $key => $value) {
         if (in_array($key, $required) && empty($value)) {
-            $fieldName = $uniqueComponentNames[$key];
-            $errors[$key] = "Поле . $fieldName . должно быть заполено";
-        }
+            $fieldName = $uniqueComponentNames[$key] ?? null;
 
-        if ($key == 'shema') {
-            $shemaId = (int)$value;
-            $rule = $rules['shema'];
-            $errors['shema'] = $rule($shemaId);
-            continue;
-        }
-
-        if ($key == 'filler' || $key == 'topping') {
-            $rule = $rules['component-length'];
-            $errors[$key] = $rule($key, $value, $createdPoke['shema']);
-
-            // Проверка наличия компонента в Поке
-            $ruleSecond = $rules['component'];
-            $errors[$key] .=  $ruleSecond($key, $value);
-
-            continue;
-        }
-
-        if ($key == 'total-price') {
-            $rule = $rules['total-price'];
-            $errors['total-price'] = $rule($value);
-            continue;
-        }
-
-        $isAddComponent = $key == 'proteinAdd' || $key == 'fillerAdd' || $key == 'toppingAdd' || $key == 'sauceAdd' || $key == 'crunchAdd';
-        if ($isAddComponent && $value != '') {
-
-            $newKey = '';
-            if ($key === 'proteinAdd') {
-                $newKey = 'protein-add';
-            } elseif ($key === 'fillerAdd') {
-                $newKey = 'filler';
-            } elseif ($key === 'toppingAdd') {
-                $newKey = 'topping';
-            } elseif ($key === 'sauceAdd') {
-                $newKey = 'sauce';
-            } else {
-                $newKey = 'crunch';
+            if ($fieldName) {
+                $errors[$key] = "Поле . $fieldName . должно быть заполено";
             }
-
-            $rule = $rules['component'];
-            $errors[$key] = $rule($newKey, $value);
-
-            continue;
         }
 
-        if ($isAddComponent && $value == '') {
-            continue;
-        }
+        switch ($key) {
+            case 'shema':
+                $errors['shema'] = $rules['shema']((int)$value);
+                break;
 
-        // Проверка на наличие компонента в Поке
-        $rule = $rules['component'];
-        $errors[$key] = $rule($key, $value);
+            case 'filler':
+            case 'topping':
+                $errors[$key] = $rules['component-length']($key, $value, $createdPoke['shema'] ?? null);
+                if (!$errors[$key]) {
+                    $errors[$key] = $rules['component']($key, $value);
+                }
+                break;
+
+            case 'total-price':
+                $errors['total-price'] = $rules['total-price']($value);
+                break;
+
+            case 'proteinAdd':
+            case 'fillerAdd':
+            case 'toppingAdd':
+            case 'sauceAdd':
+            case 'crunchAdd':
+                if ($value !== '') {
+                    $newKey = ($key === 'proteinAdd') ? 'protein-add' : (($key === 'fillerAdd') ? 'filler' : (($key === 'toppingAdd') ? 'topping' : (($key === 'sauceAdd') ? 'sauce' : 'crunch')));
+                    $errors[$key] = $rules['component']($newKey, $value);
+                }
+                break;
+
+            default:
+                $errors[$key] = $rules['component']($key, $value);
+                break;
+        }
     }
-
 
     // Фильтрует массив ошибок
     $errors = array_filter($errors);
-
 
     // Проверяет на наличие ошибок
     if (!empty($errors)) {
@@ -241,135 +188,113 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
                 'sauceList' => $sauceList,
                 'crunchList' => $crunchList,
                 'errors' => $errors,
+                'createdPoke' => $createdPoke,
             ]
         );
     } else {
-        // Формирует объект для записи в таблицу Poke
-        $poke['title'] = "Поке " . $pokeTitle[$createdPoke['protein']];
-        $poke['img'] = './poke-my-1.jpg';
+        // Генерируем уникальный идентификатор
+        do {
+            $order_id = uniqid();
+            // Проверяем, существует ли уже такой идентификатор в базе данных
+        } while (!checkUniquenessValue($con, $order_id, 'poke', 'poke_id'));
+
+
+        // Получает название Поке
+        $pokeTitle = get_poke_title($con, $createdPoke['protein']);
+
+        // Получает данные из таблицы Категория
+        $categoryInfo = getCategoryInfo($con, 'constructor-poke');
 
         // Словарь для конструктора Поке
-        $poke['dictionary'] = array();
+        $pokeDictionary = array();
 
-        // Заполняет словарь данными о состовляющих Поке 
+        // Исключаем лишние поля
+        $excludeFields = ['shema', 'fillerAdd', 'toppingAdd', 'proteinAdd', 'sauceAdd', 'crunchAdd', 'total-price'];
+
+        // Заполняет словарь данными из каких компонентов собрано Поке 
         foreach ($createdPoke as $key => $value) {
             // Пропускает лишние поля
-            if ($key == 'shema' || $key == 'fillerAdd' || $key == 'toppingAdd' || $key == 'proteinAdd' || $key == 'sauceAdd' || $key == 'crunchAdd' || $key == 'total-price') {
+            if (in_array($key, $excludeFields)) {
                 continue;
             }
 
-            if ($key == 'filler' || $key == 'topping') {
-                $keyAdd = $key . 'Add';
-                if (isset($createdPoke[$keyAdd])) {
-                    $combineArray = array_merge($createdPoke[$key], $createdPoke[$keyAdd]);
-                    $combineArray = array_count_values($combineArray);
-                    $poke['dictionary'][$key] = $combineArray;
-                    continue;
-                }
-
-                $poke['dictionary'][$key] = array_count_values($value);
-                continue;
-            }
-
-            if ($key == 'protein' || $key == 'sauce' || $key == 'crunch') {
+            if (in_array($key, ['filler', 'topping'])) {
                 $keyAdd = $key . 'Add';
 
-                if (isset($createdPoke[$keyAdd])) {
-                    $createdPokeArr = [$createdPoke[$key]];
-                    $createdPokeAddArr = [$createdPoke[$keyAdd]];
+                // Объединяет массивы со схожим типом filler => fillerAdd
+                $combineArray = isset($createdPoke[$keyAdd]) ? array_merge($createdPoke[$key], $createdPoke[$keyAdd]) : $createdPoke[$key];
 
-                    $combineArray = array_merge($createdPokeArr, $createdPokeAddArr);
-                    $combineArray = array_count_values($combineArray);
-                    $poke['dictionary'][$key] = $combineArray;
-                    continue;
-                }
+                // Добавляет данные в словарь
+                $pokeDictionary[$key] = array_count_values($combineArray);
+            } elseif (in_array($key, ['protein', 'sauce', 'crunch'])) {
+                $keyAdd = $key . 'Add';
 
-                $poke['dictionary'][$key] = array_count_values([$createdPoke[$key]]);
-                continue;
+                // Объединяет массивы со схожим типом protein => proteinAdd
+                $combineArray = isset($createdPoke[$keyAdd]) ? array_merge([$createdPoke[$key]], [$createdPoke[$keyAdd]]) : [$createdPoke[$key]];
+
+                // Добавляет данные в словарь
+                $pokeDictionary[$key] = array_count_values($combineArray);
+            } else {
+                // Добавляет данные в словарь
+                $pokeDictionary[$key] = array_count_values([$value]);
             }
-
-            $poke['dictionary'][$key] = array_count_values([$value]);
         }
 
+        // Формирует начальную часть описания
+        $pokeDescription = "Ваш Поке состоит из: ";
 
-        // Формирует описание для Поке: компоненты из которых состоит
-        $poke['description'] = '';
-        foreach ($poke['dictionary'] as $pokeItem => $pokeItemValue) {
-            if (is_array($pokeItemValue)) {
-                switch ($pokeItem) {
-                    case 'protein':
-                        $poke['description'] .=  "Протеин: ";
-                        break;
-                    case 'filler':
-                        $poke['description'] .=  "Наполнитель: ";
-                        break;
-                    case 'topping':
-                        $poke['description'] .=  "Топпинг: ";
-                        break;
-                    case 'sauce':
-                        $poke['description'] .=  "Соус: ";
-                        break;
-                    case 'crunch':
-                        $poke['description'] .=  "Хруст: ";
-                        break;
-                }
+        // Перебираем каждый компонент в словаре
+        foreach ($pokeDictionary as $component => $details) {
+            foreach ($details as $item => $count) {
+                // Получаем название компонента из базы данных
+                $title = getComponentTitle($con, $item);
 
-                foreach ($pokeItemValue as $pokeSubItemKey => $pokeSubItemValue) {
-                    $sql = get_query_componentTitle($pokeSubItemKey);
-                    $result = mysqli_query($con, $sql);
-
-                    if (!$result) {
-                        return;
-                    }
-
-                    $pokeSubItemInfo = get_arrow($result);
-
-                    if ($pokeSubItemValue > 1) {
-                        $poke['description'] .= $pokeSubItemInfo['title'] . ' ' . "*$pokeSubItemValue" . ', ';
-                    } else {
-                        $poke['description'] .= $pokeSubItemInfo['title'] . ', ';
-                    }
-                }
-
-                continue;
+                // Добавляем детали компонента (название и количество)
+                $pokeDescription .= "$title ($count), ";
             }
-
-            $sql = get_query_componentTitle($pokeItemValue);
-            $result = mysqli_query($con, $sql);
-            $pokeItemInfo = get_arrow($result);
-
-            $poke['description'] .= $pokeItemInfo['component_name'] . ": " . $pokeItemInfo['title'] . ', ';
         }
-        
-        // Удаляет лишнюю запятую
-        $poke['description'] = rtrim($poke['description'], ', ') . '.';
-       
-        // Удаляет Словарь из объекта, чтобы оттправить объект в таблицу
-        unset($poke['dictionary']);
+
+        // Убираем последнюю запятую и добавляем точку только в конце всего описания
+        $pokeDescription = rtrim($pokeDescription, ", ") . ".";
 
         // Формирует объект для записи в таблицу Poke
-        $poke['price'] = $createdPoke['total-price'];
-        $poke['cooking_time'] = 40;
+        $poke = array(
+            'title' => $pokeTitle,
+            'img' => './poke-my-1.jpg',
+            'description' => $pokeDescription,
+            'price' => $createdPoke['total-price'],
+            'cooking_time' => 40,
+            'category_id' => $categoryInfo['id'],
+            'poke_id' => $order_id
+        );
 
-        // Получает айди категории для авторского поке
-        $sql = get_query_selectedCategory('constructor-poke');
-        $result = mysqli_query($con, $sql);
-        $categoryInfo = get_arrow($result);
-        $poke['category_id'] = (int) $categoryInfo['id'];
+        // Добавляет запись в таблицу Poke и получает id вставленного записи 
+        $insertId = insertPokeInDb($con, $poke);
+
+        // Подготовка запроса для таблицы Poke contains
+        $getPokeContains = get_query_create_poke_contains();
+        $stmt = mysqli_prepare($con, $getPokeContains);
+
+        // Проходим по словарю и добавляем данные в таблицу Poke contains
+        foreach ($pokeDictionary as $pokeDictionaryItem) {
+            foreach ($pokeDictionaryItem as $component_id => $quantity) {
+                // Привязка параметров для подготовленного запроса
+                mysqli_stmt_bind_param($stmt, 'iii', $order_id, $component_id, $quantity);
+                // Выполнение подготовленного запроса
+                $res = mysqli_stmt_execute($stmt);
+            }
+        }
+
+        // Закрытие подготовленного запроса
+        mysqli_stmt_close($stmt);
 
 
-        // Добавляет запись в таблицу Poke
-        $sql = get_query_create_poke();
-        $stmt = db_get_prepare_stmt($con, $sql, $poke);
-        $res = mysqli_stmt_execute($stmt);
+        if (!is_null($insertId)) {
+            $tableName = 'poke';
+            $quantity = 1;
 
-
-        if ($res) {
-            $insertId = mysqli_insert_id($con);
-
-            // echo $insertId;
-
-            echo 'Заказ отправлен в базу';
+            // Добавляет поке в сессию: показывается в Корзине
+            addProductInSession($con, $tableName, $insertId, $quantity);
         } else {
             echo 'Заказ незавершен в базу';
         }
@@ -377,7 +302,65 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 }
 
 
+// ==== Вывод ошибок ====
+// Записывает ошибку в сессию: Не удалось загрузить ...
+// $categoryList = null;
+if (is_null($categoryList)) {
+    $option = ['value' => 'категорий меню'];
+    $toast = getModalToast(null, $option);
 
+    if (!is_null($toast)) {
+        $_SESSION['toasts'][] = $toast;
+    }
+}
+
+// Записывает ошибку в сессию: Не удалось загрузить ...
+// $componentList = [];
+if (empty($componentList)) {
+    $option = ['value' => 'список компонентов'];
+    $toast = getModalToast(null, $option);
+
+    if (!is_null($toast)) {
+        $_SESSION['toasts'][] = $toast;
+    }
+}
+
+// Записывает город в сессию 
+// $userCity = null;
+if (is_null($userCity)) {
+    $toast = getModalToast('city', $optionCity);
+
+    if (!is_null($toast)) {
+        $_SESSION['toasts'][] = $toast;
+    }
+}
+
+// Модальное окно со списком ошибок
+$modalList = $_SESSION['toasts'] ?? [];
+
+
+// ==== ШАБЛОНЫ ====
+$page_modal = include_template(
+    'modal.php',
+    [
+        'modalList' => $modalList,
+    ]
+);
+
+$page_head = include_template(
+    'head.php',
+    [
+        'title' => 'Конструктор «Много рыбы»',
+    ]
+);
+
+$page_header = include_template(
+    'header.php',
+    [
+        'isAuth' => $isAuth,
+        'userRole' => $userRole,
+    ]
+);
 
 $page_footer = include_template(
     'footer.php',
@@ -390,6 +373,7 @@ $layout_content = include_template(
     'layout.php',
     [
         'head' => $page_head,
+        'modal' => $page_modal,
         'header' => $page_header,
         'main' => $page_body,
         'footer' => $page_footer,

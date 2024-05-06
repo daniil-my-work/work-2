@@ -1,11 +1,15 @@
 <?php
 
-require_once('./functions/db.php');
-require_once('./functions/helpers.php');
 require_once('./functions/init.php');
+require_once('./functions/helpers.php');
 require_once('./functions/models.php');
+require_once('./functions/db.php');
 require_once('./functions/validators.php');
+require_once('./data/data.php');
 
+
+// Список ролей
+$userRole = $appData['userRoles'];
 
 $page_body = include_template(
     'auth.php',
@@ -19,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = [];
 
     $rules = [
-        'email' => function ($value) {
+        'user_email' => function ($value) {
             return validate_email($value);
         },
         'user_password' => function ($value) {
@@ -52,25 +56,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'auth.php',
             [
                 'errors' => $errors,
+                'user' => $user,
             ]
         );
     } else {
         // Формирует sql запрос для проверки наличия юзера в таблицу User
-        $sql = get_query_userAuth($user['user_email']);
+        $sql = get_query_user_auth($user['user_email']);
+        $result = mysqli_query($con, $sql);
 
-        $userInfo = mysqli_query($con, $sql);
-
-        if (!$userInfo) {
-            $errors['email'] = 'Вы ввели неправильный email';
+        if (!$result || mysqli_num_rows($result) == 0) {
+            $errors['user_email'] = 'Вы ввели неправильный email';
 
             $page_body = include_template(
                 'auth.php',
                 [
                     'errors' => $errors,
+                    'user' => $user,
                 ]
             );
         } else {
-            $userInfo = get_arrow($userInfo);
+            $userInfo = get_arrow($result);
 
             // Проверка совпадения пароля
             $isValidPassword = password_verify($user['user_password'], $userInfo['user_password']);
@@ -82,13 +87,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'auth.php',
                     [
                         'errors' => $errors,
+                        'user' => $user,
                     ]
                 );
             } else {
                 // Добавление данных в сессию
                 $_SESSION['user_id'] = $userInfo['id'];
                 $_SESSION['user_name'] = $userInfo['user_name'];
-                $_SESSION['user_email'] = $userInfo['email'];
+                $_SESSION['user_email'] = $userInfo['user_email'];
+                $_SESSION['user_role'] = $userInfo['user_role'];
 
                 header("Location: /index.php");
                 exit;
@@ -98,6 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 
+// ==== ШАБЛОНЫ ====
 $page_head = include_template(
     'head.php',
     [
@@ -109,6 +117,7 @@ $page_header = include_template(
     'header.php',
     [
         'isAuth' => $isAuth,
+        'userRole' => $userRole,
     ]
 );
 

@@ -1,26 +1,28 @@
 <?php
 
-require_once('./functions/helpers.php');
 require_once('./functions/init.php');
+require_once('./functions/helpers.php');
 require_once('./functions/models.php');
 require_once('./functions/db.php');
+require_once('./data/data.php');
 
 
-// Проверка на авторизацию
-if (!$isAuth) {
-    header("Location: ./auth.php");
-    exit;
-}
 
-$userEmail = $_SESSION['user_email'];
-$sql = get_query_userInfo($userEmail);
-$result = mysqli_query($con, $sql);
-$userInfo = get_arrow($result);
+// Проверка прав доступа
+$sessionRole = $_SESSION['user_role'] ?? null;
+$allowedRoles = [$userRole['owner']];
+checkAccess($isAuth, $sessionRole, $allowedRoles);
 
+// Список ролей
+$userRole = $appData['userRoles'];
+
+// Получает данные о пользователе
+$userInfo = getUserInfo($con);
 
 $statisticGroup = isset($_GET['group']) ? $_GET['group'] : 'orders';
 
 
+// ==== ШАБЛОНЫ ====
 $page_head = include_template(
     'head.php',
     [
@@ -32,6 +34,7 @@ $page_header = include_template(
     'header.php',
     [
         'isAuth' => $isAuth,
+        'userRole' => $userRole,
     ]
 );
 

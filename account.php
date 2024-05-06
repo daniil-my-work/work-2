@@ -1,51 +1,53 @@
 <?php
 
-require_once('./functions/helpers.php');
 require_once('./functions/init.php');
+require_once('./functions/helpers.php');
 require_once('./functions/models.php');
 require_once('./functions/db.php');
+require_once('./data/data.php');
 
 
-// Максимальное кол-во строк
-define("MAX_ROW", 5);
-define("PAGINATION_LENGTH", 3);
+// Проверка прав доступа
+$sessionRole = $_SESSION['user_role'] ?? null;
 
+// Список ролей
+$userRole = $appData['userRoles'];
+$allowedRoles = [$userRole['client']];
+checkAccess($isAuth, $sessionRole, $allowedRoles);
 
-// Проверка на авторизацию
-if (!$isAuth) {
-    header("Location: ./auth.php");
-    exit;
-}
+// Текущая страница
+$currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
+$startIndex = ($currentPage == 1) ? 1 : ($currentPage - 1) * MAX_ROW;
+
+// Список категорий меню
+$categoryList = getCategories($con);
+// $categoryList = null;
 
 // Получает данные о пользователе
-$userEmail = $_SESSION['user_email'];
-$sql = get_query_userInfo($userEmail);
-$result = mysqli_query($con, $sql);
-$userInfo = get_arrow($result);
+$userInfo = getUserInfo($con);
+// $userInfo = null;
+
+// Город пользователя
+$userCity = getUserCity();
+// $userCity = null;
 
 
 // Получает данные о заказах пользователя
-$userId = $userInfo['id'];
-$dateFirst = null;
-$dateSecond = null;
+$userId = $userInfo['id'] ?? null;
+
+// Инициализация переменных для временного промежутка
+$dateFirst = $_SESSION['orderTime']['start'] ?? null;
+$dateSecond = $_SESSION['orderTime']['end'] ?? null;
 
 
-// Формирует запрос с учетом указанного промежутка времени
-if (isset($_SESSION['orderTime']) && isset($_SESSION['orderTime']['start']) && isset($_SESSION['orderTime']['end'])) {
-    $dateFirst = $_SESSION['orderTime']['start'];
-    $dateSecond = $_SESSION['orderTime']['end'];
-    $sql = "SELECT orders.*, order_items.product_id, order_items.quantity, menu.title FROM orders LEFT JOIN order_items ON orders.order_id = order_items.order_id LEFT JOIN menu ON order_items.product_id = menu.id WHERE orders.customer_id = '$userId' AND orders.order_date BETWEEN '$dateFirst 00:00:00' AND '$dateSecond 23:59:59' ORDER BY orders.id DESC;";
-} else {
-    $sql = "SELECT orders.*, order_items.product_id, order_items.quantity, menu.title FROM orders LEFT JOIN order_items ON orders.order_id = order_items.order_id LEFT JOIN menu ON order_items.product_id = menu.id WHERE orders.customer_id = '$userId' ORDER BY orders.id DESC;";
-}
-
-
-// Получает данные о заказах пользователя за промежуток времени
+// Устанавливает отрезок время в сессию
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Если запрос POST, обновляем данные о временном промежутке в $_SESSION
     $dateFirst = $_POST['date-first'];
     $dateSecond = $_POST['date-second'];
 
-    $sql = "SELECT orders.*, order_items.product_id, order_items.quantity, menu.title FROM orders LEFT JOIN order_items ON orders.order_id = order_items.order_id LEFT JOIN menu ON order_items.product_id = menu.id WHERE orders.customer_id = '$userId' AND orders.order_date BETWEEN '$dateFirst 00:00:00' AND '$dateSecond 23:59:59' ORDER BY orders.id DESC;";
+    // Обновление SQL-запроса с новым временным промежутком
+    $sql = get_query_user_order($userId, $dateFirst, $dateSecond);
 
     // Присвоение данных сессии
     $_SESSION['orderTime']['start'] = $dateFirst;
@@ -53,103 +55,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 
-// Получает все записи из таблицы Заказы
-$result = mysqli_query($con, $sql);
+// Формирует запрос для получения данных из таблицы Заказы 
+$sql = get_query_user_order($userId, $dateFirst, $dateSecond);
 
+// Получает все записи из таблицы Состовляющие заказа и группирует их по айди 
+$groupedItems = getGroupOrderItems($con, $sql);
+// $groupedItems = [];
 
-if ($result === false) {
-    // Обработка ошибки выполнения запроса
-    echo "Ошибка выполнения запроса: " . mysqli_error($con);
-} else {
-    if (mysqli_num_rows($result) > 1) {
-        $orderInfo = get_arrow($result);
-
-        if ($orderInfo) {
-            // Массив для объединенных элементов
-            $groupedItems = array();
-
-            // Группирует заказы по айди заказа
-            foreach ($orderInfo as $orderInfoItem) {
-                $orderId = $orderInfoItem['order_id'];
-                $groupedItems[$orderId][] = $orderInfoItem;
-            }
-        } else {
-            // Если результат запроса пуст
-            $groupedItems = array();
-            // $keys = array();
-        }
-    } elseif (mysqli_num_rows($result) == 1) {
-        $orderInfo = get_arrow($result);
-
-        if ($orderInfo) {
-            // Массив для объединенных элементов
-            $groupedItems = array();
-
-            $orderId = $orderInfo['order_id'];
-            $groupedItems[$orderId][] = $orderInfo;
-
-            // $keys = array_keys($groupedItems);
-        } else {
-            // Если результат запроса пуст
-            $groupedItems = array();
-            // $keys = array();
-        }
-    } else {
-        // Если результат запроса пуст
-        $groupedItems = array();
-        // $keys = array();
-    }
-}
-
-
-// Кол-во записей
-$groupedItemLength = count($groupedItems);
-$paginationLength = ceil($groupedItemLength / MAX_ROW);
-
-// Создаем массив чисел от 1 до $maxNumber
-if ($groupedItemLength == 0) {
-    $pagination[] = 0;
-} else {
-    $pagination = range(1, $paginationLength);
-}
-
-
-// Соберает все даты в отдельный массив
-$allDates = [];
-foreach ($groupedItems as $order) {
-    foreach ($order as $item) {
-        $allDates[] = $item['order_date'];
-    }
-}
-
-// Cортирует массив дат по убыванию
-rsort($allDates);
-
-// Создает фильтрованный массив
-$filteredList = [];
-
-// Вставляет в массив отсортированные значения 
-foreach ($groupedItems as $orderId => $orderItems) {
-    foreach ($orderItems as $item) {
-        $filteredList[$orderId][] = $item;
-    }
-}
-
-
-// Текущая страница
-$currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
-if ($currentPage == 1) {
-    $startIndex = 1;
-} else {
-    $startIndex = ($currentPage - 1) * MAX_ROW;
-}
-
+// Создание пагинации
+$pagination = generatePagination($groupedItems);
 
 // Получает список заказов пользователя для отрисовки
-$orderList = array_slice($filteredList, $startIndex, MAX_ROW);
+$orderList = array_slice($groupedItems, $startIndex, MAX_ROW);
 $keys = array_keys($orderList);
 
 
+// ==== Вывод ошибок ====
+// Записывает ошибку в сессию: Не удалось загрузить ...
+// $categoryList = null;
+if (is_null($categoryList)) {
+    $option = ['value' => 'категорий меню'];
+    $toast = getModalToast(null, $option);
+
+    if (!is_null($toast)) {
+        $_SESSION['toasts'][] = $toast;
+    }
+}
+
+// Записывает ошибку в сессию: Не удалось загрузить ...
+// $userInfo = null;
+if (is_null($userInfo)) {
+    $option = ['value' => 'данных пользователя'];
+    $toast = getModalToast(null, $option);
+
+    if (!is_null($toast)) {
+        $_SESSION['toasts'][] = $toast;
+    }
+}
+
+// Записывает город в сессию 
+// $userCity = null;
+if (is_null($userCity)) {
+    $toast = getModalToast('city', $optionCity);
+
+    if (!is_null($toast)) {
+        $_SESSION['toasts'][] = $toast;
+    }
+}
+
+// Модальное окно со списком ошибок
+$modalList = $_SESSION['toasts'] ?? [];
+// print_r($_SESSION);
+
+
+// ==== ШАБЛОНЫ ====
+$page_modal = include_template(
+    'modal.php',
+    [
+        'modalList' => $modalList,
+    ]
+);
 
 $page_head = include_template(
     'head.php',
@@ -162,6 +127,7 @@ $page_header = include_template(
     'header.php',
     [
         'isAuth' => $isAuth,
+        'userRole' => $userRole,
     ]
 );
 
@@ -180,18 +146,20 @@ $page_body = include_template(
 
 $page_footer = include_template(
     'footer.php',
-    []
+    [
+        'categoryList' => $categoryList,
+    ]
 );
 
 $layout_content = include_template(
     'layout.php',
     [
         'head' => $page_head,
+        'modal' => $page_modal,
         'header' => $page_header,
         'main' => $page_body,
         'footer' => $page_footer,
     ]
 );
-
 
 print($layout_content);

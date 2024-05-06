@@ -3,10 +3,10 @@
     <div class="account">
         <!-- Общая инфа для всех кабинетов -->
         <div class="account__info">
-            <img class="account__info-img" src="<?= $userInfo['user_img']; ?>" alt="">
+            <img class="account__info-img" src="<?= $userInfo['user_img'] ?? ''; ?>" alt="">
 
             <h3 class="account__info-name">
-                <?= $userInfo['user_name']; ?>
+                <?= $userInfo['user_name'] ?? ''; ?>
             </h3>
 
             <!-- Таблица с данными -->
@@ -17,7 +17,7 @@
                             Почта:
                         </th>
                         <td>
-                            <?= $userInfo['email']; ?>
+                            <?= $userInfo['user_email'] ?? ''; ?>
                         </td>
                     </tr>
                     <tr>
@@ -25,17 +25,17 @@
                             Номер телефона:
                         </th>
                         <td>
-                            <?= $userInfo['telephone']; ?>
+                            <?= $userInfo['user_telephone'] ?? ''; ?>
                         </td>
                     </tr>
-                    <tr>
+                    <!-- <tr>
                         <th scope="row">
                             Адрес:
                         </th>
                         <td>
                             Таким образом постоянный количественный рост и сфера нашей активности требуют
                         </td>
-                    </tr>
+                    </tr> -->
                 </tbody>
             </table>
         </div>
@@ -86,7 +86,7 @@
                 </thead>
                 <tbody>
                     <!-- Проходится по массиву заказов -->
-                    <?php if (count($orderList) != 0) : ?>
+                    <?php if (!empty($orderList)) : ?>
                         <?php foreach ($keys as $key) : ?>
                             <?php if (count($orderList[$key]) == 1) : ?>
                                 <?php $groupedItemFirst = $orderList[$key][0]; ?>
@@ -95,7 +95,7 @@
                                         <?= $groupedItemFirst['order_date']; ?>
                                     </th>
                                     <td>
-                                        <a href="./order.php?orderId=<?= $groupedItemFirst['order_id']; ?>">
+                                        <a href="./order.php?orderId=<?= $groupedItemFirst['order_id']; ?>&prevLink=account">
                                             <?= $groupedItemFirst['order_id']; ?>
                                         </a>
                                     </td>
@@ -115,7 +115,7 @@
                                         <?= $groupedItemFirst['order_date']; ?>
                                     </th>
                                     <td>
-                                        <a href="./order.php?orderId=<?= $groupedItemFirst['order_id']; ?>">
+                                        <a href="./order.php?orderId=<?= $groupedItemFirst['order_id']; ?>&prevLink=account">
                                             <?= $groupedItemFirst['order_id']; ?>
                                         </a>
                                     </td>

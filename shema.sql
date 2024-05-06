@@ -3,18 +3,15 @@ CREATE DATABASE `mnogoruba`;
 CREATE TABLE `user` (
     `id` INT PRIMARY KEY AUTO_INCREMENT,
     `date_reg` DATETIME DEFAULT CURRENT_TIMESTAMP,
-    `name` VARCHAR(255),
-    `telephone` VARCHAR(20) UNIQUE,
-    `email` VARCHAR(255) UNIQUE,
-    `password` VARCHAR(255),
+    `user_name` VARCHAR(255),
+    `user_telephone` VARCHAR(20) UNIQUE,
+    `user_email` VARCHAR(255) UNIQUE,
+    `user_password` VARCHAR(255),
     `user_ip` VARCHAR(15),
-    `address` VARCHAR(255),
-    `rating` INT,
-    `role` CHAR(55)
+    `user_address` VARCHAR(255),
+    `user_rating` INT,
+    `user_role` CHAR(55)
 );
-
--- тест
-
 
 CREATE TABLE `category_menu` (
     `id` INT PRIMARY KEY AUTO_INCREMENT,
@@ -61,7 +58,11 @@ CREATE TABLE `orders` (
     `order_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `customer_id` INT,
     `total_amount` INT,
-    `order_id` CHAR(13) UNIQUE
+    `order_id` CHAR(13) UNIQUE,
+    `order_address` INT NULL,
+    `date_end` TIMESTAMP NULL,
+    `order_address` TEXT,
+    `order_comment` TEXT,
 );
 
 CREATE TABLE `order_items` (
@@ -80,7 +81,8 @@ CREATE TABLE `poke` (
     `description` TEXT,
     `price` INT,
     `cooking_time` INT,
-    `category_id` INT
+    `category_id` INT,
+    `poke_id` char(13)
 );
 
 CREATE TABLE `components` (
@@ -97,12 +99,13 @@ CREATE TABLE `components` (
         'sauce',
         'crunch'
     ) NOT NULL,
-    `component_name` VARCHAR(255)
+    `component_name` VARCHAR(255),
+    `component_poke_type` VARCHAR(255)
 );
 
 CREATE TABLE `poke_consists` (
     `id` INT PRIMARY KEY AUTO_INCREMENT,
-    `poke_id` INT,
+    `poke_id` char(13),
     `component_id` INT,
     `quantity` int
 );
@@ -118,6 +121,12 @@ CREATE TABLE `user_address` (
     `city` VARCHAR(255),
     `address_name` VARCHAR(255),
     `user_id` INT
+);
+
+CREATE TABLE `order_address` (
+    `id` INT PRIMARY KEY AUTO_INCREMENT,
+    `city` VARCHAR(255),
+    `address_name` VARCHAR(255),
 );
 
 ALTER TABLE
@@ -154,3 +163,8 @@ ALTER TABLE
     `user_address`
 ADD
     FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+
+ALTER TABLE
+    `orders`
+ADD
+    FOREIGN KEY (`order_address`) REFERENCES `order_address` (`id`);

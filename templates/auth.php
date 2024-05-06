@@ -33,19 +33,21 @@
         <form class="reg__form" action="#" method="post">
             <div class="reg__form-input-wrapper">
                 <label for="email">Почта:</label>
-                <input class="reg__form-input" type="email" id="user_email" name="user_email" placeholder="test@yandex.ru" required>
+                <input class="reg__form-input" type="email" id="user_email" name="user_email" placeholder="test@yandex.ru" value="<?= isset($_POST['user_email']) ? $_POST['user_email'] : ''; ?>" required>
 
-                <span class="reg__form-input-wrapper-error hidden">
-                    Сообщение с ошибкой
+                <?php $classHidden = isset($errors['user_email']) ? '' : 'hidden'; ?>
+                <span class="reg__form-input-wrapper-error <?= $classHidden; ?>">
+                    <?= $errors['user_email'] ?? ''; ?>
                 </span>
             </div>
 
             <div class="reg__form-input-wrapper">
                 <label for="password">Пароль:</label>
-                <input class="reg__form-input" type="password" id="user_password" name="user_password" placeholder="***" required>
+                <input class="reg__form-input" type="password" id="user_password" name="user_password" placeholder="***" value="<?= isset($_POST['user_password']) ? $_POST['user_password'] : ''; ?>" required>
 
-                <span class="reg__form-input-wrapper-error hidden">
-                    Сообщение с ошибкой: Пароль не соответствует требованиям
+                <?php $classHidden = isset($errors['user_password']) ? '' : 'hidden'; ?>
+                <span class="reg__form-input-wrapper-error <?= $classHidden; ?>">
+                    <?= $errors['user_password'] ?? ''; ?>
                 </span>
             </div>
 
