@@ -58,6 +58,7 @@ $page_body = include_template(
         'productLength' => $productLength,
         'fullPrice' => $fullPrice,
         'cafeList' => $cafeList,
+        'address' => [],
         'userCity' => $userCity,
     ]
 );
@@ -104,8 +105,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Получаем данные из формы с применением фильтров
     $address = filter_input_array(INPUT_POST, $filters, true);
     
-    print_r($address);
-
     // Ошибки
     $errors = [];
 
@@ -122,6 +121,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         },
         'cafe_address' => function ($value) {
             return $value !== 'default' ? '' : 'Укажите адресс кафе';
+        },
+        'user_address' => function ($value) {
+            return $value === $_SESSION['userAddress'] ? '' : 'Выберите адресс из предложенных вариантов';
         }
     ];
 
@@ -135,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if ($key == 'user_address') {
-            $rule = $rules['is_text'];
+            $rule = $rules['user_address'];
             $errors['user_address'] = $rule($value);
             continue;
         }
@@ -154,7 +156,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $errors = array_filter($errors);
-    // print_r($errors);
 
     if (!empty($errors)) {
         $page_body = include_template(
@@ -167,6 +168,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'cafeList' => $cafeList,
                 'address' => $address,
                 'errors' => $errors,
+                'userCity' => $userCity,
             ]
         );
     } else {
@@ -236,8 +238,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo "Запись успешно добавлена в базу данных.";
 
             // Удаляет данные из сессии и перенапрвляет на страницу аккаунт
-            // unset($_SESSION['order']);
-            // header("Location: ./order.php?orderId=$order_id&prevLink=basket");
+            unset($_SESSION['order']);
+            unset($_SESSION['userAddress']);
+
+            header("Location: ./order.php?orderId=$order_id&prevLink=basket");
         } else {
             echo "Ошибка при выполнении запроса: " . mysqli_error($con);
             echo "Номер ошибки: " . mysqli_errno($con);

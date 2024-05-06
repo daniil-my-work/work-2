@@ -32,7 +32,7 @@
                         </span>
 
                         <div class="basket__delivery-wrapper w-100">
-                            <?php $userCity = $userCity === null ? "" : "г " . $userCity; ?>
+                            <?php $userCity = isset($address['user_address']) && $address['user_address'] !== null ? $address['user_address'] : ($userCity === null ? "" : "г " . $userCity); ?>
                             <input type="text" id="user_address" name="user_address" class="input basket__input mb-0" placeholder="Введите адрес" value="<?= $userCity; ?>" autocomplete="off">
 
                             <!-- Список адресов -->
@@ -41,29 +41,55 @@
                         </div>
                     </div>
 
+                    <?php $classHidden = isset($errors['user_address']) ? '' : 'hidden'; ?>
+                    <span class="reg__form-input-wrapper-error <?= $classHidden; ?>">
+                        <?= $errors['user_address'] ?? ''; ?>
+                    </span>
+
+
                     <div class="basket__cafe basket__cafe--second">
                         <span class="basket__delivery-name">
                             Подъезд:
                         </span>
 
-                        <input type="number" id="entrance" name="entrance" class="input basket__input basket__cafe-input mb-0" placeholder="4" value="">
+                        <?php $entrance = isset($address['entrance']) && $address['entrance'] !== null ? $address['entrance'] : ''; ?>
+                        <input type="number" id="entrance" name="entrance" class="input basket__input basket__cafe-input mb-0" placeholder="4" value="<?= $entrance; ?>">
                     </div>
+
+                    <?php $classHidden = isset($errors['entrance']) ? '' : 'hidden'; ?>
+                    <span class="reg__form-input-wrapper-error <?= $classHidden; ?>">
+                        <?= $errors['entrance'] ?? ''; ?>
+                    </span>
+
 
                     <div class="basket__cafe basket__cafe--second">
                         <span class="basket__delivery-name">
                             Номер квартиры:
                         </span>
 
-                        <input type="number" id="apartment" name="apartment" class="input basket__input basket__cafe-input mb-0" placeholder="100" value="">
+                        <?php $apartment = isset($address['apartment']) && $address['apartment'] !== null ? $address['apartment'] : ''; ?>
+                        <input type="number" id="apartment" name="apartment" class="input basket__input basket__cafe-input mb-0" placeholder="100" value="<?= $apartment; ?>">
                     </div>
 
-                    <div class="basket__cafe basket__cafe--second mb-3">
+                    <?php $classHidden = isset($errors['apartment']) ? '' : 'hidden'; ?>
+                    <span class="reg__form-input-wrapper-error <?= $classHidden; ?>">
+                        <?= $errors['apartment'] ?? ''; ?>
+                    </span>
+
+
+                    <?php $classHidden = isset($errors['floor']) ? '' : 'hidden'; ?>
+                    <div class="basket__cafe basket__cafe--second <?= $classHidden === 'hidden' ? 'mb-3' : 'mb-0'; ?>">
                         <span class="basket__delivery-name">
                             Этаж:
                         </span>
 
-                        <input type="number" id="floor" name="floor" class="input basket__input basket__cafe-input mb-0" placeholder="6" value="">
+                        <?php $floor = isset($address['floor']) && $address['floor'] !== null ? $address['floor'] : ''; ?>
+                        <input type="number" id="floor" name="floor" class="input basket__input basket__cafe-input mb-0" placeholder="6" value="<?= $floor; ?>">
                     </div>
+
+                    <span class="reg__form-input-wrapper-error <?= $classHidden; ?> mb-3">
+                        <?= $errors['floor'] ?? ''; ?>
+                    </span>
 
                     <div class="form-floating">
                         <textarea class="form-control basket__cafe-textArea" placeholder="Комметарий" id="basket__cafe-textArea" name="order_comment-user"></textarea>
@@ -74,11 +100,9 @@
 
                 <!-- Самовывоз -->
                 <div class="basket__pickup hidden" id="basket-cafe-list">
-                <?php $classHidden = isset($errors['cafe_address']) ? '' : 'hidden'; ?>
+                    <?php $classHidden = isset($errors['cafe_address']) ? '' : 'hidden'; ?>
                     <div class="basket__cafe <?= $classHidden === 'hidden' ? 'mb-3' : 'mb-0'; ?> ">
                         Адресс:
-
-                        <!-- cafe_address -->
 
                         <select class="form-select basket__cafe-select" name="cafe_address" aria-label="ресторан получения">
                             <option value="default" selected>Выберите ресторан получения</option>

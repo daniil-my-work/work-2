@@ -233,7 +233,6 @@ const URL_BASKET_DATA = 'get-session-data.php';
 const URL_ADD_TO_BASKET = 'api-update-order.php';
 
 
-
 // Инициализация класса BasketManager
 document.addEventListener('DOMContentLoaded', function () {
     if (pageMain) {
