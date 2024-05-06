@@ -9,16 +9,14 @@ require_once('./data/data.php');
 
 
 
+// Список ролей
+$userRole = $appData['userRoles'];
+
 // Проверка прав доступа
-$sessionRole = $_SESSION['user_role'] ?? null;
+// $sessionRole = $_SESSION['user_role'] ?? null;
+// $allowedRoles = [$userRole['client']];
+// checkAccess($isAuth, $sessionRole, $allowedRoles);
 
-// Список ролей
-$userRole = $appData['userRoles'];
-$allowedRoles = [$userRole['client']];
-checkAccess($isAuth, $sessionRole, $allowedRoles);
-
-// Список ролей
-$userRole = $appData['userRoles'];
 
 // Список категорий меню
 $categoryList = getCategories($con);
@@ -156,6 +154,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $errors = array_filter($errors);
+
+    print_r($_SESSION['userAddress']);
+
 
     if (!empty($errors)) {
         $page_body = include_template(
