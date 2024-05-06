@@ -18,6 +18,7 @@ $userRole = $appData['userRoles'];
 // checkAccess($isAuth, $sessionRole, $allowedRoles);
 
 
+
 // Список категорий меню
 $categoryList = getCategories($con);
 // $categoryList = null;
