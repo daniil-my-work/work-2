@@ -1,5 +1,5 @@
 <header class="header">
-    <div class="header__wrapper">
+    <div class="header__wrapper container">
         <a class="header__logo-link" href="./index.php">
             <img src="./img/assets/logo.svg" alt="" class="header__logo">
         </a>
