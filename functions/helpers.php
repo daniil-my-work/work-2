@@ -455,10 +455,12 @@ function getModalToast($category, $options)
 
     switch ($category) {
         case 'city': 
-            foreach ($_SESSION['toasts'] as $toast) {
-                if ($toast['category'] === 'city') {
-                    // Тост с категорией 'city' уже существует
-                    return null;
+            if (isset($_SESSION['toasts'])) {
+                foreach ($_SESSION['toasts'] as $toast) {
+                    if ($toast['category'] === 'city') {
+                        // Тост с категорией 'city' уже существует
+                        return null;
+                    }
                 }
             }
             
