@@ -78,5 +78,41 @@
                 <?php endif; ?>
             </ul>
         </nav>
+
+        <div class="header__info">
+            <div class="header__info-column">
+                <p class="text header__info-text">
+                    Ваш город
+                </p>
+
+                <h3 class="sub-title header__info-value" id="header-city">
+                    <a href="./api-clear-user-city.php">
+                        <?= isset($_SESSION['city']) ? $_SESSION['city'] : ''; ?>
+                    </a>
+                </h3>
+            </div>
+
+            <div class="header__info-column">
+                <p class="text header__info-text">
+                Принимаем заказы
+                </p>
+
+                <h3 class="sub-title header__info-value">
+                09:00 - 23:59
+                </h3>
+            </div>
+
+            <div class="header__info-column">
+                <p class="text header__info-text">
+                    Телефон
+                </p>
+
+                <h3 class="sub-title header__info-value">
+                    <a href="tel:+7 (800) 10-10-900">
+                    8800-10-10-900
+                    </a>
+                </h3>
+            </div>
+        </div>
     </div>
 </header>

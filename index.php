@@ -35,8 +35,8 @@ if (is_null($productList)) {
 
     if (!is_null($toast)) {
         if (!is_null($toast)) {
-        $_SESSION['toasts'][] = $toast;
-    }
+            $_SESSION['toasts'][] = $toast;
+        }
     }
 }
 
@@ -48,8 +48,8 @@ if (is_null($categoryList)) {
 
     if (!is_null($toast)) {
         if (!is_null($toast)) {
-        $_SESSION['toasts'][] = $toast;
-    }
+            $_SESSION['toasts'][] = $toast;
+        }
     }
 }
 
@@ -60,8 +60,8 @@ if (is_null($userCity)) {
 
     if (!is_null($toast)) {
         if (!is_null($toast)) {
-        $_SESSION['toasts'][] = $toast;
-    }
+            $_SESSION['toasts'][] = $toast;
+        }
     }
 }
 
