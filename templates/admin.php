@@ -1,6 +1,6 @@
 <!-- Страница Аккаунт -->
 <div class="page__account" id="page-admin">
-    <div class="account">
+    <div class="account account--admin container">
         <!-- Общая инфа для всех кабинетов -->
         <div class="account__info">
             <img class="account__info-img" src="<?= $userInfo['user_img'] ?? ''; ?>" alt="">
