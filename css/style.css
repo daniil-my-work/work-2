@@ -1509,6 +1509,76 @@ textarea {
     border-radius: 25px;
 }
 
+
+@media (min-width: 768px) {
+    .basket__cafe {
+        font-size: 18px;
+    }
+
+    .basket__input {
+        padding: 10px 8px;
+    }
+
+    .basket__item-description {
+        font-size: 17px;
+        line-height: 1.4;
+    }
+
+    .basket__item-price {
+        font-size: 17px;
+    }
+
+    .basket__order-button {
+        font-size: 18px;
+        padding: 15px 30px;
+        border-radius: 30px;
+    }
+
+    .form-select {
+        font-size: 18px;
+        padding: 10px 8px;
+    }
+
+    .form-floating {
+        font-size: 18px;
+    }
+}
+
+
+@media (min-width: 1440px) {
+    .page__basket-wrapper {
+        padding-top: 40px;
+        padding-bottom: 40px;
+    }
+
+    .page__basket-form {
+        display: grid;
+        grid-template-columns: 40% 1fr;
+        column-gap: 80px;
+    }
+
+    .basket__selects {
+        grid-column: 1 / 2;
+        margin-bottom: 30px;
+    }
+
+    .basket__list {
+        grid-column: 2 / 3;
+        grid-row: 1 / 3;
+        margin: 0;
+    }
+
+    .basket__item {
+        margin-bottom: 40px;
+    }
+
+    #basket__cafe-textArea {
+        margin-bottom: 0;
+    }
+}
+
+
+
 /* Страница Заказ */
 .page__order {
     padding: 20px;
@@ -1708,13 +1778,15 @@ textarea {
 
 @media (min-width: 768px) {
     .action__basket {
-        width: 80px;
-        height: 80px;
+        width: 70px;
+        height: 70px;
+        right: 16px;
+        bottom: 16px;
     }
 
     .action__basket-icon {
-        width: 32px;
-        height: 32px;
+        width: 30px;
+        height: 30px;
     }
 }
 
