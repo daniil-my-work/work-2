@@ -2175,14 +2175,43 @@ textarea {
 
 .toast-body {
     background-color: #FFF5E1;
+    font-size: 14px;
+    line-height: 1.3;
 }
 
 
-/* 
-.alert-modal .toast {
-    opacity: 1;
-} */
+@media (min-width: 768px) {
+    .alert-modal {
+        top: 6px !important;
+        right: 6px !important;
+    }
 
+    .toast {
+        width: 420px;
+        font-size: 18px;
+    }
+
+    .toast-header {
+        padding: 14px 20px;
+    }
+
+    .toast-body {
+        padding: 14px 20px;
+        font-size: 18px;
+    }
+
+    .toast-body .btn {
+        font-size: 18px;
+        padding: 6px 12px;
+    }
+}
+
+@media (min-width: 1440px) {
+    .alert-modal {
+        top: 10px !important;
+        right: 10px !important;
+    }
+}
 
 
 .page__load {}
