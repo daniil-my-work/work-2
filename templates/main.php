@@ -112,7 +112,7 @@
             <?php else : ?>
                 <div class="error">
                     <p class="error__text">
-                        Произошла ошибка. Перезагрузите страницу
+                        Список популярных блюд пуст
                     </p>
                 </div>
             <?php endif; ?>

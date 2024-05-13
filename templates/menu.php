@@ -1,7 +1,7 @@
 <!-- Страница Меню -->
 <div class="page__menu" id="page-menu">
     <!-- Вкладка -->
-    <div class="account__orders-group page__menu-group">
+    <div class="account__orders-group page__menu-group container">
         <?php if (!is_null($categoryList)) : ?>
             <a class="button--basic account__orders-group-link" href="./constructor-poke.php">
                 конструктор поке
@@ -19,14 +19,14 @@
 
     <!-- Меню -->
     <div class="menu">
-        <div class="menu__wrapper">
+        <div class="menu__wrapper container">
             <h2 class="title menu__title">
                 <?php if (!empty($products)) : ?>
                     <?= formatFirstLetter($categoryName['category_name'] ?? ''); ?>
                 <?php else : ?>
                     <div class="error">
                         <p class="error__text">
-                            Произошла ошибка. Перезагрузите страницу
+                            В выбранной категории нет предложений
                         </p>
                     </div>
                 <?php endif; ?>

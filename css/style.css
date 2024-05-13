@@ -97,6 +97,9 @@ textarea {
 
 /* Кнопки */
 .button--basic {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 10px;
     background-color: #3498db;
     color: #fff;
@@ -123,6 +126,7 @@ textarea {
     .button--basic {
         min-height: 50px;
         font-size: 20px;
+        padding: 13px 30px;
     }
 }
 
@@ -1063,7 +1067,6 @@ textarea {
 .account__orders-group-link {
     width: max-content;
     position: relative;
-    display: block;
     padding: 10px 15px;
     background-color: #F6F6F6;
     color: #000;
@@ -1223,6 +1226,10 @@ textarea {
         grid-column: 2 / 3;
     }
 
+    .account__orders-group {
+        margin-top: 20px;
+    }
+
     .account__orders-table--text {
         font-size: 16px;
     }
@@ -1252,7 +1259,6 @@ textarea {
     .account__info-name {
         margin-bottom: 20px;
     }
-
 
     .account--admin {
         display: block;
@@ -1299,6 +1305,13 @@ textarea {
     overflow-x: auto;
     justify-content: flex-start;
 }
+
+@media (min-width: 1440px) {
+    .page__menu-group {
+        max-width: 1320px;
+    }
+}
+
 
 /* Страница Корзина */
 .page__basket {
@@ -1511,6 +1524,11 @@ textarea {
 
 
 @media (min-width: 768px) {
+    .basket__breadcrumbs {
+        font-size: 18px;
+        padding: 10px 20px;
+    }
+
     .basket__cafe {
         font-size: 18px;
     }
@@ -2067,6 +2085,66 @@ textarea {
 }
 
 
+@media (min-width: 768px) {
+    .constructor-poke-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        font-size: 18px;
+        line-height: 1.3;
+    }
+
+    .constructor-poke-item {
+        margin-bottom: 0;
+    }
+
+    .constructor-poke-item-checkbox+label {
+        margin-bottom: 0;
+    }
+}
+
+@media (min-width: 1440px) {
+    .constructor-poke__list {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+
+    .constructor-poke__component {
+        margin-bottom: 0;
+    }
+
+    .constructor-poke__component:nth-child(3) {
+        grid-column: 2 / 4;
+        grid-row: 1 / 4;
+    }
+
+    .constructor-poke__component:nth-child(4) {
+        display: flex;
+        grid-column: 1 / 3;
+    }
+
+    .constructor-poke__component-column-1 {
+        margin-right: 60px;
+    }
+
+    .constructor-poke__component:nth-child(5) {
+        grid-row: 3 / 4;
+    }
+
+    .constructor-poke__add-column-1 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+    }
+
+    .constructor-poke__add-column-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+    }
+}
+
 /* Ошибка */
 /* .error {
 } */
@@ -2133,9 +2211,9 @@ textarea {
     margin: 0;
 }
 
-.load__current-button {
+/* .load__current-button {
     padding: 8px 20px;
-}
+} */
 
 
 
@@ -2168,4 +2246,22 @@ textarea {
 
 .load__update-button {
     margin-top: 20px;
+}
+
+
+@media (min-width: 992px) {
+    .load__column {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+    }
+
+    .load__update-input {
+        min-height: 160px;
+    }
+
+    .load__update-button {
+        width: 100%;
+    }
+
 }
