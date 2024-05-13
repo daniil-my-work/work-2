@@ -989,11 +989,16 @@ textarea {
         margin-bottom: 20px;
     }
 
-    .reg__form-input-wrapper+.reg__form-input-wrapper {
-        margin-bottom: 0;
+    .reg__form-input {
+        min-height: 50px;
     }
 
+    /* .reg__form-input-wrapper+.reg__form-input-wrapper {
+        margin-bottom: 0;
+    } */
+
     .reg__form-button {
+        margin-top: 20px;
         min-height: 50px;
     }
 }
@@ -1615,6 +1620,35 @@ textarea {
 
 .page__order .basket__icon {
     margin-bottom: 6px;
+}
+
+
+@media (min-width: 768px) {
+    .basket__list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .basket__item--second {
+        box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
+        padding: 10px 15px;
+        border-radius: 10px;
+    }
+}
+
+@media (min-width: 1440px) {
+    .basket__list--second {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        padding: 10px;
+        margin-bottom: 30px;
+    }
+
+    .basket__item--second {
+        margin-bottom: 0;
+    }
 }
 
 
