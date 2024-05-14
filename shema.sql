@@ -8,7 +8,7 @@ CREATE TABLE `user` (
     `user_email` VARCHAR(255) UNIQUE,
     `user_password` VARCHAR(255),
     `user_ip` VARCHAR(15),
-    `user_address` VARCHAR(255),
+    -- `user_address` VARCHAR(255),
     `user_rating` INT,
     `user_role` CHAR(55)
 );
@@ -56,10 +56,9 @@ CREATE TABLE `menu` (
 CREATE TABLE `orders` (
     `id` INT PRIMARY KEY AUTO_INCREMENT,
     `order_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `customer_id` INT,
+    `customer_id` INT NULL,
     `total_amount` INT,
     `order_id` CHAR(13) UNIQUE,
-    `order_address` INT NULL,
     `date_end` TIMESTAMP NULL,
     `order_address` TEXT,
     `order_comment` TEXT,
@@ -116,18 +115,18 @@ CREATE TABLE `cafe_address` (
     `address_name` VARCHAR(255)
 );
 
-CREATE TABLE `user_address` (
-    `id` INT PRIMARY KEY AUTO_INCREMENT,
-    `city` VARCHAR(255),
-    `address_name` VARCHAR(255),
-    `user_id` INT
-);
+-- CREATE TABLE `user_address` (
+--     `id` INT PRIMARY KEY AUTO_INCREMENT,
+--     `city` VARCHAR(255),
+--     `address_name` VARCHAR(255),
+--     `user_id` INT
+-- );
 
-CREATE TABLE `order_address` (
-    `id` INT PRIMARY KEY AUTO_INCREMENT,
-    `city` VARCHAR(255),
-    `address_name` VARCHAR(255),
-);
+-- CREATE TABLE `order_address` (
+--     `id` INT PRIMARY KEY AUTO_INCREMENT,
+--     `city` VARCHAR(255),
+--     `address_name` VARCHAR(255),
+-- );
 
 ALTER TABLE
     `menu`
@@ -159,12 +158,12 @@ ALTER TABLE
 ADD
     FOREIGN KEY (`component_id`) REFERENCES `components` (`id`);
 
-ALTER TABLE
-    `user_address`
-ADD
-    FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+-- ALTER TABLE
+--     `user_address`
+-- ADD
+--     FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
 
-ALTER TABLE
-    `orders`
-ADD
-    FOREIGN KEY (`order_address`) REFERENCES `order_address` (`id`);
+-- ALTER TABLE
+--     `orders`
+-- ADD
+--     FOREIGN KEY (`order_address`) REFERENCES `order_address` (`id`);
