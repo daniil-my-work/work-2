@@ -80,7 +80,7 @@ CREATE TABLE `poke` (
     `price` INT,
     `cooking_time` INT,
     `category_id` INT,
-    `poke_id` char(13)
+    `poke_id` INT
 );
 
 CREATE TABLE `components` (
@@ -103,7 +103,7 @@ CREATE TABLE `components` (
 
 CREATE TABLE `poke_consists` (
     `id` INT PRIMARY KEY AUTO_INCREMENT,
-    `poke_id` char(13),
+    `poke_id` INT,
     `component_id` INT,
     `quantity` int
 );
@@ -143,4 +143,3 @@ ALTER TABLE
     `poke_consists`
 ADD
     FOREIGN KEY (`component_id`) REFERENCES `components` (`id`);
-    
