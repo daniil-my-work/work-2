@@ -373,6 +373,9 @@ function importCsvData($con, $filePath, $expectedColumns, $tableName)
     $headersString = implode(';', $headers); // Используем точку с запятой в качестве разделителя
     $headersColumn = fgetcsv($file, 0, ",");
 
+    echo $headersString;
+    print_r($headersArray);
+
     if ($headersString !== $expectedColumns) {
         fclose($file);
         unlink($filePath);
