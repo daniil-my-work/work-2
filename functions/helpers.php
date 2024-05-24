@@ -454,7 +454,7 @@ function getModalToast($category, $options)
     $id = uniqid();
 
     switch ($category) {
-        case 'city': 
+        case 'city':
             if (isset($_SESSION['toasts'])) {
                 foreach ($_SESSION['toasts'] as $toast) {
                     if ($toast['category'] === 'city') {
@@ -463,7 +463,7 @@ function getModalToast($category, $options)
                     }
                 }
             }
-            
+
             return getModalCity($id, $options['cities']);
 
         case 'link':
@@ -608,4 +608,41 @@ function getBasketList()
     $totalLength = count($combinedArray);
 
     return $totalLength;
+}
+
+
+function getAbsoluteImgPath($imgPathInDb)
+{
+    // Абсолютный URL
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+    $host = $_SERVER['HTTP_HOST'];
+    $absoluteUrl = $protocol . $host . '/' . $imgPathInDb;
+
+    // Абсолютный путь на сервере для проверки существования файла
+    // $projectRoot = dirname(__DIR__, 2); // Поднимитесь на два уровня вверх от текущего файла
+    // $absoluteServerPath = $projectRoot . '/' . $imgPathInDb;
+
+    // Вывод значений для отладки
+    // echo $absoluteServerPath;
+    // echo file_exists($absoluteServerPath);
+
+    // Проверка существования файла
+    // if (file_exists($absoluteServerPath)) {
+    //     echo "File exists!<br>";
+    // } else {
+    //     echo "File does not exist!<br>";
+    //     if (!is_dir($projectRoot)) {
+    //         echo "Project root directory does not exist: $projectRoot<br>";
+    //     } else {
+    //         echo "Project root directory exists: $projectRoot<br>";
+    //         if (!is_readable($absoluteServerPath)) {
+    //             echo "File is not readable: $absoluteServerPath<br>";
+    //         } else {
+    //             echo "File is readable: $absoluteServerPath<br>";
+    //         }
+    //     }
+    // }
+
+    // Проверка существования файла
+    return $absoluteUrl;
 }

@@ -39,7 +39,7 @@
                             <?php $hiddenButton = isset($productsData[$productId]) ? 'hidden' : ''; ?>
                             <?php $hiddenCounter = !isset($productsData[$productId]) ? 'hidden' : ''; ?>
 
-                            <img src="<?= $product['img']; ?>" alt="" class="menu__item-img">
+                            <img src="<?= getAbsoluteImgPath($product['img']); ?>" alt="" class="menu__item-img">
 
                             <div class="menu__item-content">
                                 <h3 class="sub-title menu__item-title">
