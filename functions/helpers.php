@@ -370,11 +370,11 @@ function importCsvData($con, $filePath, $expectedColumns, $tableName)
         return trim(str_replace('"', '', $headersArray), "\xEF\xBB\xBF");
     }, $headersArray);
 
-    $headersString = implode(';', $headers); // Используем точку с запятой в качестве разделителя
-    $headersColumn = fgetcsv($file, 0, ",");
+    $headersString = implode(',', $headers); // Используем точку с запятой в качестве разделителя
+    $headersColumn = fgetcsv($file, 0, ";");
 
-    echo $headersString;
-    print_r($headersArray);
+    // var_dump($headersString);
+    // var_dump($expectedColumns);
 
     if ($headersString !== $expectedColumns) {
         fclose($file);
@@ -386,7 +386,10 @@ function importCsvData($con, $filePath, $expectedColumns, $tableName)
     // Очистка таблицы перед вставкой новых данных
     clearTable($con, $tableName);
 
-    while (($row = fgetcsv($file, 0, ",")) !== false) {
+    while (($row = fgetcsv($file, 0, ";")) !== false) {
+        // var_dump($row);
+        // var_dump($headersColumn);
+
         if (count($row) == count($headersColumn)) {
             if ($tableName === 'menu') {
                 $row[3] = intval($row[3]);
