@@ -236,7 +236,7 @@ function get_query_search_order_by_id($searchValue)
  */
 function get_query_search_clients_by_phone($phoneValue)
 {
-    $sql = "SELECT user.id, user.user_name, user.user_telephone, user.user_address, user.user_rating, SUM(orders.total_amount) AS total_order_amount, COUNT(orders.id) AS total_orders_count, ROUND(AVG(orders.total_amount)) AS average_order_amount
+    $sql = "SELECT user.id, user.user_name, user.user_telephone, user.user_rating, SUM(orders.total_amount) AS total_order_amount, COUNT(orders.id) AS total_orders_count, ROUND(AVG(orders.total_amount)) AS average_order_amount
         FROM 
             user
         LEFT JOIN 
@@ -247,7 +247,6 @@ function get_query_search_clients_by_phone($phoneValue)
             user.id, 
             user.user_name,
             user.user_telephone,
-            user.user_address,
             user.user_rating;";
 
     return $sql;

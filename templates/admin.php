@@ -606,9 +606,9 @@
                                     <th scope="col">
                                         Контакты
                                     </th>
-                                    <th scope="col">
+                                    <!-- <th scope="col">
                                         Адрес
-                                    </th>
+                                    </th> -->
                                     <th scope="col">
                                         Рейтинг клиента
                                     </th>
@@ -630,9 +630,6 @@
                                             </td>
                                             <td class=" align-middle">
                                                 <?= $userItem['user_telephone']; ?>
-                                            </td>
-                                            <td class="text-center align-middle">
-                                                <?= $userItem['user_address']; ?>
                                             </td>
                                             <td class="align-middle">
                                                 <?= $userItem['user_rating']; ?>
