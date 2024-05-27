@@ -24,7 +24,24 @@ $orderId = $_GET['orderId'] ?? null;
 $nameLink = $_GET['prevLink'] ?? null;
 
 // Упрощение условия с помощью тернарного оператора
-$backLink = ($nameLink === 'account') ? './account.php' : './index.php';
+// $backLink = ($nameLink === 'account') ? './account.php' : './index.php';
+
+// TODO: сделать динамическую ссылку
+switch ($nameLink) {
+    case 'account':
+        $backLink = './account.php';
+        break;
+   
+    case 'admin':
+        $backLink = './admin.php';
+        break;
+    
+    default:
+     $backLink = './index.php';
+        break;
+}
+
+
 $backLinkName = ($nameLink === 'account') ? 'личный кабинет' : 'на главную';
 
 // Получает данные о наличии заказа 

@@ -121,7 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             return $value !== 'default' ? '' : 'Укажите адресс кафе';
         },
         'user_address' => function ($value) {
-            return $value === $_SESSION['userAddress'] ? '' : 'Выберите адресс из предложенных вариантов';
+            return $value === (isset($_SESSION['userAddress']) ? $_SESSION['userAddress'] : '') ? '' : 'Выберите адресс из предложенных вариантов';
         }
     ];
 
@@ -154,8 +154,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $errors = array_filter($errors);
-
-    print_r($_SESSION['userAddress']);
 
 
     if (!empty($errors)) {

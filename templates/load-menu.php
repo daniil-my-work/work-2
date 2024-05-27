@@ -57,7 +57,7 @@
                 </div>
 
                 <!-- Инпут -->
-                <form action="./load-menu.php?tab=<?= $tabGroup; ?>" class="load__form" enctype="multipart/form-data" method="post">
+                <form action="./load-menu.php?tabGroup=<?= $tabGroup; ?>" class="load__form" enctype="multipart/form-data" method="post">
                     <div class="load__update-content">
                         <input class="input load__update-input" type="file" name="file" id="file" required>
 
