@@ -1,6 +1,6 @@
 <!-- Страница Аккаунт -->
 <div class="page__account" id="page-admin">
-    <div class="account">
+    <div class="account account--admin container">
         <!-- Общая инфа для всех кабинетов -->
         <div class="account__info">
             <img class="account__info-img" src="<?= $userInfo['user_img'] ?? ''; ?>" alt="">
@@ -606,9 +606,9 @@
                                     <th scope="col">
                                         Контакты
                                     </th>
-                                    <th scope="col">
+                                    <!-- <th scope="col">
                                         Адрес
-                                    </th>
+                                    </th> -->
                                     <th scope="col">
                                         Рейтинг клиента
                                     </th>
@@ -630,9 +630,6 @@
                                             </td>
                                             <td class=" align-middle">
                                                 <?= $userItem['user_telephone']; ?>
-                                            </td>
-                                            <td class="text-center align-middle">
-                                                <?= $userItem['user_address']; ?>
                                             </td>
                                             <td class="align-middle">
                                                 <?= $userItem['user_rating']; ?>

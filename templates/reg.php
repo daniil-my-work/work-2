@@ -1,6 +1,6 @@
 <!-- Страница регистрации -->
 <div class="page__reg">
-    <div class="reg">
+    <div class="reg container">
         <!-- Выбор города -->
         <div class="reg__radio hidden">
             <div class="reg__radio-wrapper">

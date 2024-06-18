@@ -370,8 +370,15 @@ function importCsvData($con, $filePath, $expectedColumns, $tableName)
         return trim(str_replace('"', '', $headersArray), "\xEF\xBB\xBF");
     }, $headersArray);
 
-    $headersString = implode(';', $headers); // Используем точку с запятой в качестве разделителя
-    $headersColumn = fgetcsv($file, 0, ",");
+    $headersString = implode(',', $headers); // Используем точку с запятой в качестве разделителя
+
+    if ($tableName === 'menu') {
+        $headersColumn = fgetcsv($file, 0, ";");
+    }
+    else {
+        $headersColumn = fgetcsv($file, 0, ",");
+    }
+
 
     if ($headersString !== $expectedColumns) {
         fclose($file);
@@ -383,29 +390,49 @@ function importCsvData($con, $filePath, $expectedColumns, $tableName)
     // Очистка таблицы перед вставкой новых данных
     clearTable($con, $tableName);
 
-    while (($row = fgetcsv($file, 0, ",")) !== false) {
-        if (count($row) == count($headersColumn)) {
-            if ($tableName === 'menu') {
+    // Проходится по строкам таблицы
+    if ($tableName === 'menu') {
+        while (($row = fgetcsv($file, 0, ";")) !== false) {
+            if (count($row) == count($headersColumn)) {
                 $row[3] = intval($row[3]);
-            } else {
-                $row[2] = intval($row[2]);
-            }
 
-            if (!insertData($con, $tableName, $row)) {
-                $result['error'] = 'Ошибка при вставке данных.';
+                if (!insertData($con, $tableName, $row)) {
+                    $result['error'] = 'Ошибка при вставке данных.';
+                    break;
+                }
+            } else {
+                $result['error'] = 'Количество элементов в строке не соответствует количеству столбцов.';
                 break;
             }
-        } else {
-            $result['error'] = 'Количество элементов в строке не соответствует количеству столбцов.';
-            break;
+        }
+    } else {
+        while (($row = fgetcsv($file, 0, ",")) !== false) {
+
+            if (count($row) == count($headersColumn)) {
+                $row[2] = intval($row[2]);
+
+                if (!insertData($con, $tableName, $row)) {
+                    $result['error'] = 'Ошибка при вставке данных.';
+                    break;
+                }
+            } else {
+                $result['error'] = 'Количество элементов в строке не соответствует количеству столбцов.';
+                break;
+            }
         }
     }
 
     // Закрытие файла после завершения чтения
     fclose($file);
 
-    // Удаление файла только после того, как все данные были успешно обработаны или если возникла ошибка
-    unlink($filePath);
+    // Проверка существования файла перед удалением
+    if (file_exists($filePath)) {
+        if (!unlink($filePath)) {
+            $result['error'] = 'Не удалось удалить файл после обработки.';
+        }
+    } else {
+        $result['error'] = 'Файл не существует после обработки.';
+    }
 
     return $result;
 }
@@ -454,14 +481,16 @@ function getModalToast($category, $options)
     $id = uniqid();
 
     switch ($category) {
-        case 'city': 
-            foreach ($_SESSION['toasts'] as $toast) {
-                if ($toast['category'] === 'city') {
-                    // Тост с категорией 'city' уже существует
-                    return null;
+        case 'city':
+            if (isset($_SESSION['toasts'])) {
+                foreach ($_SESSION['toasts'] as $toast) {
+                    if ($toast['category'] === 'city') {
+                        // Тост с категорией 'city' уже существует
+                        return null;
+                    }
                 }
             }
-            
+
             return getModalCity($id, $options['cities']);
 
         case 'link':
@@ -606,4 +635,15 @@ function getBasketList()
     $totalLength = count($combinedArray);
 
     return $totalLength;
+}
+
+
+function getAbsoluteImgPath($imgPathInDb)
+{
+    // Абсолютный URL
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+    $host = $_SERVER['HTTP_HOST'];
+
+    // Путь до файла
+    return $protocol . $host . '/' . $imgPathInDb;
 }

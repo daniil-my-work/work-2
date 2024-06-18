@@ -1,18 +1,18 @@
 <!-- Страница Аккаунт -->
 <div class="page__account">
-    <div class="account">
+    <div class="account container">
         <!-- Общая инфа для всех кабинетов -->
         <div class="account__info">
             <img class="account__info-img" src="<?= $userInfo['user_img'] ?? ''; ?>" alt="">
 
-            <h3 class="account__info-name">
+            <h3 class="title account__info-name">
                 <?= $userInfo['user_name'] ?? ''; ?>
             </h3>
 
             <!-- Таблица с данными -->
             <table class="table mb-0">
                 <tbody>
-                    <tr>
+                    <tr class="text">
                         <th scope="row">
                             Почта:
                         </th>
@@ -20,7 +20,8 @@
                             <?= $userInfo['user_email'] ?? ''; ?>
                         </td>
                     </tr>
-                    <tr>
+
+                    <tr class="text">
                         <th scope="row">
                             Номер телефона:
                         </th>
@@ -42,10 +43,9 @@
 
         <!-- Инфа для клиентов: права доступа клиент -->
         <div class="account__orders">
-            <h3 class="account__orders-title">
+            <h3 class="sub-title account__orders-title">
                 История заказов:
             </h3>
-
 
             <form class="account__orders-calendar" action="./account.php" method="POST">
                 <!-- Календарь -->
@@ -67,7 +67,7 @@
 
 
             <!-- Таблица заказов пользователя -->
-            <table class="table table-striped table-hover account__orders-table ">
+            <table class="table table-striped table-hover account__orders-table account__orders-table--text">
                 <thead>
                     <tr>
                         <th scope="col">

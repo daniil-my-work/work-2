@@ -71,6 +71,7 @@ class ModalManager {
                 await this.apiCloseToast(params);
 
                 this.removeToast(toast);
+                window.location.reload();
             } catch (err) {
                 console.error('Ошибка при обновлении города:', err);
             }

@@ -2,7 +2,7 @@
 <div class="page__main" id="page-main">
     <!-- Предложение -->
     <div class="offer">
-        <div class="offer__wrapper">
+        <div class="offer__wrapper container">
             <a class="offer__button" href="./menu.php">
                 Меню
             </a>
@@ -24,7 +24,7 @@
 
     <!-- Меню -->
     <div class="menu">
-        <div class="menu__wrapper">
+        <div class="menu__wrapper container">
             <h2 class="title menu__title">
                 Популярные блюда
             </h2>
@@ -39,7 +39,7 @@
                             <?php $hiddenButton = isset($productsData[$productId]) ? 'hidden' : ''; ?>
                             <?php $hiddenCounter = !isset($productsData[$productId]) ? 'hidden' : ''; ?>
 
-                            <img src="<?= $product['img']; ?>" alt="" class="menu__item-img">
+                            <img src="<?= getAbsoluteImgPath($product['img']); ?>" alt="" class="menu__item-img">
 
                             <div class="menu__item-content">
                                 <h3 class="sub-title menu__item-title">
@@ -112,7 +112,7 @@
             <?php else : ?>
                 <div class="error">
                     <p class="error__text">
-                        Произошла ошибка. Перезагрузите страницу
+                        Список популярных блюд пуст
                     </p>
                 </div>
             <?php endif; ?>
@@ -122,7 +122,7 @@
 
     <!-- О компании -->
     <div class="about">
-        <div class="about__wrapper">
+        <div class="about__wrapper container">
             <img src="../../img/assets/about-1.png" alt="" class="about__img">
 
             <h2 class="title about__title">

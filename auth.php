@@ -11,6 +11,10 @@ require_once('./data/data.php');
 // Список ролей
 $userRole = $appData['userRoles'];
 
+// Список категорий меню
+$categoryList = getCategories($con);
+// $categoryList = null;
+
 $page_body = include_template(
     'auth.php',
     []
@@ -104,8 +108,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+// ==== Вывод ошибок ====
+// Записывает ошибку в сессию: Не удалось загрузить ...
+// $categoryList = null;
+if (is_null($categoryList)) {
+    $option = ['value' => 'категорий меню'];
+    $toast = getModalToast(null, $option);
+
+    if (!is_null($toast)) {
+        $_SESSION['toasts'][] = $toast;
+    }
+}
+
+// Модальное окно со списком ошибок
+$modalList = $_SESSION['toasts'] ?? [];
+// print_r($_SESSION);
+
 
 // ==== ШАБЛОНЫ ====
+$page_modal = include_template(
+    'modal.php',
+    [
+        'modalList' => $modalList,
+    ]
+);
+
 $page_head = include_template(
     'head.php',
     [
@@ -123,13 +150,16 @@ $page_header = include_template(
 
 $page_footer = include_template(
     'footer.php',
-    []
+    [
+        'categoryList' => $categoryList,
+    ]
 );
 
 $layout_content = include_template(
     'layout.php',
     [
         'head' => $page_head,
+        'modal' => $page_modal,
         'header' => $page_header,
         'main' => $page_body,
         'footer' => $page_footer,
