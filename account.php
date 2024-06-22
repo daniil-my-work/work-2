@@ -6,8 +6,6 @@ require_once('./functions/models.php');
 require_once('./functions/db.php');
 require_once('./data/data.php');
 
-// Проверка
-
 // Проверка прав доступа
 $sessionRole = $_SESSION['user_role'] ?? null;
 
