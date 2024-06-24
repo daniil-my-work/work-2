@@ -143,7 +143,8 @@
                             <?php $productItem = $product['item']; ?>
                             <?php $productId = $productItem['id']; ?>
                             <?php $tableName = $product['table']; ?>
-                            <?php $categoryId = $product['category_id']; ?>
+                            <?php $categoryId = $productItem['category_id']; ?>
+
                             <li class="basket__item" data-product-id="<?= $productId ?>" data-table-name="<?= $tableName ?>">
                                 <div class="basket__item-content">
                                     <div class="basket__item-top">

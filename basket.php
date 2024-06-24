@@ -67,7 +67,7 @@ $productLength = count($productList);
 
 // print_r($_SESSION['order']);
 // unset($_SESSION['order']);
-// print_r($productsData);
+print_r($productList);
 
 // Инициализируем переменную для хранения общей стоимости
 $fullPrice = 0;
