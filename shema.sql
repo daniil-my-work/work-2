@@ -114,6 +114,15 @@ CREATE TABLE `cafe_address` (
     `address_name` VARCHAR(255)
 );
 
+
+-- Новое
+CREATE TABLE `wok` (
+    `id` INT PRIMARY KEY AUTO_INCREMENT,
+    `wok_base` VARCHAR(255),
+    `wok_sauce` VARCHAR(255),
+    `wok_id` INT,
+);
+
 ALTER TABLE
     `menu`
 ADD
@@ -143,3 +152,9 @@ ALTER TABLE
     `poke_consists`
 ADD
     FOREIGN KEY (`component_id`) REFERENCES `components` (`id`);
+
+ALTER TABLE
+    `wok`
+ADD
+    FOREIGN KEY (`wok_id`) REFERENCES `menu` (`id`);
+

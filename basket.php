@@ -35,9 +35,39 @@ $userCity = getUserCity();
 $productsData = isset($_SESSION['order']) ? $_SESSION['order'] : array();
 // $productsData = [];
 
+
+// Массив с основой
+$noodleComponents = array(
+    'noodle_1' => 'лапша Харусаме',
+    'noodle_2' => 'Киноа',
+    'noodle_3' => 'Рисовая лапша',
+    'noodle_4' => 'Удон',
+    'noodle_5' => 'Яичная лапша',
+    'noodle_6' => 'Рис на пару',
+    'noodle_7' => 'Гречневая лапша',
+);
+
+// Массив с соусами
+$sauceComponents = array(
+    'sauce_1' => 'Соус Перечный',
+    'sauce_2' => 'Соус Кисло-сладкий (острый)',
+    'sauce_3' => 'Соус Устричный',
+    'sauce_4' => 'Соус Сливочно-перечный',
+    'sauce_5' => 'Соус Сливочный',
+    'sauce_6' => 'Соус Терияки',
+    'sauce_7' => 'БЕЗ СОУСА',
+    'sauce_8' => 'Соус Карри',
+    'sauce_9' => 'Соус Кимчи (острый)',
+);
+
+
 // Cписок выбранных блюд 
 $productList = getProductListInBasket($con, $productsData);
 $productLength = count($productList);
+
+// print_r($_SESSION['order']);
+// unset($_SESSION['order']);
+// print_r($productsData);
 
 // Инициализируем переменную для хранения общей стоимости
 $fullPrice = 0;
@@ -58,6 +88,8 @@ $page_body = include_template(
         'cafeList' => $cafeList,
         'address' => [],
         'userCity' => $userCity,
+        'noodleComponents' => $noodleComponents,
+        'sauceComponents' => $sauceComponents,
     ]
 );
 
@@ -100,9 +132,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $filters['order_comment-cafe'] = FILTER_DEFAULT;
     }
 
+    // Garnir
+    if (isset($_POST['garnir']) ? $_POST['garnir'] : null) {
+        $filters['garnir'] = FILTER_DEFAULT;
+    }
+
     // Получаем данные из формы с применением фильтров
     $address = filter_input_array(INPUT_POST, $filters, true);
-    
+
     // Ошибки
     $errors = [];
 
@@ -168,6 +205,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'address' => $address,
                 'errors' => $errors,
                 'userCity' => $userCity,
+                'noodleComponents' => $noodleComponents,
+                'sauceComponents' => $sauceComponents,
             ]
         );
     } else {
@@ -175,6 +214,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($address['delivery-type'] === 'delivery') {
             // Формирует адресс заказа
             $order['order_address'] = "{$address['user_address']}, кв. {$address['apartment']}, подъезд {$address['entrance']}, этаж {$address['floor']}";
+
+            // Добавляет гарнир для вока
+            $order['order_comment'] = $address['garnir'] ? ("Гарнир для вока:" . $address['garnir']) : '';
 
             // Добавляет комментарий в объект для записи в БД
             $order['order_comment'] = $address['order_comment-user'];
@@ -185,6 +227,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // Формирует адресс заказа
             $order['order_address'] = $address_name;
+
+            // Добавляет гарнир для вока
+            $order['order_comment'] = $address['garnir'] ? ("Гарнир для вока:" . $address['garnir']) : '';
 
             // Добавляет комментарий в объект для записи в БД
             $order['order_comment'] = $address['order_comment-cafe'];

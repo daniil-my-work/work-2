@@ -1,8 +1,8 @@
 <!-- Страница Корзина -->
 <div class="page__basket" id="page-basket">
     <div class="page__basket-wrapper container">
-        
-        
+
+
         <!-- Форма заказа: Корзина -->
         <form class="page__basket-form" method="post" action="basket.php">
             <div>
@@ -10,12 +10,12 @@
                     <svg class="basket__breadcrumbs-icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                         <path fill="currentColor" d="M4 15a1 1 0 0 0 1 1h19.586l-4.292 4.292a1 1 0 0 0 1.414 1.414l6-6a.99.99 0 0 0 .292-.702V15c0-.13-.026-.26-.078-.382a.99.99 0 0 0-.216-.324l-6-6a1 1 0 0 0-1.414 1.414L24.586 14H5a1 1 0 0 0-1 1z"></path>
                     </svg>
-    
+
                     <span>
                         назад в меню
                     </span>
                 </a>
-    
+
                 <img src="./img/svg/bag.svg" alt="" class="basket__icon">
             </div>
 
@@ -143,16 +143,12 @@
                             <?php $productItem = $product['item']; ?>
                             <?php $productId = $productItem['id']; ?>
                             <?php $tableName = $product['table']; ?>
+                            <?php $categoryId = $product['category_id']; ?>
                             <li class="basket__item" data-product-id="<?= $productId ?>" data-table-name="<?= $tableName ?>">
                                 <div class="basket__item-content">
                                     <div class="basket__item-top">
                                         <img src="<?= $productItem['img']; ?>" alt="" class="basket__item-img">
-
-                                        <p class="sub-title basket__item-title">
-                                            <?= $productItem['title']; ?>
-                                        </p>
                                     </div>
-
 
                                     <div class="product-item__counter">
                                         <div class="product-item__counter-number-wrapper">
@@ -178,6 +174,50 @@
                                         </button>
                                     </div>
                                 </div>
+
+                                <p class="sub-title basket__item-title mb-2">
+                                        <?= $productItem['title']; ?>
+                                    </p>
+
+                                    <?php if ($categoryId === '4') : ?>
+                                        <div class="d-flex">
+                                            <span class="text me-2">
+                                                Выберите основу:
+                                            </span>
+
+                                            <!-- Основа для вока -->
+                                            <select class="basket__item-component form-select mb-3" id="wok-base" name="garnir" aria-label="Основа для вок">
+                                                <option value="default">
+                                                    Не выбрано
+                                                </option>
+
+                                                <?php foreach ($noodleComponents as $key => $value) : ?>
+                                                    <option value="<?= $key; ?>">
+                                                        <?= $value; ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+
+                                        <div class="d-flex">
+                                            <span class="text me-2">
+                                                Выберите соус:
+                                            </span>
+
+                                            <!-- Соус для вока -->
+                                            <select class="basket__item-component form-select mb-3" id="garnir" name="garnir" aria-label="Соус для вок">
+                                                <option value="default">
+                                                    Не выбрано
+                                                </option>
+
+                                                <?php foreach ($sauceComponents as $key => $value) : ?>
+                                                    <option value="<?= $key; ?>">
+                                                        <?= $value; ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                    <?php endif; ?>
 
 
                                 <div class="basket__item-info">
