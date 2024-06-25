@@ -35,7 +35,10 @@
                 <ul class="menu__list">
                     <?php foreach ($products as $product) : ?>
                         <?php $productId = $product['id']; ?>
-                        <li class="menu__item" data-product-id="<?= $productId ?>">
+                        <?php $categoryId = $product['category_id']; ?>
+                        <?php $uniqueId = isset($productsData[$productId])? $productsData[$productId]['uniqueId'] : ''; ?>
+
+                        <li class="menu__item" data-product-id="<?= $productId ?>" data-table-name="menu" data-category-id="<?= $categoryId; ?>" data-unique-id="<?= $uniqueId; ?>">
                             <?php $hiddenButton = isset($productsData[$productId]) ? 'hidden' : ''; ?>
                             <?php $hiddenCounter = !isset($productsData[$productId]) ? 'hidden' : ''; ?>
 
@@ -61,14 +64,14 @@
                                         </button>
 
                                         <div class="product-item__counter-number-wrapper <?= $hiddenCounter; ?>">
-                                            <input class="product-item__counter-input" type="hidden" name="productId" value="<?= isset($productsData[$productId]) ? $productsData[$productId] : '0'; ?>">
+                                            <input class="product-item__counter-input" type="hidden" name="productId" value="<?= isset($productsData[$productId]) ? $productsData[$productId]['quantity'] : '0'; ?>">
 
                                             <span class="product-item__counter-action product-item__counter-action--minus">
                                                 –
                                             </span>
 
                                             <p class="product-item__counter-number">
-                                                <?= isset($productsData[$productId]) ? $productsData[$productId] : '0'; ?>
+                                                <?= isset($productsData[$productId]) ? $productsData[$productId]['quantity'] : '0'; ?>
                                             </p>
 
                                             <span class="product-item__counter-action product-item__counter-action--plus">

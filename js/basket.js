@@ -107,10 +107,25 @@ class BasketManager {
     }
 
     #createParamsOnMain(productItem, element, counterValue) {
+        let newValue = parseInt(counterValue, 10);
+
+        if (element.matches(".product-item__counter-action--plus")) {
+            newValue = counterValue + 1;
+        } else if (element.matches(".product-item__counter-action--minus") && counterValue > 1) {
+            newValue = counterValue - 1;
+        } else if (element.matches(".product-item__counter-button")) {
+            newValue = 1;
+        }
+
+        console.log(element);
+        console.log(newValue);
+
         return new URLSearchParams({
+            uniqueId: productItem.dataset.uniqueId,
             productId: productItem.dataset.productId,
             tableName: 'menu',
-            quantity: element.classList.contains("product-item__counter-action--plus") ? counterValue + 1 : counterValue - 1
+            categoryId: productItem.dataset.categoryId,
+            quantity: newValue,
         });
     }
 
@@ -181,8 +196,10 @@ class BasketManager {
         }
 
         return new URLSearchParams({
+            uniqueId: productItem.dataset.uniqueId,
             productId: productItem.dataset.productId,
             tableName: productItem.dataset.tableName,
+            categoryId: productItem.dataset.categoryId,
             quantity: newValue,
         });
     }

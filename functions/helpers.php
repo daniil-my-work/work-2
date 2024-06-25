@@ -109,7 +109,7 @@ function checkUniquenessValue($con, $order_id, $table, $value)
  *
  * @return void
  */
-function addProductInSession($con, $tableName, $productId, $quantity)
+function addProductInSession($con, $tableName, $uniqueId, $productId, $quantity, $categoryId)
 {
     // Инициализируйте или обновите данные корзины в сессии
     if (!isset($_SESSION['order'][$tableName])) {
@@ -117,41 +117,61 @@ function addProductInSession($con, $tableName, $productId, $quantity)
     }
 
     // Добавьте товар в корзину
-    if (isset($_SESSION['order'][$tableName][$productId])) {
-        // Удаление конкретного элемента из сессии
-        if ($quantity <= 0) {
-            if ($tableName == 'poke') {
-                $sql = get_query_poke_unique_id($productId);
-                $result = mysqli_query($con, $sql);
-                $pokeUniqueId = get_arrow($result);
-                $pokeUniqueId = $pokeUniqueId['poke_id'];
+    // if (isset($_SESSION['order'][$tableName][$productId])) {
+    // Удаление конкретного элемента из сессии
+    if ($quantity <= 0) {
+        if ($tableName == 'poke') {
+            $sql = get_query_poke_unique_id($productId);
+            $result = mysqli_query($con, $sql);
+            $pokeUniqueId = get_arrow($result);
+            $pokeUniqueId = $pokeUniqueId['poke_id'];
 
-                $deletePoke = get_query_delete_poke($productId);
-                $resultDeletePoke = mysqli_query($con, $deletePoke);
+            $deletePoke = get_query_delete_poke($productId);
+            $resultDeletePoke = mysqli_query($con, $deletePoke);
 
-                $deletePokeConsists = get_query_delete_poke_consists($pokeUniqueId);
-                $resultDeletePokeConsists = mysqli_query($con, $deletePokeConsists);
+            $deletePokeConsists = get_query_delete_poke_consists($pokeUniqueId);
+            $resultDeletePokeConsists = mysqli_query($con, $deletePokeConsists);
 
-                if ($resultDeletePoke && $resultDeletePokeConsists) {
-                    // Успешно удалено, теперь удаляем из сессии
-                    unset($_SESSION['order'][$tableName][$productId]);
-                } else {
-                    // Обработка ошибки, если удаление не удалось
-                    echo "Ошибка при удалении записей из базы данных.";
-                }
-
-                return;
+            if ($resultDeletePoke && $resultDeletePokeConsists) {
+                // Успешно удалено, теперь удаляем из сессии
+                unset($_SESSION['order'][$tableName][$productId]);
+            } else {
+                // Обработка ошибки, если удаление не удалось
+                echo "Ошибка при удалении записей из базы данных.";
             }
 
-            unset($_SESSION['order'][$tableName][$productId]);
             return;
         }
 
-        $_SESSION['order'][$tableName][$productId] = $quantity;
+        unset($_SESSION['order'][$tableName][$productId]);
+        return;
+    }
+
+    // if ($categoryId == '4') {
+
+    // }
+
+    if (isset($_SESSION['order'][$tableName][$uniqueId])) {
+        $_SESSION['order'][$tableName][$uniqueId]['quantity'] = $quantity;
     } else {
-        $_SESSION['order'][$tableName][$productId] = 1;
+        $uniqueId = uniqid();
+
+        $_SESSION['order'][$tableName][] = array(
+            'uniqueId' => $uniqueId,
+            'productId' => $productId,
+            'quantity' => $quantity,
+            'categoryId' => $categoryId
+        );
     }
 }
+
+// [$productId] = 1;
+// Array ( [307] => 2 [308] => 3 [309] => 2 ) 
+
+// New
+// [0] => [$uniqueId, $productId, $quantity, $categoryId];
+// Array ( [0] => [dsdsnj1, 307, 2, 2])
+
 
 /**
  * Возвращает список заказов, сгруппированных по идентификатору заказа.
@@ -374,8 +394,7 @@ function importCsvData($con, $filePath, $expectedColumns, $tableName)
 
     if ($tableName === 'menu') {
         $headersColumn = fgetcsv($file, 0, ";");
-    }
-    else {
+    } else {
         $headersColumn = fgetcsv($file, 0, ",");
     }
 
