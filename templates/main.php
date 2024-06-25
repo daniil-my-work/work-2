@@ -36,7 +36,19 @@
                     <?php foreach ($products as $product) : ?>
                         <?php $productId = $product['id']; ?>
                         <?php $categoryId = $product['category_id']; ?>
-                        <?php $uniqueId = isset($productsData[$productId])? $productsData[$productId]['uniqueId'] : ''; ?>
+
+                        <?php
+                        foreach ($productsData as $productData) {
+                            if ($productData['productId'] == $productId) {
+                                $uniqueId = $productData['uniqueId'];
+                                
+                                $hiddenButton = isset($productsData['uniqueId']) ? 'hidden' : '';
+                                $hiddenCounter = !isset($productsData['uniqueId']) ? 'hidden' : '';
+
+                                break; // Завершаем цикл, если нашли совпадение
+                            }
+                        }
+                        ?>
 
                         <li class="menu__item" data-product-id="<?= $productId ?>" data-table-name="menu" data-category-id="<?= $categoryId; ?>" data-unique-id="<?= $uniqueId; ?>">
                             <?php $hiddenButton = isset($productsData[$productId]) ? 'hidden' : ''; ?>
@@ -64,14 +76,22 @@
                                         </button>
 
                                         <div class="product-item__counter-number-wrapper <?= $hiddenCounter; ?>">
-                                            <input class="product-item__counter-input" type="hidden" name="productId" value="<?= isset($productsData[$productId]) ? $productsData[$productId]['quantity'] : '0'; ?>">
+                                            <?php
+                                            foreach ($productsData as $productData) {
+                                                if ($productData['productId'] == $productId) {
+                                                    $quantity = $productData['quantity'] ? $productData['quantity'] : null;
+                                                    break; // Завершаем цикл, если нашли совпадение
+                                                }
+                                            }
+                                            ?>
+                                            <input class="product-item__counter-input" type="hidden" name="productId" value="<?= isset($quantity) ? $quantity : '0'; ?>">
 
                                             <span class="product-item__counter-action product-item__counter-action--minus">
                                                 –
                                             </span>
 
                                             <p class="product-item__counter-number">
-                                                <?= isset($productsData[$productId]) ? $productsData[$productId]['quantity'] : '0'; ?>
+                                                <?= isset($quantity) ? $quantity : '0'; ?>
                                             </p>
 
                                             <span class="product-item__counter-action product-item__counter-action--plus">
